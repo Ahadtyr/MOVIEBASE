@@ -52,7 +52,6 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
           alt={`Banner for ${currentMovie.title}`}
           layout="fill"
           objectFit="cover"
-          className="brightness-50"
           priority={currentIndex === 0}
           data-ai-hint="movie scene landscape"
         />

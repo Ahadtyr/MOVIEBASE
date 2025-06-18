@@ -17,7 +17,6 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
         alt={`Banner for ${item.title}`}
         layout="fill"
         objectFit="cover"
-        className="brightness-50"
         priority
         data-ai-hint="movie scene action"
       />

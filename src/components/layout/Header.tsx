@@ -1,0 +1,77 @@
+'use client';
+
+import Link from 'next/link';
+import { Film, Tv, LayoutGrid, Search, UserCircle, Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+
+const navLinks = [
+  { href: '/', label: 'Home', icon: Film },
+  { href: '/movies', label: 'Movies', icon: Film },
+  { href: '/tv-shows', label: 'TV Shows', icon: Tv },
+  { href: '/genres', label: 'Genres', icon: LayoutGrid },
+  { href: '/search-page', label: 'Search', icon: Search },
+  { href: '/recommendations', label: 'AI Recommends', icon: LayoutGrid }, // Added AI Recommends link
+  { href: '/login', label: 'Login', icon: UserCircle },
+];
+
+export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const NavLinkItem = ({ href, label, icon: Icon }: typeof navLinks[0] & { icon: React.ElementType }) => (
+    <Link
+      href={href}
+      className={cn(
+        "px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2",
+        pathname === href ? "bg-primary text-primary-foreground" : "text-foreground/80"
+      )}
+      aria-current={pathname === href ? "page" : undefined}
+    >
+      <Icon className="w-4 h-4 neon-glow" />
+      {label}
+    </Link>
+  );
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center space-x-2">
+          <Film className="h-8 w-8 text-primary neon-glow-primary" />
+          <span className="font-headline text-2xl font-bold text-primary">MOVIEBASE</span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-1">
+          {navLinks.map((link) => (
+            <NavLinkItem key={link.href} {...link} />
+          ))}
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-background shadow-lg p-4 animate-fade-in">
+          <nav className="flex flex-col space-y-2">
+            {navLinks.map((link) => (
+              <NavLinkItem key={link.href} {...link} />
+            ))}
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}

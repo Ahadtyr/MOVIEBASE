@@ -1,33 +1,38 @@
 import { notFound } from 'next/navigation';
-import { getContentById } from '@/lib/placeholder-data';
+import { getMovieDetails, getMovieCredits, getSimilarMovies, IMAGE_BASE_URL_W500, IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
 import MovieDetailsBanner from '@/components/movie/MovieDetailsBanner';
 import CastList from '@/components/movie/CastList';
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
-import { placeholderMovies } from '@/lib/placeholder-data'; // For related movies
-
-export async function generateStaticParams() {
-  // In a real app, fetch all movie IDs
-  const movies = placeholderMovies.slice(0, 5); // Limit for build time
-  return movies.map((movie) => ({
-    id: movie.id,
-  }));
-}
+import type { Movie, TMDBCastMember } from '@/lib/types';
 
 interface MovieDetailPageProps {
   params: { id: string };
 }
 
 export default async function MovieDetailPage({ params }: MovieDetailPageProps) {
-  const item = getContentById(params.id);
+  const movieId = parseInt(params.id, 10);
+  if (isNaN(movieId)) {
+    notFound();
+  }
+
+  const itemPromise = getMovieDetails(movieId);
+  const creditsPromise = getMovieCredits(movieId);
+  const similarMoviesPromise = getSimilarMovies(movieId);
+
+  const [item, credits, similarMoviesData] = await Promise.all([
+    itemPromise,
+    creditsPromise,
+    similarMoviesPromise
+  ]);
 
   if (!item) {
     notFound();
   }
 
-  // Simulate related movies
-  const relatedMovies = placeholderMovies.filter(m => m.id !== item.id && m.genres.some(g => item.genres.includes(g))).slice(0,6);
+  const cast: TMDBCastMember[] = credits.cast.slice(0, 12); // Limit cast members displayed
+  const similarMovies: Movie[] = similarMoviesData.slice(0, 6);
 
   return (
     <>
@@ -38,27 +43,24 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
             <section id="details" className="mb-8">
               <SectionTitle>Synopsis</SectionTitle>
               <p className="text-base md:text-lg text-foreground/80 leading-relaxed whitespace-pre-line">
-                {item.synopsis}
+                {item.overview}
               </p>
             </section>
             
-            <CastList cast={item.cast} />
+            <CastList cast={cast} />
           </div>
           <aside className="md:col-span-1">
-            {/* You can add more details here like director, writer, awards etc. */}
             <SectionTitle>Details</SectionTitle>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><strong>Release Date:</strong> {new Date(item.releaseDate).toLocaleDateString()}</li>
-              <li><strong>Rating:</strong> {item.rating}/10</li>
-              {'duration' in item && <li><strong>Duration:</strong> {item.duration}</li>}
-              {'seasons' in item && <li><strong>Seasons:</strong> {item.seasons}</li>}
-              {'episodes' in item && <li><strong>Episodes:</strong> {item.episodes}</li>}
-              <li><strong>Genres:</strong> {item.genres.join(', ')}</li>
+              <li><strong>Release Date:</strong> {new Date(item.release_date).toLocaleDateString()}</li>
+              <li><strong>Rating:</strong> {item.vote_average.toFixed(1)}/10</li>
+              {item.runtime && <li><strong>Duration:</strong> {Math.floor(item.runtime / 60)}h {item.runtime % 60}m</li>}
+              <li><strong>Genres:</strong> {item.genres.map(g => g.name).join(', ')}</li>
             </ul>
           </aside>
         </div>
-        {relatedMovies.length > 0 && (
-          <MovieSection title="More Like This" items={relatedMovies} />
+        {similarMovies.length > 0 && (
+          <MovieSection title="More Like This" items={similarMovies} />
         )}
       </PageContainer>
     </>

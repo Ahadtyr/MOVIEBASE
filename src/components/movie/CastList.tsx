@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import type { CastMember } from '@/lib/types';
+import type { TMDBCastMember } from '@/lib/types';
 import SectionTitle from '@/components/shared/SectionTitle';
+import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
 
 interface CastListProps {
-  cast: CastMember[];
+  cast: TMDBCastMember[];
 }
 
 export default function CastList({ cast }: CastListProps) {
@@ -19,7 +20,7 @@ export default function CastList({ cast }: CastListProps) {
           <div key={member.id} className="text-center group">
             <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden mb-2 shadow-md group-hover:shadow-accent/30 transition-shadow duration-300">
               <Image
-                src={member.imageUrl}
+                src={member.profile_path ? `${IMAGE_BASE_URL_W500}${member.profile_path}` : 'https://placehold.co/200x300.png'}
                 alt={member.name}
                 width={200}
                 height={300}
@@ -28,7 +29,7 @@ export default function CastList({ cast }: CastListProps) {
               />
             </div>
             <h4 className="font-semibold text-primary-foreground text-sm group-hover:text-accent transition-colors duration-300">{member.name}</h4>
-            <p className="text-xs text-muted-foreground">{member.character}</p>
+            {member.character && <p className="text-xs text-muted-foreground">{member.character}</p>}
           </div>
         ))}
       </div>

@@ -1,40 +1,53 @@
 import { notFound } from 'next/navigation';
 import { getContentById, placeholderTVShows, placeholderMovies } from '@/lib/placeholder-data'; // Using getContentById for flexibility
 import MovieDetailsBanner from '@/components/movie/MovieDetailsBanner'; // Reusable for TV shows
-import CastList from '@/components/movie/CastList'; // Reusable for TV shows
+import CastList from '@/components/movie/CastList'; // Reusable for TV shows - will need adapter for TMDb TV cast
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection'; // Reusable for related content
+import type { TMDBCastMember } from '@/lib/types';
 
-export async function generateStaticParams() {
-  // In a real app, fetch all TV Show IDs
-  const tvShows = placeholderTVShows.slice(0, 5); // Limit for build time
-  return tvShows.map((show) => ({
-    id: show.id,
-  }));
-}
+
+// export async function generateStaticParams() {
+  // In a real app, fetch all TV Show IDs from TMDb if pre-rendering
+  // const tvShows = placeholderTVShows.slice(0, 5); // Limit for build time
+  // return tvShows.map((show) => ({
+  // id: show.id,
+  // }));
+// }
 
 interface TVShowDetailPageProps {
   params: { id: string };
 }
 
 export default async function TVShowDetailPage({ params }: TVShowDetailPageProps) {
+  // TODO: Fetch TV Show details from TMDb using params.id
+  // For now, using placeholder data
   const item = getContentById(params.id);
 
-  if (!item || !('seasons' in item)) { // Ensure it's a TV show
+  if (!item || !('seasons' in item)) { // Ensure it's a TV show (placeholder logic)
     notFound();
   }
 
-  // Simulate related content (can be movies or other TV shows)
+  // TODO: Fetch TV Show credits and similar TV shows from TMDb
+  // Placeholder cast and related content
+  const cast: TMDBCastMember[] = item.cast.map(c => ({ // Adapting placeholder cast
+    id: parseInt(c.id.replace('cast',''),10), // crude id conversion
+    name: c.name,
+    character: c.character,
+    profile_path: null // Placeholder doesn't have profile_path
+  })).slice(0,12);
+
   const relatedContent = [...placeholderMovies, ...placeholderTVShows]
     .filter(m => m.id !== item.id && m.genres.some(g => item.genres.includes(g)))
-    .sort(() => 0.5 - Math.random()) // Randomize for variety
+    .sort(() => 0.5 - Math.random()) 
     .slice(0,6);
 
   return (
     <>
-      <MovieDetailsBanner item={item} />
-      <PageContainer className="pt-24 md:pt-16"> {/* Adjust padding top due to banner overlap */}
+      {/* MovieDetailsBanner expects Movie or TVShow (placeholder type for now) */}
+      <MovieDetailsBanner item={item} /> 
+      <PageContainer className="pt-24 md:pt-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <section id="details" className="mb-8">
@@ -44,7 +57,7 @@ export default async function TVShowDetailPage({ params }: TVShowDetailPageProps
               </p>
             </section>
             
-            <CastList cast={item.cast} />
+            <CastList cast={cast} />
           </div>
           <aside className="md:col-span-1">
             <SectionTitle>Details</SectionTitle>

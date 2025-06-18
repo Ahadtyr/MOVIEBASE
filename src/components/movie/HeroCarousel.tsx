@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, PlayCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
 
 interface HeroCarouselProps {
   movies: Movie[];
@@ -17,12 +18,14 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = useCallback(() => {
+    if (movies.length === 0) return;
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? movies.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   }, [currentIndex, movies.length]);
 
   const goToNext = useCallback(() => {
+    if (movies.length === 0) return;
     const isLastSlide = currentIndex === movies.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
@@ -37,25 +40,36 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   if (!movies || movies.length === 0) {
     return (
       <div className="h-[70vh] flex items-center justify-center bg-muted">
-        <p className="text-muted-foreground">No movies to display in carousel.</p>
+        <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
   }
 
   const currentMovie = movies[currentIndex];
+  const bannerImageUrl = currentMovie.backdrop_path 
+    ? `${IMAGE_BASE_URL_ORIGINAL}${currentMovie.backdrop_path}`
+    : `https://placehold.co/1200x675.png`; // Fallback placeholder
 
   return (
     <div className="relative w-full h-[calc(100vh-4rem)] md:h-[calc(85vh-4rem)] max-h-[700px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
-      <div className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out" key={currentMovie.id}>
-        <Image
-          src={currentMovie.bannerUrl}
-          alt={`Banner for ${currentMovie.title}`}
-          layout="fill"
-          objectFit="cover"
-          priority={currentIndex === 0}
-          data-ai-hint="movie scene landscape"
-        />
-      </div>
+      {movies.map((movie, index) => (
+        <div
+          key={movie.id}
+          className={cn(
+            "absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out",
+            index === currentIndex ? "opacity-100 z-0" : "opacity-0 -z-10"
+          )}
+        >
+          <Image
+            src={movie.backdrop_path ? `${IMAGE_BASE_URL_ORIGINAL}${movie.backdrop_path}` : `https://placehold.co/1200x675.png`}
+            alt={`Banner for ${movie.title}`}
+            fill // Use fill instead of layout
+            style={{ objectFit: 'cover' }} // Use style for objectFit
+            priority={index === 0} // Only prioritize the first image usually
+            data-ai-hint="movie scene landscape"
+          />
+       </div>
+      ))}
       
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
 
@@ -65,14 +79,14 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             {currentMovie.title}
           </h1>
           <div className="flex items-center space-x-4 mb-4">
-            {currentMovie.genres.slice(0, 3).map(genre => (
-              <Badge key={genre} variant="outline" className="border-primary-foreground/50 text-primary-foreground bg-black/30 backdrop-blur-sm text-sm">
-                {genre}
+            {currentMovie.genres?.slice(0, 3).map(genre => (
+              <Badge key={genre.id} variant="outline" className="border-primary-foreground/50 text-primary-foreground bg-black/30 backdrop-blur-sm text-sm">
+                {genre.name}
               </Badge>
             ))}
           </div>
           <p className="text-base md:text-lg mb-6 line-clamp-3 drop-shadow-sm">
-            {currentMovie.synopsis}
+            {currentMovie.overview}
           </p>
           <div className="flex space-x-3">
             <Link href={`/movie/${currentMovie.id}`} passHref>

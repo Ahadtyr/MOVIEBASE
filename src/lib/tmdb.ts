@@ -1,4 +1,3 @@
-'use server';
 import type { Movie, TMDBCastMember } from './types';
 
 const API_KEY = process.env.TMDB_API_KEY;

@@ -23,8 +23,8 @@ interface TMDbMovieDetail extends Omit<Movie, 'genres' | 'credits' | 'similar' |
 }
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
-  if (!API_KEY) {
-    throw new Error('TMDB API key is not configured. Please set TMDB_API_KEY in your environment variables.');
+  if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
+    throw new Error('TMDB API key is not configured. Please get a free key from themoviedb.org and add it to a .env.local file as TMDB_API_KEY=your_key_here');
   }
   const urlParams = new URLSearchParams({ ...params, api_key: API_KEY });
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;

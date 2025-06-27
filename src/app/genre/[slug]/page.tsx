@@ -25,7 +25,7 @@ export default async function GenrePage({ params }: GenrePageProps) {
 
   // Using placeholder data until TMDb genre fetching is implemented
   const moviesInGenre = placeholderMovies.filter(movie => 
-    movie.genres.some(g => g.toLowerCase() === genreName)
+    movie.genres.some(g => g.name.toLowerCase() === genreName)
   );
 
   // This check also needs to be updated for TMDb genres

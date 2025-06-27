@@ -23,7 +23,7 @@ export default function GenresPage() {
               <h3 className="text-lg font-semibold text-primary-foreground group-hover:text-accent transition-colors">{genre}</h3>
               {/* Could add a count of movies in this genre if available */}
               <p className="text-xs text-muted-foreground mt-1">
-                {placeholderMovies.filter(m => m.genres.includes(genre)).length} titles
+                {placeholderMovies.filter(m => m.genres.some(g => g.name === genre)).length} titles
               </p>
             </div>
           </Link>

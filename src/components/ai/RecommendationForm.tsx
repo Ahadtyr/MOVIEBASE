@@ -11,6 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Loader2, Wand2 } from 'lucide-react';
 import { recommendMovie, type RecommendMovieOutput } from '@/ai/flows/recommend-movie';
 import { useToast } from '@/hooks/use-toast';
+import MovieCard from '@/components/movie/MovieCard';
+import type { Movie, TVShow } from '@/lib/types';
 
 const FormSchema = z.object({
   viewingHistory: z.string().min(10, { message: 'Please describe your viewing history (at least 10 characters).' }),
@@ -56,7 +58,7 @@ export default function RecommendationForm() {
           AI Movie Recommender
         </CardTitle>
         <CardDescription>
-          Tell us about movies you&apos;ve enjoyed, and our AI will suggest something new for you!
+          Tell us about movies you've enjoyed, and our AI will suggest something new for you!
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -108,11 +110,18 @@ export default function RecommendationForm() {
           <CardHeader>
             <CardTitle className="text-xl font-headline text-primary">AI Recommendation:</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <h4 className="text-2xl font-semibold text-accent">{recommendation.movieRecommendation}</h4>
+          <CardContent className="space-y-4">
+            {recommendation.recommendation ? (
+              <div className="w-full sm:w-1/2 md:w-2/5 mx-auto">
+                 <MovieCard item={recommendation.recommendation as Movie | TVShow} />
+              </div>
+            ) : (
+              <p className="text-2xl font-semibold text-accent text-center">{recommendation.movieTitleFromAI}</p>
+            )}
+
             <div>
-              <p className="font-medium text-muted-foreground mb-1">Reason:</p>
-              <p className="text-foreground/90 whitespace-pre-line">{recommendation.reason}</p>
+              <p className="font-medium text-muted-foreground mb-1 text-center mt-4">Reason:</p>
+              <p className="text-foreground/90 whitespace-pre-line text-center">{recommendation.reason}</p>
             </div>
           </CardContent>
         </Card>

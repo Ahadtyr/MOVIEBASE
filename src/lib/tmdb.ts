@@ -134,6 +134,15 @@ export async function getDiscoverMovies(genreId: string, page: number = 1): Prom
   };
 }
 
+export async function getDiscoverMoviesByParams(params: Record<string, string>, page: number = 1): Promise<Movie[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', {
+    ...params,
+    sort_by: 'popularity.desc',
+    page: page.toString(),
+  });
+  return data.results.map(mapTMDbMovie);
+}
+
 // TV Show Functions
 function mapTMDbTVShow(tmdbTVShow: any): TVShow {
   return {

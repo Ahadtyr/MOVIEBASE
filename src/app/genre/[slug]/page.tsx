@@ -1,14 +1,16 @@
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
+import PaginationControls from '@/components/shared/PaginationControls';
 import { getMovieGenres, getDiscoverMovies } from '@/lib/tmdb';
 import { notFound } from 'next/navigation';
 
 interface GenrePageProps {
   params: { slug: string };
+  searchParams?: { page?: string };
 }
 
-export default async function GenrePage({ params }: GenrePageProps) {
+export default async function GenrePage({ params, searchParams }: GenrePageProps) {
   const allGenres = await getMovieGenres();
   const genre = allGenres.find(g => g.name.toLowerCase().replace(/\s+/g, '-') === params.slug);
 
@@ -16,13 +18,21 @@ export default async function GenrePage({ params }: GenrePageProps) {
     notFound();
   }
   
-  const moviesInGenre = await getDiscoverMovies(genre.id.toString());
+  const currentPage = Number(searchParams?.page) || 1;
+  const { movies: moviesInGenre, totalPages } = await getDiscoverMovies(genre.id.toString(), currentPage);
 
   return (
     <PageContainer>
       <SectionTitle>{genre.name} Movies</SectionTitle>
       {moviesInGenre.length > 0 ? (
-        <MovieSection title="" items={moviesInGenre} />
+        <>
+          <MovieSection title="" items={moviesInGenre} />
+          <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            basePath={`/genre/${params.slug}`}
+          />
+        </>
       ) : (
         <p className="text-muted-foreground">No movies found in the {genre.name} genre yet. Check back soon!</p>
       )}

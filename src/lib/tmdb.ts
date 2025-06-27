@@ -120,13 +120,18 @@ export async function getMovieGenres(): Promise<Genre[]> {
   return data.genres;
 }
 
-export async function getDiscoverMovies(genreId: string): Promise<Movie[]> {
+export async function getDiscoverMovies(genreId: string, page: number = 1): Promise<{ movies: Movie[], totalPages: number }> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', {
     with_genres: genreId,
     sort_by: 'popularity.desc',
+    page: page.toString(),
   });
-  // The 'discover' endpoint doesn't return full genre details on each movie, so we map what we get
-  return data.results.map(mapTMDbMovie);
+  // The TMDb API caps total_pages at 500
+  const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
+  return {
+    movies: data.results.map(mapTMDbMovie),
+    totalPages,
+  };
 }
 
 // TV Show Functions

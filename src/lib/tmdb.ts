@@ -1,4 +1,4 @@
-import type { Movie, TMDBCastMember } from './types';
+import type { Movie, TVShow, TMDBCastMember } from './types';
 
 const API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -19,8 +19,15 @@ interface TMDbGenre {
 
 interface TMDbMovieDetail extends Omit<Movie, 'genres' | 'credits' | 'similar' | 'runtime'> {
   genres: TMDbGenre[];
-  runtime: number | null; // runtime can be null
+  runtime: number | null;
 }
+
+interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar' | 'number_of_seasons' | 'number_of_episodes'> {
+  genres: TMDbGenre[];
+  number_of_seasons: number;
+  number_of_episodes: number;
+}
+
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
@@ -44,6 +51,7 @@ async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string>
   }
 }
 
+// Movie Functions
 function mapTMDbMovie(tmdbMovie: any): Movie {
   return {
     id: tmdbMovie.id,
@@ -53,12 +61,10 @@ function mapTMDbMovie(tmdbMovie: any): Movie {
     overview: tmdbMovie.overview,
     release_date: tmdbMovie.release_date,
     vote_average: tmdbMovie.vote_average,
-    genres: tmdbMovie.genres || [], // Ensure genres is an array
+    genres: tmdbMovie.genres || [],
     runtime: tmdbMovie.runtime,
-    // credits and similar will be populated by separate calls if needed
   };
 }
-
 
 export async function getPopularMovies(): Promise<Movie[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/popular');
@@ -105,7 +111,59 @@ export async function getSimilarMovies(movieId: number): Promise<Movie[]> {
   }
 }
 
-// TODO: Add functions for TV shows, search, genres later
-// export async function searchMovies(query: string): Promise<Movie[]>
-// export async function getGenres(): Promise<Genre[]>
-// export async function getMoviesByGenre(genreId: number): Promise<Movie[]>
+
+// TV Show Functions
+function mapTMDbTVShow(tmdbTVShow: any): TVShow {
+  return {
+    id: tmdbTVShow.id,
+    name: tmdbTVShow.name,
+    poster_path: tmdbTVShow.poster_path,
+    backdrop_path: tmdbTVShow.backdrop_path,
+    overview: tmdbTVShow.overview,
+    first_air_date: tmdbTVShow.first_air_date,
+    vote_average: tmdbTVShow.vote_average,
+    genres: tmdbTVShow.genres || [],
+    number_of_seasons: tmdbTVShow.number_of_seasons,
+    number_of_episodes: tmdbTVShow.number_of_episodes,
+  };
+}
+
+export async function getPopularTVShows(): Promise<TVShow[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/popular');
+  return data.results.map(mapTMDbTVShow);
+}
+
+export async function getTopRatedTVShows(): Promise<TVShow[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/top_rated');
+  return data.results.map(mapTMDbTVShow);
+}
+
+export async function getTVShowDetails(tvId: number): Promise<TVShow | null> {
+  try {
+    const data = await fetchFromTMDB<TMDbTVShowDetail>(`tv/${tvId}`);
+    return mapTMDbTVShow(data);
+  } catch (error) {
+    console.error(`Error fetching details for TV show ID ${tvId}:`, error);
+    return null;
+  }
+}
+
+export async function getTVShowCredits(tvId: number): Promise<{ cast: TMDBCastMember[] }> {
+  try {
+    const data = await fetchFromTMDB<{ cast: TMDBCastMember[], crew: any[] }>(`tv/${tvId}/credits`);
+    return { cast: data.cast };
+  } catch (error) {
+    console.error(`Error fetching credits for TV show ID ${tvId}:`, error);
+    return { cast: [] };
+  }
+}
+
+export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
+  try {
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>(`tv/${tvId}/similar`);
+    return data.results.map(mapTMDbTVShow);
+  } catch (error) {
+    console.error(`Error fetching similar TV shows for TV ID ${tvId}:`, error);
+    return [];
+  }
+}

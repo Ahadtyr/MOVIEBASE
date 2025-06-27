@@ -21,25 +21,18 @@ export interface Movie {
   similar?: { results: Movie[] };
 }
 
-// Keeping TVShow structure for now, can be updated to TMDb format later
 export interface TVShow {
-  id: string; // Placeholder ID might be string
-  title: string;
-  posterUrl: string; // Placeholder URL
-  bannerUrl: string; // Placeholder URL
-  synopsis: string;
-  releaseDate: string;
-  rating: number;
-  genres: string[]; // Placeholder genres might be string array
-  cast: CastMember[]; // Placeholder cast type
-  seasons?: number;
-  episodes?: number;
-}
-
-// Original CastMember type for placeholder data, if still needed elsewhere
-export interface CastMember {
-  id: string;
+  id: number;
   name: string;
-  character: string;
-  imageUrl: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  overview: string;
+  first_air_date: string;
+  vote_average: number;
+  genres: { id: number; name: string }[];
+  number_of_seasons?: number;
+  number_of_episodes?: number;
+  // credits and similar from specific calls
+  credits?: { cast: TMDBCastMember[] };
+  similar?: { results: TVShow[] };
 }

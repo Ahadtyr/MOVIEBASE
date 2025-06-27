@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Movie, TVShow } from '@/lib/types';
-import { Star, PlayCircle, Info } from 'lucide-react';
+import { Star, PlayCircle, Info, Tv } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
@@ -14,36 +14,16 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ item, className }: MovieCardProps) {
-  const isMovie = 'vote_average' in item;
-  const href = isMovie ? `/movie/${item.id}` : `/tv-show/${item.id}`;
+  // Use 'name' property to identify TV shows, as TMDb API uses 'name' for TV and 'title' for movies.
+  const isTV = 'name' in item;
+  const href = isTV ? `/tv-show/${item.id}` : `/movie/${item.id}`;
 
-  const title = item.title;
-  const rating = isMovie ? (item as Movie).vote_average : (item as TVShow).rating;
-  const releaseDate = isMovie ? (item as Movie).release_date : (item as TVShow).releaseDate;
-  const synopsis = isMovie ? (item as Movie).overview : (item as TVShow).synopsis;
+  const title = isTV ? item.name : (item as Movie).title;
+  const releaseDate = isTV ? item.first_air_date : (item as Movie).release_date;
   
-  let posterUrl: string;
-  if (isMovie) {
-    const movieItem = item as Movie;
-    if (movieItem.poster_path) {
-      if (movieItem.poster_path.startsWith('http')) {
-        posterUrl = movieItem.poster_path;
-      } else {
-        posterUrl = `${IMAGE_BASE_URL_W500}${movieItem.poster_path}`;
-      }
-    } else {
-      posterUrl = 'https://placehold.co/400x600.png';
-    }
-  } else {
-    posterUrl = (item as TVShow).posterUrl;
-  }
-
-  let genresDisplay: { id: string | number; name: string }[] = [];
-  if (isMovie) {
-    genresDisplay = (item as Movie).genres.map(g => ({ id: g.id, name: g.name }));
-  } else if ((item as TVShow).genres) {
-    genresDisplay = (item as TVShow).genres.map((g, idx) => ({ id: `genre-${idx}`, name: g }));
-  }
+  const posterUrl = item.poster_path
+    ? `${IMAGE_BASE_URL_W500}${item.poster_path}`
+    : 'https://placehold.co/400x600.png';
 
   return (
     <Link href={href} className={cn("group relative block overflow-hidden rounded-lg shadow-lg aspect-[2/3] transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-accent/30 hover:scale-105", className)} data-ai-hint="movie poster">
@@ -56,27 +36,28 @@ export default function MovieCard({ item, className }: MovieCardProps) {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end">
         <h3 className="text-lg font-headline font-semibold text-primary-foreground mb-1 line-clamp-2">{title}</h3>
-        <div className="flex items-center text-xs text-muted-foreground mb-2">
+        <div className="flex items-center text-xs text-muted-foreground mb-2 flex-wrap">
           <Star className="w-4 h-4 text-yellow-400 mr-1" />
-          <span>{rating.toFixed(1)}</span>
+          <span>{item.vote_average.toFixed(1)}</span>
           {releaseDate && <span className="mx-2">|</span>}
           {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
-          {!isMovie && (item as TVShow).seasons && (
+          {isTV && (
             <>
               <span className="mx-2">|</span>
-              <span>{(item as TVShow).seasons} Season{((item as TVShow).seasons ?? 0) > 1 ? 's' : ''}</span>
+              <Tv className="w-3 h-3 mr-1" />
+              <span>TV Show</span>
             </>
           )}
         </div>
         <div className="flex space-x-2 mb-2">
-          {genresDisplay.slice(0, 2).map((genre) => (
+          {item.genres?.slice(0, 2).map((genre) => (
             <Badge key={genre.id} variant="secondary" className="text-xs bg-primary/70 text-primary-foreground backdrop-blur-sm">
               {genre.name}
             </Badge>
           ))}
         </div>
         
-        <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{synopsis}</p>
+        <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{item.overview}</p>
 
         <div className="flex items-center space-x-2">
             <button 

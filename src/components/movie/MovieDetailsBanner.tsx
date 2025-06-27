@@ -9,34 +9,21 @@ interface MovieDetailsBannerProps {
 }
 
 export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
-  const isMovie = 'vote_average' in item;
+  const isTV = 'name' in item;
 
-  const title = item.title;
-  const rating = isMovie ? (item as Movie).vote_average : (item as TVShow).rating;
-  const releaseDate = isMovie ? (item as Movie).release_date : (item as TVShow).releaseDate;
+  const title = isTV ? item.name : (item as Movie).title;
+  const releaseDate = isTV ? item.first_air_date : (item as Movie).release_date;
   
   const getImageUrl = (path: string | null | undefined, baseUrl: string) => {
     if (!path) return 'https://placehold.co/1200x675.png';
-    if (path.startsWith('http')) return path;
     return `${baseUrl}${path}`;
   };
 
-  const bannerUrl = getImageUrl(
-    isMovie ? (item as Movie).backdrop_path : (item as TVShow).bannerUrl,
-    IMAGE_BASE_URL_ORIGINAL
-  );
+  const bannerUrl = getImageUrl(item.backdrop_path, IMAGE_BASE_URL_ORIGINAL);
+  const posterUrl = getImageUrl(item.poster_path, IMAGE_BASE_URL_W500);
   
-  const posterUrl = getImageUrl(
-    isMovie ? (item as Movie).poster_path : (item as TVShow).posterUrl,
-    IMAGE_BASE_URL_W500
-  );
-
-  const genresDisplay = isMovie 
-    ? (item as Movie).genres.map(g => ({ id: g.id, name: g.name }))
-    : (item as TVShow).genres.map((g, idx) => ({ id: `genre-${idx}`, name: g }));
-  
-  const runtime = isMovie ? (item as Movie).runtime : undefined;
-  const tvShowDetails = !isMovie ? (item as TVShow) : undefined;
+  const runtime = !isTV ? (item as Movie).runtime : undefined;
+  const tvShowDetails = isTV ? item : undefined;
 
   return (
     <div className="relative h-[60vh] md:h-[70vh] w-full text-primary-foreground">
@@ -66,7 +53,7 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-400 mr-1.5 neon-glow" />
-                  <span className="text-lg font-medium">{rating.toFixed(1)}</span>
+                  <span className="text-lg font-medium">{item.vote_average.toFixed(1)}</span>
                 </div>
                 {releaseDate && (
                   <div className="flex items-center">
@@ -74,21 +61,21 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
                     <span className="text-lg">{new Date(releaseDate).getFullYear()}</span>
                   </div>
                 )}
-                {isMovie && runtime && (
+                {!isTV && runtime && (
                   <div className="flex items-center">
                     <Clock className="w-5 h-5 text-muted-foreground mr-1.5" />
                     <span className="text-lg">{Math.floor(runtime / 60)}h {runtime % 60}m</span>
                   </div>
                 )}
-                {!isMovie && tvShowDetails?.seasons && (
+                {isTV && tvShowDetails?.number_of_seasons && (
                   <div className="flex items-center">
                     <Tv className="w-5 h-5 text-muted-foreground mr-1.5" />
-                    <span className="text-lg">{tvShowDetails.seasons} Season{(tvShowDetails.seasons ?? 0) > 1 ? 's' : ''}</span>
+                    <span className="text-lg">{tvShowDetails.number_of_seasons} Season{tvShowDetails.number_of_seasons > 1 ? 's' : ''}</span>
                   </div>
                 )}
               </div>
               <div className="flex flex-wrap gap-2 mb-6">
-                {genresDisplay.map((genre) => (
+                {item.genres.map((genre) => (
                   <Badge key={genre.id} variant="secondary" className="bg-primary/80 text-primary-foreground backdrop-blur-sm text-sm px-3 py-1">
                     {genre.name}
                   </Badge>

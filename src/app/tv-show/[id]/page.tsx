@@ -1,51 +1,41 @@
 import { notFound } from 'next/navigation';
-import { getContentById, placeholderTVShows, placeholderMovies } from '@/lib/placeholder-data'; // Using getContentById for flexibility
-import MovieDetailsBanner from '@/components/movie/MovieDetailsBanner'; // Reusable for TV shows
-import CastList from '@/components/movie/CastList'; // Reusable for TV shows - will need adapter for TMDb TV cast
+import { getTVShowDetails, getTVShowCredits, getSimilarTVShows } from '@/lib/tmdb';
+import MovieDetailsBanner from '@/components/movie/MovieDetailsBanner';
+import CastList from '@/components/movie/CastList';
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
-import MovieSection from '@/components/movie/MovieSection'; // Reusable for related content
-import type { TMDBCastMember } from '@/lib/types';
-
-
-// export async function generateStaticParams() {
-  // In a real app, fetch all TV Show IDs from TMDb if pre-rendering
-  // const tvShows = placeholderTVShows.slice(0, 5); // Limit for build time
-  // return tvShows.map((show) => ({
-  // id: show.id,
-  // }));
-// }
+import MovieSection from '@/components/movie/MovieSection';
+import type { TVShow, TMDBCastMember } from '@/lib/types';
 
 interface TVShowDetailPageProps {
   params: { id: string };
 }
 
 export default async function TVShowDetailPage({ params }: TVShowDetailPageProps) {
-  // TODO: Fetch TV Show details from TMDb using params.id
-  // For now, using placeholder data
-  const item = getContentById(params.id);
-
-  if (!item || !('seasons' in item)) { // Ensure it's a TV show (placeholder logic)
+  const tvShowId = parseInt(params.id, 10);
+  if (isNaN(tvShowId)) {
     notFound();
   }
 
-  // TODO: Fetch TV Show credits and similar TV shows from TMDb
-  // Placeholder cast and related content
-  const cast: TMDBCastMember[] = item.cast.map(c => ({ // Adapting placeholder cast
-    id: parseInt(c.id.replace('cast',''),10), // crude id conversion
-    name: c.name,
-    character: c.character,
-    profile_path: null // Placeholder doesn't have profile_path
-  })).slice(0,12);
+  const itemPromise = getTVShowDetails(tvShowId);
+  const creditsPromise = getTVShowCredits(tvShowId);
+  const similarShowsPromise = getSimilarTVShows(tvShowId);
 
-  const relatedContent = [...placeholderMovies, ...placeholderTVShows]
-    .filter(m => m.id !== item.id && m.genres.some(g => item.genres.includes(g)))
-    .sort(() => 0.5 - Math.random()) 
-    .slice(0,6);
+  const [item, credits, similarShowsData] = await Promise.all([
+    itemPromise,
+    creditsPromise,
+    similarShowsPromise,
+  ]);
+
+  if (!item) {
+    notFound();
+  }
+
+  const cast: TMDBCastMember[] = credits.cast.slice(0, 12);
+  const similarShows: TVShow[] = similarShowsData.slice(0, 6);
 
   return (
     <>
-      {/* MovieDetailsBanner expects Movie or TVShow (placeholder type for now) */}
       <MovieDetailsBanner item={item} /> 
       <PageContainer className="pt-24 md:pt-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -53,7 +43,7 @@ export default async function TVShowDetailPage({ params }: TVShowDetailPageProps
             <section id="details" className="mb-8">
               <SectionTitle>Synopsis</SectionTitle>
               <p className="text-base md:text-lg text-foreground/80 leading-relaxed whitespace-pre-line">
-                {item.synopsis}
+                {item.overview}
               </p>
             </section>
             
@@ -62,16 +52,16 @@ export default async function TVShowDetailPage({ params }: TVShowDetailPageProps
           <aside className="md:col-span-1">
             <SectionTitle>Details</SectionTitle>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><strong>Release Date:</strong> {new Date(item.releaseDate).toLocaleDateString()}</li>
-              <li><strong>Rating:</strong> {item.rating}/10</li>
-              {'seasons' in item && <li><strong>Seasons:</strong> {item.seasons}</li>}
-              {'episodes' in item && <li><strong>Episodes:</strong> {item.episodes}</li>}
-              <li><strong>Genres:</strong> {item.genres.join(', ')}</li>
+              <li><strong>First Aired:</strong> {new Date(item.first_air_date).toLocaleDateString()}</li>
+              <li><strong>Rating:</strong> {item.vote_average.toFixed(1)}/10</li>
+              {item.number_of_seasons && <li><strong>Seasons:</strong> {item.number_of_seasons}</li>}
+              {item.number_of_episodes && <li><strong>Episodes:</strong> {item.number_of_episodes}</li>}
+              <li><strong>Genres:</strong> {item.genres.map(g => g.name).join(', ')}</li>
             </ul>
           </aside>
         </div>
-        {relatedContent.length > 0 && (
-          <MovieSection title="You Might Also Like" items={relatedContent} />
+        {similarShows.length > 0 && (
+          <MovieSection title="You Might Also Like" items={similarShows} />
         )}
       </PageContainer>
     </>

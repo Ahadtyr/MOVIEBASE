@@ -1,17 +1,17 @@
 import HeroCarousel from '@/components/movie/HeroCarousel';
 import MovieSection from '@/components/movie/MovieSection';
 import PageContainer from '@/components/shared/PageContainer';
-import { getPopularMovies, getUpcomingMovies, getTopRatedMovies } from '@/lib/tmdb';
-import type { Movie } from '@/lib/types'; // TVShow can be used later
-import { placeholderTVShows } from '@/lib/placeholder-data'; // Keep for TV shows for now
+import { getPopularMovies, getUpcomingMovies, getTopRatedMovies, getTopRatedTVShows } from '@/lib/tmdb';
+import type { Movie, TVShow } from '@/lib/types';
 
 // Simulate fetching data
 async function getHomePageData() {
   try {
-    const [popularMovies, upcomingMovies, topRatedMovies] = await Promise.all([
+    const [popularMovies, upcomingMovies, topRatedMovies, topRatedTVShows] = await Promise.all([
       getPopularMovies(),
       getUpcomingMovies(),
       getTopRatedMovies(),
+      getTopRatedTVShows(),
     ]);
 
     const heroMovies = popularMovies.slice(0, 5) as Movie[];
@@ -19,21 +19,21 @@ async function getHomePageData() {
     const newReleases = upcomingMovies.slice(0, 6) as Movie[];
     const topRated = topRatedMovies.slice(0, 6) as Movie[];
     
-    // Placeholder for AI recommendations or curated list - can be movies or TV shows
-    // For now, mixing some fetched movies and placeholder TV shows
-    const recommended = [...topRatedMovies.slice(6, 9), ...placeholderTVShows.slice(0,3)].sort(() => 0.5 - Math.random()).slice(0, 6);
-
+    // Mix top-rated movies and TV shows for recommendations
+    const recommended = [...topRatedMovies.slice(6, 9), ...topRatedTVShows.slice(0,3)]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 6);
 
     return { heroMovies, trending, newReleases, topRated, recommended };
   } catch (error) {
     console.error("Failed to fetch homepage data from TMDb:", error);
-    // Fallback to empty arrays or placeholder data if needed
+    // Fallback to empty arrays if needed
     return { 
       heroMovies: [], 
       trending: [], 
       newReleases: [], 
       topRated: [], 
-      recommended: placeholderTVShows.slice(0, 6) // Fallback recommended
+      recommended: []
     };
   }
 }
@@ -48,7 +48,6 @@ export default async function HomePage() {
         {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} />}
         {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
         {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
-        {/* Recommended can mix movies and TV shows, MovieSection component needs to handle mixed types or be split */}
         {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}
       </PageContainer>
     </>

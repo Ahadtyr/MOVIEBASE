@@ -1,15 +1,9 @@
-import type { Movie, TVShow, CastMember, TMDBCastMember } from './types';
+import type { Movie, TVShow, TMDBCastMember } from './types';
 
 export const placeholderTMDBCast: TMDBCastMember[] = [
   { id: 1, name: 'Actor One', character: 'Hero', profile_path: null },
   { id: 2, name: 'Actress Two', character: 'Sidekick', profile_path: null },
   { id: 3, name: 'Actor Three', character: 'Villain', profile_path: null },
-];
-
-export const placeholderCast: CastMember[] = [
-  { id: 'cast1', name: 'Actor One', character: 'Hero', imageUrl: 'https://placehold.co/100x150.png' },
-  { id: 'cast2', name: 'Actress Two', character: 'Sidekick', imageUrl: 'https://placehold.co/100x150.png' },
-  { id: 'cast3', name: 'Actor Three', character: 'Villain', imageUrl: 'https://placehold.co/100x150.png' },
 ];
 
 export const placeholderMovies: Movie[] = [
@@ -104,49 +98,19 @@ export const placeholderMovies: Movie[] = [
   }
 ];
 
-export const placeholderTVShows: TVShow[] = [
-  {
-    id: 'tv1',
-    title: 'Space Cadets',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A group of young trainees at a prestigious space academy uncover a galactic conspiracy.',
-    releaseDate: '2024-04-10',
-    rating: 8.2,
-    genres: ['Sci-Fi', 'Teen', 'Drama'],
-    cast: placeholderCast,
-    seasons: 2,
-    episodes: 20,
-  },
-  {
-    id: 'tv2',
-    title: 'The Algorithm',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A brilliant but reclusive programmer creates an AI that begins to control global events.',
-    releaseDate: '2024-06-05',
-    rating: 8.9,
-    genres: ['Tech-Thriller', 'Drama', 'Suspense'],
-    cast: placeholderCast,
-    seasons: 1,
-    episodes: 8,
-  },
-];
-
 export const placeholderGenres: string[] = [
   'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Cyberpunk', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History', 'Horror', 'Music', 'Mystery', 'Neo-noir', 'Romance', 'Sci-Fi', 'Sport', 'Superhero', 'Thriller', 'War', 'Western'
 ];
 
-export const allContent: (Movie | TVShow)[] = [...placeholderMovies, ...placeholderTVShows];
+// The 'allContent' array is now only used for initializing the search page.
+// It will only contain placeholder movies until the search functionality is updated to use the API.
+export const allContent: (Movie)[] = [...placeholderMovies];
 
 export function getMovieById(id: string): Movie | undefined {
   return placeholderMovies.find(movie => movie.id.toString() === id);
 }
 
-export function getTVShowById(id: string): TVShow | undefined {
-  return placeholderTVShows.find(show => show.id === id);
-}
-
-export function getContentById(id: string): Movie | TVShow | undefined {
+// This function is no longer reliable for fetching TV shows and will be removed in a future step.
+export function getContentById(id: string): Movie | undefined {
   return allContent.find(content => content.id.toString() === id);
 }

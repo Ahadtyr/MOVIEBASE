@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "id": "moviebase-backend",
+      "region": "us-central1"
+    }
+  }
+}

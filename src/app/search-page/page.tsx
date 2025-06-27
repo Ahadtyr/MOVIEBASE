@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import SearchBar from '@/components/search/SearchBar';
 import MovieCard from '@/components/movie/MovieCard';
 import PageContainer from '@/components/shared/PageContainer';
@@ -13,12 +13,10 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearchResults = (results: (Movie | TVShow)[]) => {
+  const handleSearchResults = useCallback((results: (Movie | TVShow)[]) => {
     setSearchResults(results);
-    if (!hasSearched) {
-      setHasSearched(true);
-    }
-  };
+    setHasSearched(true);
+  }, []);
 
   return (
     <PageContainer>

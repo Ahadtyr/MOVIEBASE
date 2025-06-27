@@ -15,14 +15,14 @@ async function getHomePageData() {
     ]);
 
     const heroMovies = popularMovies.slice(0, 5) as Movie[];
-    const trending = popularMovies.slice(0, 6) as Movie[]; // Using popular as trending
-    const newReleases = upcomingMovies.slice(0, 6) as Movie[];
-    const topRated = topRatedMovies.slice(0, 6) as Movie[];
+    const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending
+    const newReleases = upcomingMovies.slice(0, 12) as Movie[];
+    const topRated = topRatedMovies.slice(0, 12) as Movie[];
     
     // Mix top-rated movies and TV shows for recommendations
-    const recommended = [...topRatedMovies.slice(6, 9), ...topRatedTVShows.slice(0,3)]
+    const recommended = [...topRatedMovies.slice(12, 18), ...topRatedTVShows.slice(0, 6)]
       .sort(() => 0.5 - Math.random())
-      .slice(0, 6) as (Movie | TVShow)[];
+      .slice(0, 12) as (Movie | TVShow)[];
 
     return { heroMovies, trending, newReleases, topRated, recommended };
   } catch (error) {

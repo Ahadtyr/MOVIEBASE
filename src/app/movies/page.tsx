@@ -17,7 +17,7 @@ async function getMoviesPageData() {
 }
 
 export default async function MoviesPage() {
-  const { movies } = await getMoviesPage-data();
+  const { movies } = await getMoviesPageData();
 
   return (
     <PageContainer>

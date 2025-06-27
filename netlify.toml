@@ -1,0 +1,17 @@
+# Netlify configuration file
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # This command is run to build the site
+  command = "npm run build"
+  # This is the directory that Netlify will deploy
+  publish = ".next"
+
+[build.environment]
+  # Set the Node.js version to be used
+  NODE_VERSION = "20"
+
+[[plugins]]
+  # The essential Next.js plugin for Netlify.
+  # This handles server-side rendering, image optimization, and more.
+  package = "@netlify/plugin-nextjs"

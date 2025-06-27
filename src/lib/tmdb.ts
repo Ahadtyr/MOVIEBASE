@@ -156,8 +156,7 @@ function mapTMDbTVShow(tmdbTVShow: any): TVShow {
     genres: tmdbTVShow.genres || [],
     number_of_seasons: tmdbTVShow.number_of_seasons,
     number_of_episodes: tmdbTVShow.number_of_episodes,
-    // Note: 'title' is added for compatibility with MovieCard, which expects a 'title' prop
-    title: tmdbTVShow.name,
+    title: tmdbTVShow.name, // for MovieCard compatibility
   };
 }
 
@@ -204,6 +203,15 @@ export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
 export async function getTVShowGenres(): Promise<Genre[]> {
   const data = await fetchFromTMDB<TMDbGenreList>('genre/tv/list');
   return data.genres;
+}
+
+export async function getDiscoverTVShowsByParams(params: Record<string, string>, page: number = 1): Promise<TVShow[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('discover/tv', {
+    ...params,
+    sort_by: 'popularity.desc',
+    page: page.toString(),
+  });
+  return data.results.map(mapTMDbTVShow);
 }
 
 // Search Functions

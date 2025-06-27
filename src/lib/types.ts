@@ -1,3 +1,8 @@
+export interface Genre {
+  id: number;
+  name: string;
+}
+
 export interface TMDBCastMember {
   id: number;
   name: string;

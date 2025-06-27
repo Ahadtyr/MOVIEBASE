@@ -1,4 +1,4 @@
-import type { Movie, TVShow, TMDBCastMember } from './types';
+import type { Movie, TVShow, TMDBCastMember, Genre } from './types';
 
 const API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -15,6 +15,10 @@ interface TMDbListResponse<T> {
 interface TMDbGenre {
   id: number;
   name: string;
+}
+
+interface TMDbGenreList {
+  genres: Genre[];
 }
 
 interface TMDbMovieDetail extends Omit<Movie, 'genres' | 'credits' | 'similar' | 'runtime'> {
@@ -111,6 +115,19 @@ export async function getSimilarMovies(movieId: number): Promise<Movie[]> {
   }
 }
 
+export async function getMovieGenres(): Promise<Genre[]> {
+  const data = await fetchFromTMDB<TMDbGenreList>('genre/movie/list');
+  return data.genres;
+}
+
+export async function getDiscoverMovies(genreId: string): Promise<Movie[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', {
+    with_genres: genreId,
+    sort_by: 'popularity.desc',
+  });
+  // The 'discover' endpoint doesn't return full genre details on each movie, so we map what we get
+  return data.results.map(mapTMDbMovie);
+}
 
 // TV Show Functions
 function mapTMDbTVShow(tmdbTVShow: any): TVShow {
@@ -125,6 +142,8 @@ function mapTMDbTVShow(tmdbTVShow: any): TVShow {
     genres: tmdbTVShow.genres || [],
     number_of_seasons: tmdbTVShow.number_of_seasons,
     number_of_episodes: tmdbTVShow.number_of_episodes,
+    // Note: 'title' is added for compatibility with MovieCard, which expects a 'title' prop
+    title: tmdbTVShow.name,
   };
 }
 

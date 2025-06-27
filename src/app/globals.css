@@ -68,7 +68,7 @@
 }
 
 .neon-glow-primary {
- filter: drop-shadow(0 0 3px hsl(var(--primary))) drop-shadow(0 0 6px hsl(var(--primary)));
+ filter: drop-shadow(0 0 2px hsl(var(--primary))) drop-shadow(0 0 8px hsl(var(--accent)));
 }
 
 /* Custom scrollbar for webkit browsers */

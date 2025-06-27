@@ -9,8 +9,8 @@ export default function Footer() {
       <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
           <div className="flex items-center space-x-2">
-            <Film className="h-7 w-7 text-primary neon-glow-primary" />
-            <span className="font-headline text-xl font-bold text-primary">MOVIEBASE</span>
+            <Film className="h-7 w-7 text-primary-foreground neon-glow-primary" />
+            <span className="font-headline text-xl font-bold text-primary-foreground neon-glow-primary">MOVIEBASE</span>
           </div>
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear} MOVIEBASE. All rights reserved.

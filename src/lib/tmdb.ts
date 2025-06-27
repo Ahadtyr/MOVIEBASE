@@ -200,3 +200,85 @@ export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
     return [];
   }
 }
+
+export async function getTVShowGenres(): Promise<Genre[]> {
+  const data = await fetchFromTMDB<TMDbGenreList>('genre/tv/list');
+  return data.genres;
+}
+
+// Search Functions
+let genreMap: Map<number, string> | null = null;
+
+async function getGenreMap(): Promise<Map<number, string>> {
+  if (genreMap) {
+    return genreMap;
+  }
+
+  const movieGenresPromise = getMovieGenres();
+  const tvGenresPromise = getTVShowGenres();
+
+  const [movieGenres, tvGenres] = await Promise.all([
+    movieGenresPromise,
+    tvGenresPromise,
+  ]);
+
+  const allGenres = [...movieGenres, ...tvGenres];
+  const newGenreMap = new Map<number, string>();
+  allGenres.forEach(genre => {
+    if (!newGenreMap.has(genre.id)) {
+      newGenreMap.set(genre.id, genre.name);
+    }
+  });
+  
+  genreMap = newGenreMap;
+  return genreMap;
+}
+
+function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | TVShow | null {
+  const genre_ids = item.genre_ids || [];
+  const baseItem = {
+    id: item.id,
+    poster_path: item.poster_path,
+    backdrop_path: item.backdrop_path,
+    overview: item.overview,
+    vote_average: item.vote_average,
+    genres: genre_ids.map((id: number) => ({ id, name: genreMap.get(id) || '' })).filter((g: Genre) => g.name),
+  };
+
+  if (item.media_type === 'movie') {
+    return {
+      ...baseItem,
+      title: item.title,
+      release_date: item.release_date,
+    } as Movie;
+  }
+
+  if (item.media_type === 'tv') {
+    return {
+      ...baseItem,
+      name: item.name,
+      first_air_date: item.first_air_date,
+      title: item.name, // for MovieCard compatibility
+    } as TVShow;
+  }
+
+  return null;
+}
+
+export async function searchMulti(query: string, page: number = 1): Promise<(Movie | TVShow)[]> {
+  if (!query) return [];
+  try {
+    const map = await getGenreMap();
+    const data = await fetchFromTMDB<TMDbListResponse<any>>('search/multi', {
+      query,
+      page: page.toString(),
+      include_adult: 'false',
+    });
+    return data.results
+      .map(item => mapTMDbSearchResult(item, map))
+      .filter((item): item is Movie | TVShow => item !== null && (item.poster_path || item.backdrop_path) != null);
+  } catch (error) {
+    console.error(`Error searching for query "${query}":`, error);
+    return [];
+  }
+}

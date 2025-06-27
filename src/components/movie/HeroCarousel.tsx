@@ -82,7 +82,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4 neon-glow-primary">
             {currentMovie.title}
           </h1>
           <div className="flex items-center space-x-4 mb-4">

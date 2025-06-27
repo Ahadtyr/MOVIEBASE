@@ -1,12 +1,21 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 
 export default function TermsPage() {
+  const [currentDate, setCurrentDate] = useState('');
+
+  useEffect(() => {
+    setCurrentDate(new Date().toLocaleDateString());
+  }, []);
+
   return (
     <PageContainer>
       <SectionTitle>Terms of Service</SectionTitle>
       <div className="space-y-4 text-foreground/80 leading-relaxed">
-        <p>Last updated: {new Date().toLocaleDateString()}</p>
+        <p>Last updated: {currentDate}</p>
         
         <h3 className="text-xl font-semibold text-primary-foreground pt-4">1. Agreement to Terms</h3>
         <p>

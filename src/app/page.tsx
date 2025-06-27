@@ -22,7 +22,7 @@ async function getHomePageData() {
     // Mix top-rated movies and TV shows for recommendations
     const recommended = [...topRatedMovies.slice(6, 9), ...topRatedTVShows.slice(0,3)]
       .sort(() => 0.5 - Math.random())
-      .slice(0, 6);
+      .slice(0, 6) as (Movie | TVShow)[];
 
     return { heroMovies, trending, newReleases, topRated, recommended };
   } catch (error) {
@@ -45,7 +45,7 @@ export default async function HomePage() {
     <>
       <HeroCarousel movies={heroMovies} />
       <PageContainer>
-        {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} />}
+        {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} href="/movies" />}
         {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
         {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
         {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}

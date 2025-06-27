@@ -1,37 +1,42 @@
 import Image from 'next/image';
-import type { Movie, TVShow } from '@/lib/types'; // TVShow is placeholder type
+import type { Movie, TVShow } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Star, CalendarDays, Clock, Tv } from 'lucide-react';
 import { IMAGE_BASE_URL_ORIGINAL, IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
 
 interface MovieDetailsBannerProps {
-  item: Movie | TVShow; // Movie is TMDb type, TVShow placeholder
+  item: Movie | TVShow;
 }
 
 export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
-  const isTMDbMovie = 'vote_average' in item && typeof item.id === 'number';
+  const isMovie = 'vote_average' in item;
 
   const title = item.title;
-  const rating = isTMDbMovie ? (item as Movie).vote_average : (item as TVShow).rating;
-  const releaseDate = item.release_date || (item as TVShow).releaseDate;
+  const rating = isMovie ? (item as Movie).vote_average : (item as TVShow).rating;
+  const releaseDate = isMovie ? (item as Movie).release_date : (item as TVShow).releaseDate;
   
-  const bannerPath = isTMDbMovie ? (item as Movie).backdrop_path : (item as TVShow).bannerUrl;
-  const bannerUrl = isTMDbMovie 
-    ? bannerPath ? `${IMAGE_BASE_URL_ORIGINAL}${bannerPath}` : 'https://placehold.co/1200x675.png'
-    : bannerPath;
+  const getImageUrl = (path: string | null | undefined, baseUrl: string) => {
+    if (!path) return 'https://placehold.co/1200x675.png';
+    if (path.startsWith('http')) return path;
+    return `${baseUrl}${path}`;
+  };
 
-  const posterPath = isTMDbMovie ? (item as Movie).poster_path : (item as TVShow).posterUrl;
-  const posterUrl = isTMDbMovie
-    ? posterPath ? `${IMAGE_BASE_URL_W500}${posterPath}` : 'https://placehold.co/400x600.png'
-    : posterPath;
+  const bannerUrl = getImageUrl(
+    isMovie ? (item as Movie).backdrop_path : (item as TVShow).bannerUrl,
+    IMAGE_BASE_URL_ORIGINAL
+  );
+  
+  const posterUrl = getImageUrl(
+    isMovie ? (item as Movie).poster_path : (item as TVShow).posterUrl,
+    IMAGE_BASE_URL_W500
+  );
 
-  const genresDisplay = isTMDbMovie 
+  const genresDisplay = isMovie 
     ? (item as Movie).genres.map(g => ({ id: g.id, name: g.name }))
     : (item as TVShow).genres.map((g, idx) => ({ id: `genre-${idx}`, name: g }));
   
-  const runtime = isTMDbMovie ? (item as Movie).runtime : undefined; // TMDb Movie has runtime in minutes
-  const tvShowDetails = !isTMDbMovie ? (item as TVShow) : undefined;
-
+  const runtime = isMovie ? (item as Movie).runtime : undefined;
+  const tvShowDetails = !isMovie ? (item as TVShow) : undefined;
 
   return (
     <div className="relative h-[60vh] md:h-[70vh] w-full text-primary-foreground">
@@ -69,13 +74,13 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
                     <span className="text-lg">{new Date(releaseDate).getFullYear()}</span>
                   </div>
                 )}
-                {isTMDbMovie && runtime && (
+                {isMovie && runtime && (
                   <div className="flex items-center">
                     <Clock className="w-5 h-5 text-muted-foreground mr-1.5" />
                     <span className="text-lg">{Math.floor(runtime / 60)}h {runtime % 60}m</span>
                   </div>
                 )}
-                {!isTMDbMovie && tvShowDetails?.seasons && (
+                {!isMovie && tvShowDetails?.seasons && (
                   <div className="flex items-center">
                     <Tv className="w-5 h-5 text-muted-foreground mr-1.5" />
                     <span className="text-lg">{tvShowDetails.seasons} Season{(tvShowDetails.seasons ?? 0) > 1 ? 's' : ''}</span>

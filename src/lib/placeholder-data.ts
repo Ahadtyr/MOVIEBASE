@@ -1,4 +1,10 @@
-import type { Movie, TVShow, CastMember } from './types';
+import type { Movie, TVShow, CastMember, TMDBCastMember } from './types';
+
+export const placeholderTMDBCast: TMDBCastMember[] = [
+  { id: 1, name: 'Actor One', character: 'Hero', profile_path: null },
+  { id: 2, name: 'Actress Two', character: 'Sidekick', profile_path: null },
+  { id: 3, name: 'Actor Three', character: 'Villain', profile_path: null },
+];
 
 export const placeholderCast: CastMember[] = [
   { id: 'cast1', name: 'Actor One', character: 'Hero', imageUrl: 'https://placehold.co/100x150.png' },
@@ -8,100 +14,93 @@ export const placeholderCast: CastMember[] = [
 
 export const placeholderMovies: Movie[] = [
   {
-    id: '1',
+    id: 1,
     title: 'Cosmic Odyssey',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A thrilling space adventure across galaxies to save humanity from an ancient cosmic threat.',
-    releaseDate: '2024-01-15',
-    rating: 8.5,
-    genres: ['Sci-Fi', 'Action', 'Adventure'],
-    cast: placeholderCast,
-    duration: '2h 20m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'A thrilling space adventure across galaxies to save humanity from an ancient cosmic threat.',
+    release_date: '2024-01-15',
+    vote_average: 8.5,
+    genres: [{id: 878, name: 'Sci-Fi'}, {id: 28, name: 'Action'}, {id: 12, name: 'Adventure'}],
+    runtime: 140,
+    credits: { cast: placeholderTMDBCast }
   },
   {
-    id: '2',
+    id: 2,
     title: 'Cyber City Nights',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'In a dystopian future, a detective uncovers a conspiracy in the neon-lit streets of Cyber City.',
-    releaseDate: '2024-03-22',
-    rating: 7.9,
-    genres: ['Cyberpunk', 'Thriller', 'Mystery'],
-    cast: placeholderCast,
-    duration: '1h 55m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'In a dystopian future, a detective uncovers a conspiracy in the neon-lit streets of Cyber City.',
+    release_date: '2024-03-22',
+    vote_average: 7.9,
+    genres: [{id: 10752, name: 'Cyberpunk'}, {id: 53, name: 'Thriller'}, {id: 9648, name: 'Mystery'}],
+    runtime: 115,
   },
   {
-    id: '3',
+    id: 3,
     title: 'The Last Kingdom',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A medieval epic where kingdoms clash and heroes rise to defend their land from invaders.',
-    releaseDate: '2023-11-10',
-    rating: 9.0,
-    genres: ['Fantasy', 'War', 'Drama'],
-    cast: placeholderCast,
-    duration: '2h 45m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'A medieval epic where kingdoms clash and heroes rise to defend their land from invaders.',
+    release_date: '2023-11-10',
+    vote_average: 9.0,
+    genres: [{id: 14, name: 'Fantasy'}, {id: 10752, name: 'War'}, {id: 18, name: 'Drama'}],
+    runtime: 165,
   },
   {
-    id: '4',
+    id: 4,
     title: 'Deep Sea Mystery',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'Explorers discover an ancient civilization hidden in the depths of the ocean, but they are not alone.',
-    releaseDate: '2024-05-01',
-    rating: 7.2,
-    genres: ['Adventure', 'Horror', 'Mystery'],
-    cast: placeholderCast,
-    duration: '2h 05m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'Explorers discover an ancient civilization hidden in the depths of the ocean, but they are not alone.',
+    release_date: '2024-05-01',
+    vote_average: 7.2,
+    genres: [{id: 12, name: 'Adventure'}, {id: 27, name: 'Horror'}, {id: 9648, name: 'Mystery'}],
+    runtime: 125,
   },
   {
-    id: '5',
+    id: 5,
     title: 'Retro Arcade',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A group of friends gets trapped inside a vintage arcade game and must play to survive.',
-    releaseDate: '2024-02-10',
-    rating: 6.8,
-    genres: ['Comedy', 'Adventure', 'Family'],
-    cast: placeholderCast,
-    duration: '1h 40m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'A group of friends gets trapped inside a vintage arcade game and must play to survive.',
+    release_date: '2024-02-10',
+    vote_average: 6.8,
+    genres: [{id: 35, name: 'Comedy'}, {id: 12, name: 'Adventure'}, {id: 10751, name: 'Family'}],
+    runtime: 100,
   },
    {
-    id: '6',
+    id: 6,
     title: 'Galactic Guardians',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A band of misfits must team up to protect the galaxy from a powerful warlord.',
-    releaseDate: '2024-07-19',
-    rating: 8.8,
-    genres: ['Sci-Fi', 'Action', 'Comedy'],
-    cast: placeholderCast,
-    duration: '2h 10m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'A band of misfits must team up to protect the galaxy from a powerful warlord.',
+    release_date: '2024-07-19',
+    vote_average: 8.8,
+    genres: [{id: 878, name: 'Sci-Fi'}, {id: 28, name: 'Action'}, {id: 35, name: 'Comedy'}],
+    runtime: 130,
   },
   {
-    id: '7',
+    id: 7,
     title: 'Neon Noir',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'A hard-boiled detective navigates the rain-slicked, neon-drenched streets of a corrupt city.',
-    releaseDate: '2024-09-06',
-    rating: 7.5,
-    genres: ['Neo-noir', 'Crime', 'Thriller'],
-    cast: placeholderCast,
-    duration: '2h 00m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'A hard-boiled detective navigates the rain-slicked, neon-drenched streets of a corrupt city.',
+    release_date: '2024-09-06',
+    vote_average: 7.5,
+    genres: [{id: 80, name: 'Crime'}, {id: 53, name: 'Thriller'}],
+    runtime: 120,
   },
   {
-    id: '8',
+    id: 8,
     title: 'Chronicles of Eldoria',
-    posterUrl: 'https://placehold.co/400x600.png',
-    bannerUrl: 'https://placehold.co/1200x400.png',
-    synopsis: 'An ancient prophecy unfolds as a young hero embarks on a quest to restore balance to a magical realm.',
-    releaseDate: '2023-12-25',
-    rating: 9.2,
-    genres: ['Fantasy', 'Adventure', 'Epic'],
-    cast: placeholderCast,
-    duration: '3h 05m',
+    poster_path: 'https://placehold.co/400x600.png',
+    backdrop_path: 'https://placehold.co/1200x400.png',
+    overview: 'An ancient prophecy unfolds as a young hero embarks on a quest to restore balance to a magical realm.',
+    release_date: '2023-12-25',
+    vote_average: 9.2,
+    genres: [{id: 14, name: 'Fantasy'}, {id: 12, name: 'Adventure'}],
+    runtime: 185,
   }
 ];
 
@@ -141,7 +140,7 @@ export const placeholderGenres: string[] = [
 export const allContent: (Movie | TVShow)[] = [...placeholderMovies, ...placeholderTVShows];
 
 export function getMovieById(id: string): Movie | undefined {
-  return placeholderMovies.find(movie => movie.id === id);
+  return placeholderMovies.find(movie => movie.id.toString() === id);
 }
 
 export function getTVShowById(id: string): TVShow | undefined {
@@ -149,5 +148,5 @@ export function getTVShowById(id: string): TVShow | undefined {
 }
 
 export function getContentById(id: string): Movie | TVShow | undefined {
-  return allContent.find(content => content.id === id);
+  return allContent.find(content => content.id.toString() === id);
 }

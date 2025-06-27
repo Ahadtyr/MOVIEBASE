@@ -7,6 +7,7 @@ import type { Movie, TVShow } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '../ui/button';
+import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
 
 interface SearchBarProps {
   initialItems: (Movie | TVShow)[];
@@ -45,6 +46,20 @@ export default function SearchBar({ initialItems, onSearch }: SearchBarProps) {
     };
   }, []);
 
+  const getSuggestionPosterUrl = (item: Movie | TVShow) => {
+    const isMovie = 'poster_path' in item;
+    if (isMovie) {
+        const path = (item as Movie).poster_path;
+        if (path) {
+            if (path.startsWith('http')) return path;
+            return `${IMAGE_BASE_URL_W500}${path}`;
+        }
+    } else {
+        return (item as TVShow).posterUrl;
+    }
+    return 'https://placehold.co/40x60.png';
+  }
+
   return (
     <div className="relative w-full max-w-xl mx-auto" ref={searchContainerRef}>
       <div className="relative">
@@ -73,28 +88,39 @@ export default function SearchBar({ initialItems, onSearch }: SearchBarProps) {
 
       {isFocused && suggestions.length > 0 && (
         <ul className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-xl overflow-hidden animate-fade-in max-h-96 overflow-y-auto">
-          {suggestions.map(item => (
-            <li key={item.id}>
-              <Link
-                href={'duration' in item ? `/movie/${item.id}` : `/tv-show/${item.id}`} // Adjust link for TV shows if needed
-                className="flex items-center p-3 hover:bg-accent/10 transition-colors"
-                onClick={() => setIsFocused(false)}
-              >
-                <Image
-                  src={item.posterUrl}
-                  alt={item.title}
-                  width={40}
-                  height={60}
-                  className="w-10 h-15 object-cover rounded-sm mr-3"
-                  data-ai-hint="movie poster small"
-                />
-                <div className="flex-grow">
-                  <p className="font-medium text-sm text-card-foreground">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{new Date(item.releaseDate).getFullYear()} &bull; {item.genres[0]}</p>
-                </div>
-              </Link>
-            </li>
-          ))}
+          {suggestions.map(item => {
+            const isMovie = 'vote_average' in item;
+            const href = isMovie ? `/movie/${item.id}` : `/tv-show/${item.id}`;
+            const posterUrl = getSuggestionPosterUrl(item);
+            const date = isMovie ? (item as Movie).release_date : (item as TVShow).releaseDate;
+            const firstGenre = isMovie ? (item as Movie).genres[0]?.name : (item as TVShow).genres[0];
+
+            return (
+              <li key={item.id}>
+                <Link
+                  href={href}
+                  className="flex items-center p-3 hover:bg-accent/10 transition-colors"
+                  onClick={() => setIsFocused(false)}
+                >
+                  <Image
+                    src={posterUrl}
+                    alt={item.title}
+                    width={40}
+                    height={60}
+                    className="w-10 h-15 object-cover rounded-sm mr-3"
+                    data-ai-hint="movie poster small"
+                  />
+                  <div className="flex-grow">
+                    <p className="font-medium text-sm text-card-foreground">{item.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {date ? new Date(date).getFullYear() : 'N/A'}
+                      {firstGenre ? ` • ${firstGenre}` : ''}
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

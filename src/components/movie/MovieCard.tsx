@@ -2,39 +2,48 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Movie, TVShow } from '@/lib/types'; // TVShow is placeholder type
+import type { Movie, TVShow } from '@/lib/types';
 import { Star, PlayCircle, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
 
 interface MovieCardProps {
-  item: Movie | TVShow; // Movie is TMDb type, TVShow is placeholder
+  item: Movie | TVShow;
   className?: string;
 }
 
 export default function MovieCard({ item, className }: MovieCardProps) {
-  // Check if item is a TMDb Movie object (has vote_average) or a placeholder TVShow
-  const isTMDbMovie = 'vote_average' in item && typeof item.id === 'number';
-  const href = isTMDbMovie ? `/movie/${item.id}` : `/tv-show/${item.id}`;
+  const isMovie = 'vote_average' in item;
+  const href = isMovie ? `/movie/${item.id}` : `/tv-show/${item.id}`;
 
   const title = item.title;
-  const posterPath = isTMDbMovie ? (item as Movie).poster_path : (item as TVShow).posterUrl;
-  const posterUrl = isTMDbMovie 
-    ? posterPath ? `${IMAGE_BASE_URL_W500}${posterPath}` : 'https://placehold.co/400x600.png'
-    : posterPath; // Placeholder TVShow already has full URL
-
-  const rating = isTMDbMovie ? (item as Movie).vote_average : (item as TVShow).rating;
-  const releaseDate = item.release_date || (item as TVShow).releaseDate;
-  const synopsis = isTMDbMovie ? (item as Movie).overview : (item as TVShow).synopsis;
+  const rating = isMovie ? (item as Movie).vote_average : (item as TVShow).rating;
+  const releaseDate = isMovie ? (item as Movie).release_date : (item as TVShow).releaseDate;
+  const synopsis = isMovie ? (item as Movie).overview : (item as TVShow).synopsis;
   
+  let posterUrl: string;
+  if (isMovie) {
+    const movieItem = item as Movie;
+    if (movieItem.poster_path) {
+      if (movieItem.poster_path.startsWith('http')) {
+        posterUrl = movieItem.poster_path;
+      } else {
+        posterUrl = `${IMAGE_BASE_URL_W500}${movieItem.poster_path}`;
+      }
+    } else {
+      posterUrl = 'https://placehold.co/400x600.png';
+    }
+  } else {
+    posterUrl = (item as TVShow).posterUrl;
+  }
+
   let genresDisplay: { id: string | number; name: string }[] = [];
-  if (isTMDbMovie) {
+  if (isMovie) {
     genresDisplay = (item as Movie).genres.map(g => ({ id: g.id, name: g.name }));
   } else if ((item as TVShow).genres) {
     genresDisplay = (item as TVShow).genres.map((g, idx) => ({ id: `genre-${idx}`, name: g }));
   }
-
 
   return (
     <Link href={href} className={cn("group relative block overflow-hidden rounded-lg shadow-lg aspect-[2/3] transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-accent/30 hover:scale-105", className)} data-ai-hint="movie poster">
@@ -52,7 +61,7 @@ export default function MovieCard({ item, className }: MovieCardProps) {
           <span>{rating.toFixed(1)}</span>
           {releaseDate && <span className="mx-2">|</span>}
           {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
-          {!isTMDbMovie && (item as TVShow).seasons && (
+          {!isMovie && (item as TVShow).seasons && (
             <>
               <span className="mx-2">|</span>
               <span>{(item as TVShow).seasons} Season{((item as TVShow).seasons ?? 0) > 1 ? 's' : ''}</span>

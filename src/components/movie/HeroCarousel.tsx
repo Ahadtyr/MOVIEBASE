@@ -45,10 +45,17 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
     );
   }
 
+  const getBannerUrl = (movie: Movie) => {
+    if (movie.backdrop_path) {
+      if (movie.backdrop_path.startsWith('http')) {
+        return movie.backdrop_path;
+      }
+      return `${IMAGE_BASE_URL_ORIGINAL}${movie.backdrop_path}`;
+    }
+    return `https://placehold.co/1200x675.png`;
+  };
+  
   const currentMovie = movies[currentIndex];
-  const bannerImageUrl = currentMovie.backdrop_path 
-    ? `${IMAGE_BASE_URL_ORIGINAL}${currentMovie.backdrop_path}`
-    : `https://placehold.co/1200x675.png`; // Fallback placeholder
 
   return (
     <div className="relative w-full h-[calc(100vh-4rem)] md:h-[calc(85vh-4rem)] max-h-[700px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
@@ -61,11 +68,11 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
           )}
         >
           <Image
-            src={movie.backdrop_path ? `${IMAGE_BASE_URL_ORIGINAL}${movie.backdrop_path}` : `https://placehold.co/1200x675.png`}
+            src={getBannerUrl(movie)}
             alt={`Banner for ${movie.title}`}
-            fill // Use fill instead of layout
-            style={{ objectFit: 'cover' }} // Use style for objectFit
-            priority={index === 0} // Only prioritize the first image usually
+            fill
+            style={{ objectFit: 'cover' }}
+            priority={index === 0}
             data-ai-hint="movie scene landscape"
           />
        </div>

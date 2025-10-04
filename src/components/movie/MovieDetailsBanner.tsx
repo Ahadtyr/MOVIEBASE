@@ -44,7 +44,7 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
       <div className="absolute inset-0 flex items-end p-6 md:p-12">
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-end">
-            <div className="md:col-span-1 hidden md:block relative aspect-[2/3] w-full max-w-xs rounded-lg overflow-hidden shadow-2xl -mb-16 transform translate-y-1/4">
+            <div className="md:col-span-1 hidden md:block relative aspect-[2/3] w-full max-w-xs rounded-lg overflow-hidden shadow-2xl -mb-8">
                <Image
                 src={posterUrl}
                 alt={`Poster for ${title}`}

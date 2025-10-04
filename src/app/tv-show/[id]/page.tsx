@@ -37,21 +37,10 @@ export default async function TVShowDetailPage({ params }: TVShowDetailPageProps
   const cast: TMDBCastMember[] = credits.cast.slice(0, 12);
   const similarShows: TVShow[] = similarShowsData.slice(0, 6);
 
-  // For TV, default to season 1, episode 1 for the player link
-  const playerHref = `/player/tv/${item.id}?s=1&e=1`;
-
   return (
     <>
       <MovieDetailsBanner item={item} /> 
       <PageContainer className="pt-24 md:pt-16">
-
-        <div className="mb-8">
-          <Link href={playerHref} passHref>
-            <Button size="lg" className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg py-7">
-              <PlayCircle className="mr-2 h-6 w-6 neon-glow" /> Watch Season 1, Episode 1
-            </Button>
-          </Link>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">

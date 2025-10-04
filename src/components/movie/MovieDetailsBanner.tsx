@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import type { Movie, TVShow } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import { Star, CalendarDays, Clock, Tv } from 'lucide-react';
+import { Star, CalendarDays, Clock, Tv, PlayCircle } from 'lucide-react';
 import { IMAGE_BASE_URL_ORIGINAL, IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 interface MovieDetailsBannerProps {
   item: Movie | TVShow;
@@ -24,6 +26,9 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
   
   const runtime = !isTV ? (item as Movie).runtime : undefined;
   const tvShowDetails = isTV ? item : undefined;
+
+  const playerHref = isTV ? `/player/tv/${item.id}?s=1&e=1` : `/player/movie/${item.id}`;
+  const watchButtonText = isTV ? 'Watch Season 1, Episode 1' : 'Watch Now';
 
   return (
     <div className="relative h-[60vh] md:h-[70vh] w-full text-primary-foreground">
@@ -80,6 +85,13 @@ export default function MovieDetailsBanner({ item }: MovieDetailsBannerProps) {
                     {genre.name}
                   </Badge>
                 ))}
+              </div>
+               <div className="mt-6">
+                <Link href={playerHref} passHref>
+                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg py-7 px-8">
+                    <PlayCircle className="mr-2 h-6 w-6 neon-glow" /> {watchButtonText}
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

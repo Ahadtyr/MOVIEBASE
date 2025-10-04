@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Movie } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, PlayCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlayCircle, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
@@ -96,14 +96,14 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">
-            <Link href={`/movie/${currentMovie.id}`} passHref>
+            <Link href={`/player/movie/${currentMovie.id}`} passHref>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                 <PlayCircle className="mr-2 h-5 w-5 neon-glow" /> Watch Now
               </Button>
             </Link>
-            <Link href={`/movie/${currentMovie.id}#details`} passHref>
+            <Link href={`/movie/${currentMovie.id}`} passHref>
               <Button size="lg" variant="secondary" className="bg-secondary/70 hover:bg-secondary/90 text-secondary-foreground font-semibold backdrop-blur-sm">
-                More Info
+                 <Info className="mr-2 h-5 w-5" /> More Info
               </Button>
             </Link>
           </div>

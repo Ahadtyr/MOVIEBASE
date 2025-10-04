@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { getMovieDetails, getMovieCredits, getSimilarMovies, IMAGE_BASE_URL_W500, IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
+import { getMovieDetails, getMovieCredits, getSimilarMovies } from '@/lib/tmdb';
 import MovieDetailsBanner from '@/components/movie/MovieDetailsBanner';
 import CastList from '@/components/movie/CastList';
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
 import type { Movie, TMDBCastMember } from '@/lib/types';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { PlayCircle } from 'lucide-react';
 
 interface MovieDetailPageProps {
   params: { id: string };
@@ -38,6 +41,15 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
     <>
       <MovieDetailsBanner item={item} />
       <PageContainer className="pt-24 md:pt-16"> {/* Adjust padding top due to banner overlap */}
+        
+        <div className="mb-8">
+          <Link href={`/player/movie/${item.id}`} passHref>
+            <Button size="lg" className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg py-7">
+              <PlayCircle className="mr-2 h-6 w-6 neon-glow" /> Watch Now
+            </Button>
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <section id="details" className="mb-8">

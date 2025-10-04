@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Movie, TVShow } from '@/lib/types';
-import { Star, PlayCircle, Info, Tv } from 'lucide-react';
+import { Star, Info, Tv } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
@@ -60,19 +60,9 @@ export default function MovieCard({ item, className }: MovieCardProps) {
         <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{item.overview}</p>
 
         <div className="flex items-center space-x-2">
-            <button 
-              aria-label="Play trailer"
-              className="p-2 rounded-full bg-accent/80 hover:bg-accent text-accent-foreground transition-colors"
-              onClick={(e) => { e.preventDefault(); alert(`Playing trailer for ${title}`); }}
-            >
-              <PlayCircle className="w-5 h-5" />
-            </button>
-            <button 
-              aria-label="More info"
-              className="p-2 rounded-full bg-secondary/80 hover:bg-secondary text-secondary-foreground transition-colors"
-            >
-              <Info className="w-5 h-5" />
-            </button>
+            <Link href={href} className="p-2 rounded-full bg-secondary/80 hover:bg-secondary text-secondary-foreground transition-colors" passHref>
+                <Info className="w-5 h-5" />
+            </Link>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-0 transition-opacity duration-300">

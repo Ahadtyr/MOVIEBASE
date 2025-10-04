@@ -60,9 +60,9 @@ export default function MovieCard({ item, className }: MovieCardProps) {
         <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{item.overview}</p>
 
         <div className="flex items-center space-x-2">
-            <Link href={href} className="p-2 rounded-full bg-secondary/80 hover:bg-secondary text-secondary-foreground transition-colors" passHref>
+            <div className="p-2 rounded-full bg-secondary/80 text-secondary-foreground">
                 <Info className="w-5 h-5" />
-            </Link>
+            </div>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-0 transition-opacity duration-300">

@@ -12,9 +12,10 @@ export default function Footer() {
             <Film className="h-7 w-7 text-primary-foreground neon-glow-primary" />
             <span className="font-headline text-xl font-bold text-primary-foreground neon-glow-primary">MOVIEBASE</span>
           </div>
-          <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} MOVIEBASE. All rights reserved.
-          </p>
+          <div className="text-center text-sm text-muted-foreground">
+            <p>&copy; {currentYear} MOVIEBASE. All rights reserved.</p>
+            <p>Created by Ahad Tyr</p>
+          </div>
           <div className="flex space-x-4">
             <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               About

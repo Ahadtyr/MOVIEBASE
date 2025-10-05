@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Film, Tv, LayoutGrid, Search, UserCircle, Menu, X } from 'lucide-react';
+import { Film, Tv, LayoutGrid, Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';

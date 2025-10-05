@@ -13,8 +13,7 @@ const navLinks = [
   { href: '/tv-shows', label: 'TV Shows', icon: Tv },
   { href: '/genres', label: 'Genres', icon: LayoutGrid },
   { href: '/search-page', label: 'Search', icon: Search },
-  { href: '/recommendations', label: 'AI Recommends', icon: LayoutGrid }, // Added AI Recommends link
-  { href: '/login', label: 'Login', icon: UserCircle },
+  { href: '/recommendations', label: 'AI Recommends', icon: LayoutGrid },
 ];
 
 export default function Header() {

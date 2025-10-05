@@ -1,9 +1,10 @@
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
-import { getMovieDetails, getTVShowDetails } from '@/lib/tmdb';
+import { getMovieDetails, getTVShowDetails, getTVSeasonDetails } from '@/lib/tmdb';
 import { notFound } from 'next/navigation';
 import { ExternalLink, Tv, Film } from 'lucide-react';
 import Link from 'next/link';
+import EpisodeList from '@/components/tv/EpisodeList';
 
 interface PlayerPageProps {
   params: {
@@ -19,6 +20,8 @@ interface PlayerPageProps {
 export default async function PlayerPage({ params, searchParams }: PlayerPageProps) {
   const { type, id } = params;
   const tmdbId = parseInt(id, 10);
+  const seasonNumber = parseInt(searchParams.s || '1', 10);
+  const episodeNumber = parseInt(searchParams.e || '1', 10);
 
   if (isNaN(tmdbId) || (type !== 'movie' && type !== 'tv')) {
     notFound();
@@ -27,6 +30,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   let title = 'Player';
   let itemUrl = '';
   let embedSrc = '';
+  let seasonsData = null;
 
   if (type === 'movie') {
     const movie = await getMovieDetails(tmdbId);
@@ -37,11 +41,18 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
-    const season = searchParams.s || '1';
-    const episode = searchParams.e || '1';
-    title = `${show.name} - S${season} E${episode}`;
+    title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
-    embedSrc = `https://www.vidking.net/embed/tv/${tmdbId}/${season}/${episode}`;
+    embedSrc = `https://www.vidking.net/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+
+    // Fetch all seasons data
+    if (show.seasons) {
+        seasonsData = await Promise.all(
+            show.seasons
+                .filter(s => s.season_number > 0) // Exclude season 0 which is usually "Specials"
+                .map(s => getTVSeasonDetails(tmdbId, s.season_number))
+        );
+    }
   }
 
   return (
@@ -63,12 +74,24 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           frameBorder="0"
           allowFullScreen
           title={`Playback for ${title}`}
+          key={`${tmdbId}-${seasonNumber}-${episodeNumber}`} // Force re-render on episode change
         ></iframe>
       </div>
        <div className="mt-4 text-center text-sm text-muted-foreground">
         <p>If the player does not load, it may be due to regional restrictions or content availability.</p>
         <p>This content is provided by an external service. MOVIEBASE does not host any media files.</p>
       </div>
+
+      {type === 'tv' && seasonsData && (
+        <div className="mt-12">
+            <EpisodeList 
+                tvShowId={tmdbId}
+                seasons={seasonsData}
+                currentSeason={seasonNumber}
+                currentEpisode={episodeNumber}
+            />
+        </div>
+      )}
     </PageContainer>
   );
 }

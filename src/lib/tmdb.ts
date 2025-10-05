@@ -1,4 +1,4 @@
-import type { Movie, TVShow, TMDBCastMember, Genre } from './types';
+import type { Movie, TVShow, TMDBCastMember, Genre, TVSeason, TVSeasonDetails } from './types';
 
 const API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -30,6 +30,7 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
   genres: TMDbGenre[];
   number_of_seasons: number;
   number_of_episodes: number;
+  seasons: TVSeason[];
 }
 
 
@@ -156,6 +157,7 @@ function mapTMDbTVShow(tmdbTVShow: any): TVShow {
     genres: tmdbTVShow.genres || [],
     number_of_seasons: tmdbTVShow.number_of_seasons,
     number_of_episodes: tmdbTVShow.number_of_episodes,
+    seasons: tmdbTVShow.seasons || [],
     title: tmdbTVShow.name, // for MovieCard compatibility
   };
 }
@@ -178,6 +180,11 @@ export async function getTVShowDetails(tvId: number): Promise<TVShow | null> {
     console.error(`Error fetching details for TV show ID ${tvId}:`, error);
     return null;
   }
+}
+
+export async function getTVSeasonDetails(tvId: number, seasonNumber: number): Promise<TVSeasonDetails> {
+    const data = await fetchFromTMDB<TVSeasonDetails>(`tv/${tvId}/season/${seasonNumber}`);
+    return data;
 }
 
 export async function getTVShowCredits(tvId: number): Promise<{ cast: TMDBCastMember[] }> {

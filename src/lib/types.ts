@@ -37,7 +37,32 @@ export interface TVShow {
   genres: { id: number; name: string }[];
   number_of_seasons?: number;
   number_of_episodes?: number;
+  seasons?: TVSeason[];
   // credits and similar from specific calls
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: TVShow[] };
+}
+
+export interface TVSeason {
+    air_date: string;
+    episode_count: number;
+    id: number;
+    name: string;
+    overview: string;
+    poster_path: string | null;
+    season_number: number;
+}
+
+export interface TVEpisode {
+    id: number;
+    name: string;
+    overview: string;
+    episode_number: number;
+    season_number: number;
+    still_path: string | null;
+    air_date: string;
+}
+
+export interface TVSeasonDetails extends TVSeason {
+    episodes: TVEpisode[];
 }

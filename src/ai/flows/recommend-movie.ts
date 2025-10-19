@@ -60,9 +60,16 @@ const prompt = ai.definePrompt({
   name: 'recommendMoviePrompt',
   input: {schema: RecommendMovieInputSchema},
   output: {schema: PromptOutputSchema},
-  prompt: `You are a movie expert. Analyze the user's viewing history. Based on their taste, recommend one real, existing movie or TV show title that they would likely enjoy. Also, provide a brief reason for your recommendation.
+  prompt: `You are an AI movie recommendation system. Your goal is to recommend a single, real, existing movie or TV show based on the user's viewing history.
 
-Viewing History: {{{viewingHistory}}}
+When recommending, you MUST provide:
+1. The exact title of the movie or TV show.
+2. A brief, engaging reason (1-2 sentences) explaining why the user might like it, based on their history.
+
+User's Viewing History:
+"{{{viewingHistory}}}"
+
+Based on this history, provide a recommendation.
 `,
 });
 

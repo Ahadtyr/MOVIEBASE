@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Movie } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, PlayCircle, Info } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlayCircle, Info, Star, CalendarDays } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
@@ -39,7 +39,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[60vh] flex items-center justify-center bg-muted">
+      <div className="h-[70vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[60vh] max-h-[600px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[70vh] max-h-[700px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}
@@ -78,32 +78,42 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
        </div>
       ))}
       
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent"></div>
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
-        <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h1 className="text-2xl md:text-3xl font-headline font-bold mb-2">
-            {currentMovie.title}
-          </h1>
-          <div className="flex items-center space-x-4 mb-4">
+        <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
+           <h1 className="text-4xl md:text-5xl font-headline font-bold mb-3 drop-shadow-xl">{currentMovie.title}</h1>
+           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+                <div className="flex items-center">
+                  <Star className="w-5 h-5 text-yellow-400 mr-1.5 neon-glow" />
+                  <span className="text-lg font-medium">{currentMovie.vote_average.toFixed(1)}</span>
+                </div>
+                {currentMovie.release_date && (
+                  <div className="flex items-center">
+                    <CalendarDays className="w-5 h-5 text-muted-foreground mr-1.5" />
+                    <span className="text-lg">{new Date(currentMovie.release_date).getFullYear()}</span>
+                  </div>
+                )}
+            </div>
+          <div className="flex flex-wrap gap-2 mb-6">
             {currentMovie.genres?.slice(0, 3).map(genre => (
-              <Badge key={genre.id} variant="outline" className="border-primary-foreground/50 text-primary-foreground bg-black/30 backdrop-blur-sm text-xs">
+              <Badge key={genre.id} variant="secondary" className="bg-primary/80 text-primary-foreground backdrop-blur-sm text-sm px-3 py-1">
                 {genre.name}
               </Badge>
             ))}
           </div>
-          <p className="text-sm md:text-base mb-4 line-clamp-2 drop-shadow-sm">
+          <p className="text-sm md:text-base mb-6 line-clamp-3 drop-shadow-sm text-foreground/90">
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">
             <Link href={`/player/movie/${currentMovie.id}`} passHref>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                <PlayCircle className="mr-2 h-5 w-5 neon-glow" /> Watch Now
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg py-6 px-8">
+                <PlayCircle className="mr-2 h-6 w-6 neon-glow" /> Watch Now
               </Button>
             </Link>
             <Link href={`/movie/${currentMovie.id}`} passHref>
-              <Button size="lg" variant="secondary" className="bg-secondary/70 hover:bg-secondary/90 text-secondary-foreground font-semibold backdrop-blur-sm">
-                 <Info className="mr-2 h-5 w-5" /> More Info
+              <Button size="lg" variant="secondary" className="bg-secondary/70 hover:bg-secondary/90 text-secondary-foreground font-semibold backdrop-blur-sm text-lg py-6 px-8">
+                 <Info className="mr-2 h-6 w-6" /> More Info
               </Button>
             </Link>
           </div>

@@ -30,7 +30,7 @@ export default function MovieSection({ title, items, href }: MovieSectionProps) 
       <div className="relative">
         <div className="flex space-x-4 md:space-x-6 overflow-x-auto pb-4 -mb-4">
           {items.map((item) => (
-            <div key={item.id} className="flex-shrink-0 w-[40vw] sm:w-[28vw] md:w-[20vw] lg:w-[15vw] xl:w-[14vw]">
+            <div key={item.id} className="flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[18vw] xl:w-[15vw]">
               <MovieCard item={item} />
             </div>
           ))}

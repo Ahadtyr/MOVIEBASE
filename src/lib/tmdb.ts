@@ -41,8 +41,8 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
   const API_KEY = process.env.TMDB_API_KEY;
-  if (!API_KEY) {
-    throw new Error('TMDb API Key is missing. Please add TMDB_API_KEY to your .env.local file.');
+  if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
+    throw new Error('TMDb API Key is missing or is a placeholder. Please add TMDB_API_KEY to your .env.local file.');
   }
   const urlParams = new URLSearchParams({ ...params, api_key: API_KEY });
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;

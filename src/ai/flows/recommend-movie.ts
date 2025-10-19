@@ -92,7 +92,7 @@ const recommendMovieFlow = ai.defineFlow(
         topResult = searchResults.length > 0 ? searchResults[0] : null;
     }
 
-    // Step 4: Return the structured data
+    // Step 4: Return the structured data in the correct format
     return {
       recommendation: topResult,
       reason,

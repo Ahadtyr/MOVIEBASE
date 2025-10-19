@@ -6,7 +6,7 @@ import type { Movie, TVShow } from '@/lib/types';
 import { Star, Info, Tv } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
+import { IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
 
 interface MovieCardProps {
   item: Movie | TVShow;
@@ -22,7 +22,7 @@ export default function MovieCard({ item, className }: MovieCardProps) {
   const releaseDate = isTV ? item.first_air_date : (item as Movie).release_date;
   
   const posterUrl = item.poster_path
-    ? `${IMAGE_BASE_URL_W500}${item.poster_path}`
+    ? `${IMAGE_BASE_URL_ORIGINAL}${item.poster_path}`
     : 'https://placehold.co/400x600.png';
 
   return (

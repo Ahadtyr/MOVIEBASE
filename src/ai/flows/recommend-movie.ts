@@ -7,8 +7,6 @@
  * - RecommendMovieInput - The input type for the recommendMovie function.
  * - RecommendMovieOutput - The return type for the recommendMovie function.
  */
-import { config } from 'dotenv';
-config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';

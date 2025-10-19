@@ -303,7 +303,7 @@ function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | 
     poster_path: item.poster_path,
     backdrop_path: item.backdrop_path,
     overview: item.overview,
-    vote_average: item.vote_average,
+    vote_average: item.vote_,
     genres: genre_ids.map((id: number) => ({ id, name: genreMap.get(id) || '' })).filter((g: Genre) => g.name),
   };
 

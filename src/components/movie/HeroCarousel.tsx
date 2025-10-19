@@ -72,7 +72,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             src={getBannerUrl(movie)}
             alt={`Banner for ${movie.title}`}
             fill
-            style={{ objectFit: 'cover', objectPosition: 'center top' }}
+            style={{ objectFit: 'cover' }}
             priority={index === 0}
             data-ai-hint="movie scene landscape"
           />

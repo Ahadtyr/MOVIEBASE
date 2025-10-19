@@ -24,6 +24,7 @@ export interface Movie {
   // Fields that might come from specific endpoints like /movie/{id}
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: Movie[] };
+  name?: string; // for compatibility
 }
 
 export interface TVShow {
@@ -41,6 +42,7 @@ export interface TVShow {
   // credits and similar from specific calls
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: TVShow[] };
+  title?: string; // for compatibility
 }
 
 export interface TVSeason {

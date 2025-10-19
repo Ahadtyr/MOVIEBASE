@@ -50,6 +50,8 @@ export default function RecommendationForm() {
     }
   };
 
+  const recommendedTitle = recommendation?.recommendation?.title || recommendation?.recommendation?.name || recommendation?.movieTitleFromAI;
+
   return (
     <>
       <Card className="w-full max-w-2xl mx-auto shadow-2xl shadow-primary/20">
@@ -110,11 +112,7 @@ export default function RecommendationForm() {
       {recommendation && !isLoading && (
          <div className="mt-12 max-w-4xl mx-auto animate-fade-in">
             <h2 className="text-2xl font-headline font-bold text-center mb-2 text-primary">Our AI Recommends:</h2>
-             {recommendation.recommendation ? (
-                <p className="text-center text-3xl font-bold text-primary-foreground mb-6">{recommendation.recommendation.title}</p>
-             ) : (
-                <p className="text-center text-3xl font-bold text-primary-foreground mb-6">{recommendation.movieTitleFromAI}</p>
-             )}
+             <p className="text-center text-3xl font-bold text-primary-foreground mb-6">{recommendedTitle}</p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
               <div className="md:col-span-1">

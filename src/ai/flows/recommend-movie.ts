@@ -12,8 +12,8 @@ config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getDiscoverMoviesByParams } from '@/lib/tmdb';
-import type { Movie } from '@/lib/types';
+import { searchMulti } from '@/lib/tmdb';
+import type { Movie, TVShow } from '@/lib/types';
 
 const RecommendMovieInputSchema = z.object({
   viewingHistory: z
@@ -23,17 +23,17 @@ const RecommendMovieInputSchema = z.object({
 export type RecommendMovieInput = z.infer<typeof RecommendMovieInputSchema>;
 
 const PromptOutputSchema = z.object({
-  keywords: z
+  title: z
     .string()
-    .describe('A comma-separated list of 1-3 keywords or genres based on the user\'s viewing history (e.g., "sci-fi, action, thriller").'),
+    .describe('The title of a real movie or TV show to recommend.'),
   reason: z
     .string()
-    .describe('A brief explanation of why movies with these keywords are being recommended.'),
+    .describe('A brief explanation of why this movie/show is being recommended based on the viewing history.'),
 });
 
 const RecommendedItemSchema = z.object({
   id: z.number(),
-  title: z.string(),
+  title: z.string().optional(),
   name: z.string().optional(),
   poster_path: z.string().nullable(),
   backdrop_path: z.string().nullable(),
@@ -45,9 +45,9 @@ const RecommendedItemSchema = z.object({
 });
 
 const RecommendMovieOutputSchema = z.object({
-  recommendation: RecommendedItemSchema.nullable().describe("The full movie object from TMDb, or null if not found."),
-  reason: z.string().describe('The reason for recommending the movie.'),
-  movieTitleFromAI: z.string().describe("A fallback title in case no movie is found."),
+  recommendation: RecommendedItemSchema.nullable().describe("The full movie/TV show object from TMDb, or null if not found."),
+  reason: z.string().describe('The reason for recommending the movie/show.'),
+  movieTitleFromAI: z.string().describe("A fallback title in case no movie/show is found."),
 });
 export type RecommendMovieOutput = z.infer<typeof RecommendMovieOutputSchema>;
 
@@ -60,11 +60,10 @@ const prompt = ai.definePrompt({
   name: 'recommendMoviePrompt',
   input: {schema: RecommendMovieInputSchema},
   output: {schema: PromptOutputSchema},
-  prompt: `You are a movie expert. Analyze the user's viewing history and extract key themes, genres, or actors. 
-  
-Viewing History: {{{viewingHistory}}}
+  prompt: `You are a movie expert. Analyze the user's viewing history. Based on their taste, recommend one real, existing movie or TV show title that they would likely enjoy. Also, provide a brief reason for your recommendation.
 
-Based on this, provide a comma-separated list of 1-3 keywords or genres that would be good for finding similar movies. Also, provide a brief reason for your choices.`,
+Viewing History: {{{viewingHistory}}}
+`,
 });
 
 const recommendMovieFlow = ai.defineFlow(
@@ -74,29 +73,30 @@ const recommendMovieFlow = ai.defineFlow(
     outputSchema: RecommendMovieOutputSchema,
   },
   async (input) => {
-    // Step 1: Get keywords and reason from the AI
+    // Step 1: Get a movie title and reason from the AI
     const {output} = await prompt(input);
     if (!output) {
-      throw new Error('Failed to get recommendation keywords from AI model.');
+      throw new Error('Failed to get recommendation from AI model.');
     }
     
-    const { keywords, reason } = output;
+    const { title, reason } = output;
 
-    // Step 2: Directly use the keywords to discover movies
-    const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywords });
+    // Step 2: Search for that exact title on TMDb
+    const searchResults = await searchMulti(title);
     
-    let topResult: Movie | null = null;
-    if (searchResults.length > 0) {
-        // To make it more interesting, pick a random movie from the top 5 results
-        const top5 = searchResults.slice(0, 5);
-        topResult = top5[Math.floor(Math.random() * top5.length)];
-    }
+    // Step 3: Pick the most relevant result (usually the first one)
+    const topResult = searchResults.length > 0 ? searchResults[0] : null;
+    
+    const finalResult = topResult ? {
+        ...topResult,
+        title: 'title' in topResult ? topResult.title : topResult.name,
+    } : null;
 
-    // Step 3: Return the structured data in the correct format
+    // Step 4: Return the structured data in the correct format
     return {
-      recommendation: topResult,
+      recommendation: finalResult,
       reason,
-      movieTitleFromAI: topResult ? (topResult.title || 'A Great Movie') : `A movie with themes like: ${keywords}`,
+      movieTitleFromAI: title, // Return the AI's original title suggestion
     };
   }
 );

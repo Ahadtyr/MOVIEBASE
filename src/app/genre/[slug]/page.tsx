@@ -1,6 +1,6 @@
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
-import MovieSection from '@/components/movie/MovieSection';
+import MovieGrid from '@/components/movie/MovieGrid';
 import PaginationControls from '@/components/shared/PaginationControls';
 import { getMovieGenres, getDiscoverMovies } from '@/lib/tmdb';
 import { notFound } from 'next/navigation';
@@ -26,7 +26,7 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
       <SectionTitle>{genre.name} Movies</SectionTitle>
       {moviesInGenre.length > 0 ? (
         <>
-          <MovieSection title="" items={moviesInGenre} />
+          <MovieGrid items={moviesInGenre} />
           <PaginationControls
             totalPages={totalPages}
             currentPage={currentPage}

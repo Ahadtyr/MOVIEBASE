@@ -159,6 +159,39 @@ export async function getDiscoverMoviesByParams(params: Record<string, string>, 
   return data.results.map(mapTMDbMovie);
 }
 
+export type BrowseCategory = 'bollywood' | 'hollywood' | 'anime';
+
+export async function getMoviesByCategory(category: BrowseCategory, page: number = 1): Promise<{ movies: Movie[], totalPages: number }> {
+    let params: Record<string, string> = {
+        sort_by: 'popularity.desc',
+        page: page.toString(),
+    };
+
+    switch (category) {
+        case 'bollywood':
+            params.with_original_language = 'hi';
+            params.region = 'IN';
+            break;
+        case 'hollywood':
+            params.with_origin_country = 'US';
+            break;
+        case 'anime':
+            params.with_genres = '16'; // Animation
+            params.with_keywords = '210024'; // Anime keyword ID
+            params.with_origin_country = 'JP';
+            break;
+    }
+
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', params);
+    const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
+    
+    return {
+        movies: data.results.map(mapTMDbMovie),
+        totalPages,
+    };
+}
+
+
 // TV Show Functions
 function mapTMDbTVShow(tmdbTVShow: any): TVShow {
   return {

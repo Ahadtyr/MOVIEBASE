@@ -39,7 +39,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[70vh] flex items-center justify-center bg-muted">
+      <div className="h-[50vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[calc(70vh-4rem)] md:h-[calc(65vh-4rem)] max-h-[600px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[50vh] max-h-[500px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}
@@ -82,7 +82,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold mb-4">
+          <h1 className="text-2xl md:text-3xl font-headline font-bold mb-3">
             {currentMovie.title}
           </h1>
           <div className="flex items-center space-x-4 mb-4">
@@ -92,7 +92,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
               </Badge>
             ))}
           </div>
-          <p className="text-sm md:text-base mb-6 line-clamp-3 drop-shadow-sm">
+          <p className="text-xs md:text-sm mb-4 line-clamp-2 drop-shadow-sm">
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">

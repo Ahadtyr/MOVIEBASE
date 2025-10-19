@@ -12,7 +12,7 @@ config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getDiscoverMoviesByParams, getKeywordIds } from '@/lib/tmdb';
+import { getDiscoverMoviesByParams } from '@/lib/tmdb';
 import type { Movie } from '@/lib/types';
 
 const RecommendMovieInputSchema = z.object({

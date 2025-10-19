@@ -39,7 +39,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[60vh] flex items-center justify-center bg-muted">
+      <div className="h-[55vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );

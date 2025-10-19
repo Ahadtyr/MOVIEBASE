@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -40,7 +39,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[35vh] flex items-center justify-center bg-muted">
+      <div className="h-[50vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -59,7 +58,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[35vh] max-h-[350px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[50vh] max-h-[450px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}

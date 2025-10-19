@@ -275,7 +275,7 @@ export async function getUpcomingAnime(page: number = 1): Promise<{ movies: TVSh
         with_genres: '16',
         with_origin_country: 'JP',
         'first_air_date.gte': new Date().toISOString().split('T')[0],
-        sort_by: 'popularity.desc',
+        sort_by: 'first_air_date.asc',
         page: page.toString()
     });
     if (!data) return { movies: [], totalPages: 0 };

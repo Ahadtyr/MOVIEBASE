@@ -25,7 +25,7 @@ export type RecommendMovieInput = z.infer<typeof RecommendMovieInputSchema>;
 const PromptOutputSchema = z.object({
   title: z
     .string()
-    .describe('The title of a real movie or TV show to recommend.'),
+    .describe('The title of a real, officially released movie or TV show to recommend.'),
   reason: z
     .string()
     .describe('A brief explanation of why this movie/show is being recommended based on the viewing history.'),
@@ -60,7 +60,7 @@ const prompt = ai.definePrompt({
   name: 'recommendMoviePrompt',
   input: {schema: RecommendMovieInputSchema},
   output: {schema: PromptOutputSchema},
-  prompt: `You are an AI movie recommendation system. Your goal is to recommend a single, real, existing movie or TV show based on the user's viewing history.
+  prompt: `You are an AI movie recommendation system. Your goal is to recommend a single, real movie or TV show that has been officially released. Do not recommend unreleased, canceled, or in-development projects.
 
 When recommending, you MUST provide:
 1. The exact title of the movie or TV show.
@@ -91,8 +91,8 @@ const recommendMovieFlow = ai.defineFlow(
     // Step 2: Search for that exact title on TMDb
     const searchResults = await searchMulti(title);
     
-    // Step 3: Pick the most relevant result (usually the first one)
-    const topResult = searchResults.length > 0 ? searchResults[0] : null;
+    // Step 3: Pick the most relevant result (usually the first one with a poster)
+    const topResult = searchResults.find(r => r.poster_path) || (searchResults.length > 0 ? searchResults[0] : null);
     
     const finalResult = topResult ? {
         ...topResult,

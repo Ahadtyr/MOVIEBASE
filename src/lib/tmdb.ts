@@ -259,9 +259,10 @@ export async function getDiscoverTVShowsByParams(params: Record<string, string>,
 
 // Anime Fetching Functions
 export async function getTrendingAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
-    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('trending/tv/week', {
-        with_genres: '16', // Ensures we get animation
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('discover/tv', {
+        with_genres: '16',
         with_keywords: '210024', // Anime
+        sort_by: 'popularity.desc',
         page: page.toString()
     });
     if (!data) return { movies: [], totalPages: 0 };

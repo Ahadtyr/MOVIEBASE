@@ -18,7 +18,6 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Film },
   { href: '/movies', label: 'Movies', icon: Film },
   { href: '/tv-shows', label: 'TV Shows', icon: Tv },
-  { href: '/genres', label: 'Genres', icon: LayoutGrid },
 ];
 
 const browseLinks = [
@@ -29,7 +28,18 @@ const browseLinks = [
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -71,7 +81,10 @@ export default function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        isScrolled ? "border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
+    )}>
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
           <Film className="h-8 w-8 text-primary-foreground neon-glow-primary" />
@@ -80,11 +93,11 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-1">
-          {navLinks.slice(0,3).map((link) => (
+          {navLinks.map((link) => (
             <NavLinkItem key={link.href} {...link} />
           ))}
           <BrowseDropdown />
-          <NavLinkItem {...navLinks[3]} />
+          <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
           <NavLinkItem href="/search-page" label="Search" icon={Search} />
           <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
 
@@ -107,6 +120,7 @@ export default function Header() {
               <NavLinkItem key={link.href} {...link} />
             ))}
              <div className="border-t border-border/50 my-2"></div>
+            <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
             <NavLinkItem href="/search-page" label="Search" icon={Search} />
             <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
           </nav>

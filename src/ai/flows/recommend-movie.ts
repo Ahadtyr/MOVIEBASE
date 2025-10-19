@@ -86,17 +86,21 @@ const recommendMovieFlow = ai.defineFlow(
     const keywordIds = await getKeywordIds(keywords);
 
     let topResult: Movie | null = null;
-    if (keywordIds) {
-        // Step 3: Use keyword IDs to discover movies on TMDb
+    // Step 3: Use keyword IDs to discover movies on TMDb, only if we have IDs
+    if (keywordIds && keywordIds.length > 0) {
         const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywordIds });
-        topResult = searchResults.length > 0 ? searchResults[0] : null;
+        if (searchResults.length > 0) {
+            // To make it more interesting, pick a random movie from the top 5 results
+            const top5 = searchResults.slice(0, 5);
+            topResult = top5[Math.floor(Math.random() * top5.length)];
+        }
     }
 
     // Step 4: Return the structured data in the correct format
     return {
       recommendation: topResult,
       reason,
-      movieTitleFromAI: topResult ? topResult.title : `A movie with themes like: ${keywords}`,
+      movieTitleFromAI: topResult ? (topResult.title || 'A Great Movie') : `A movie with themes like: ${keywords}`,
     };
   }
 );

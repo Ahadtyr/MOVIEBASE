@@ -48,6 +48,26 @@ export default function Header() {
       {label}
     </Link>
   );
+  
+  const BrowseDropdown = () => (
+    <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80">
+                Browse
+                <ChevronDown className="w-4 h-4" />
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+            {browseLinks.map((link) => (
+                 <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href} className={cn("flex items-center gap-2", pathname === link.href ? "bg-primary/10" : "")}>
+                        {link.label}
+                    </Link>
+                </DropdownMenuItem>
+            ))}
+        </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -59,34 +79,19 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-1">
-          {navLinks.map((link) => (
+          {navLinks.slice(0,3).map((link) => (
             <NavLinkItem key={link.href} {...link} />
           ))}
-           <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80">
-                        <LayoutGrid className="w-4 h-4 neon-glow" />
-                        Browse
-                        <ChevronDown className="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    {browseLinks.map((link) => (
-                         <DropdownMenuItem key={link.href} asChild>
-                            <Link href={link.href} className={cn("flex items-center gap-2", pathname === link.href ? "bg-primary/10" : "")}>
-                                {link.label}
-                            </Link>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <NavLinkItem href="/search-page" label="Search" icon={Search} />
-            <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
+          <BrowseDropdown />
+          <NavLinkItem {...navLinks[3]} />
+          <NavLinkItem href="/search-page" label="Search" icon={Search} />
+          <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
 
         </nav>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="flex items-center md:hidden">
+          <BrowseDropdown />
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -100,11 +105,6 @@ export default function Header() {
             {navLinks.map((link) => (
               <NavLinkItem key={link.href} {...link} />
             ))}
-             <div className="border-t border-border/50 my-2"></div>
-             <p className="px-3 py-2 text-sm font-semibold text-muted-foreground">Browse</p>
-             {browseLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="pl-8 pr-3 py-2 rounded-md text-sm font-medium text-foreground/80 hover:bg-accent hover:text-accent-foreground">{link.label}</Link>
-             ))}
              <div className="border-t border-border/50 my-2"></div>
             <NavLinkItem href="/search-page" label="Search" icon={Search} />
             <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />

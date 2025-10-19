@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Film, Tv, LayoutGrid, Search, Menu, X, ChevronDown } from 'lucide-react';
+import { Film, Tv, LayoutGrid, Search, Menu, X, ChevronDown, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -53,6 +53,7 @@ export default function Header() {
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80">
+                <Globe className="w-4 h-4 neon-glow" />
                 Browse
                 <ChevronDown className="w-4 h-4" />
             </Button>

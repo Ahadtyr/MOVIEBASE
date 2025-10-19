@@ -58,7 +58,7 @@ export default function Header() {
                 <ChevronDown className="w-4 h-4" />
             </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="bg-popover/80 backdrop-blur-lg">
             {browseLinks.map((link) => (
                  <DropdownMenuItem key={link.href} asChild>
                     <Link href={link.href} className={cn("flex items-center gap-2", pathname === link.href ? "bg-primary/10" : "")}>

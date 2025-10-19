@@ -1,7 +1,7 @@
 
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
-import MovieGrid from '@/components/movie/MovieGrid';
+import MovieSection from '@/components/movie/MovieSection';
 import { getTrendingAnime, getUpcomingAnime, getTopRatedAnime } from '@/lib/tmdb';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -18,9 +18,9 @@ export default async function AnimePage() {
     topRatedPromise,
   ]);
 
-  const trendingAnime = trending.movies.slice(0, 6);
-  const upcomingAnime = upcoming.movies.slice(0, 6);
-  const topRatedAnime = topRated.movies.slice(0, 6);
+  const trendingAnime = trending.movies.slice(0, 12);
+  const upcomingAnime = upcoming.movies.slice(0, 12);
+  const topRatedAnime = topRated.movies.slice(0, 12);
 
   return (
     <PageContainer>
@@ -46,7 +46,7 @@ export default async function AnimePage() {
         </Link>
       </div>
 
-      {trendingAnime.length === 0 && upcomingAnime.length === 0 && topRatedAnime.length === 0 ? (
+      {(trendingAnime.length === 0 && upcomingAnime.length === 0 && topRatedAnime.length === 0) ? (
         <div className="text-center py-10">
           <p className="text-xl text-muted-foreground">Loading anime...</p>
           <p className="text-sm text-muted-foreground">Please wait a moment or ensure your TMDb API key is correct.</p>
@@ -54,24 +54,15 @@ export default async function AnimePage() {
       ) : (
         <>
           {trendingAnime.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4 text-accent">🔥 Trending Anime</h2>
-              <MovieGrid items={trendingAnime} />
-            </section>
+            <MovieSection title="🔥 Trending Anime" items={trendingAnime} href="/anime/trending" />
           )}
 
           {upcomingAnime.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4 text-accent">🌸 Upcoming Anime</h2>
-              <MovieGrid items={upcomingAnime} />
-            </section>
+            <MovieSection title="🌸 Upcoming Anime" items={upcomingAnime} href="/anime/upcoming" />
           )}
 
           {topRatedAnime.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold mb-4 text-accent">⭐ Top Rated Anime</h2>
-              <MovieGrid items={topRatedAnime} />
-            </section>
+            <MovieSection title="⭐ Top Rated Anime" items={topRatedAnime} href="/anime/top-rated" />
           )}
         </>
       )}

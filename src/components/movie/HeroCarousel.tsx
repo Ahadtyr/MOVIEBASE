@@ -82,7 +82,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold mb-4">
             {currentMovie.title}
           </h1>
           <div className="flex items-center space-x-4 mb-4">
@@ -92,7 +92,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
               </Badge>
             ))}
           </div>
-          <p className="text-base md:text-lg mb-6 line-clamp-3 drop-shadow-sm">
+          <p className="text-sm md:text-base mb-6 line-clamp-3 drop-shadow-sm">
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">

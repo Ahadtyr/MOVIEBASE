@@ -12,7 +12,7 @@ config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { searchMulti } from '@/lib/tmdb';
+import { getDiscoverMoviesByParams } from '@/lib/tmdb';
 import type { Movie, TVShow } from '@/lib/types';
 
 const RecommendMovieInputSchema = z.object({
@@ -23,15 +23,14 @@ const RecommendMovieInputSchema = z.object({
 export type RecommendMovieInput = z.infer<typeof RecommendMovieInputSchema>;
 
 const PromptOutputSchema = z.object({
-  movieRecommendation: z
+  keywords: z
     .string()
-    .describe('The title of the recommended movie.'),
+    .describe('A comma-separated list of 1-3 keywords or genres based on the user\'s viewing history (e.g., "sci-fi, action, thriller").'),
   reason: z
     .string()
-    .describe('The reason for recommending this movie.'),
+    .describe('A brief explanation of why movies with these keywords are being recommended.'),
 });
 
-// This schema is compatible with the Movie | TVShow types from lib/types.ts
 const RecommendedItemSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -48,7 +47,7 @@ const RecommendedItemSchema = z.object({
 const RecommendMovieOutputSchema = z.object({
   recommendation: RecommendedItemSchema.nullable().describe("The full movie object from TMDb, or null if not found."),
   reason: z.string().describe('The reason for recommending the movie.'),
-  movieTitleFromAI: z.string().describe("The raw movie title recommended by the AI."),
+  movieTitleFromAI: z.string().describe("A fallback title in case no movie is found."),
 });
 export type RecommendMovieOutput = z.infer<typeof RecommendMovieOutputSchema>;
 
@@ -61,12 +60,11 @@ const prompt = ai.definePrompt({
   name: 'recommendMoviePrompt',
   input: {schema: RecommendMovieInputSchema},
   output: {schema: PromptOutputSchema},
-  prompt: `You are a movie expert. Based on the provided viewing history, recommend a movie and explain the reason for the recommendation.
-
+  prompt: `You are a movie expert. Analyze the user's viewing history and extract key themes, genres, or actors. 
+  
 Viewing History: {{{viewingHistory}}}
 
-Recommendation (Movie Recommendation and the Reason for Recommendation):
-`,
+Based on this, provide a comma-separated list of 1-3 keywords or genres that would be good for finding similar movies. Also, provide a brief reason for your choices.`,
 });
 
 const recommendMovieFlow = ai.defineFlow(
@@ -76,23 +74,23 @@ const recommendMovieFlow = ai.defineFlow(
     outputSchema: RecommendMovieOutputSchema,
   },
   async (input) => {
-    // Step 1: Get the text-based recommendation from the AI
+    // Step 1: Get keywords and reason from the AI
     const {output} = await prompt(input);
     if (!output) {
-      throw new Error('Failed to get recommendation from AI model.');
+      throw new Error('Failed to get recommendation keywords from AI model.');
     }
     
-    const { movieRecommendation, reason } = output;
+    const { keywords, reason } = output;
 
-    // Step 2: Search for the recommended movie on TMDb to get its details
-    const searchResults = await searchMulti(movieRecommendation);
+    // Step 2: Use keywords to discover movies on TMDb
+    const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywords });
     const topResult = searchResults.length > 0 ? searchResults[0] : null;
 
     // Step 3: Return the structured data
     return {
       recommendation: topResult,
       reason,
-      movieTitleFromAI: movieRecommendation,
+      movieTitleFromAI: topResult ? topResult.title : `A movie with themes like: ${keywords}`,
     };
   }
 );

@@ -1,3 +1,4 @@
+
 import type { Movie, TVShow, TMDBCastMember, Genre, TVSeason, TVSeasonDetails } from './types';
 
 const API_KEY = process.env.TMDB_API_KEY;
@@ -40,8 +41,8 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
-  if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
-    throw new Error('TMDB API key is not configured. Please get a free key from themoviedb.org and add it to a .env.local file as TMDB_API_KEY=your_key_here');
+  if (!API_KEY || API_KEY === 'your_key_here') {
+    throw new Error('TMDb API key is missing or invalid. Please get a free key from themoviedb.org and add it to your .env.local file. See README.md for more details.');
   }
   const urlParams = new URLSearchParams({ ...params, api_key: API_KEY });
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;

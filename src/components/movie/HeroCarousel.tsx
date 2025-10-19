@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -39,7 +40,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[50vh] flex items-center justify-center bg-muted">
+      <div className="h-[35vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -58,7 +59,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[50vh] max-h-[500px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[35vh] max-h-[350px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}
@@ -71,7 +72,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             src={getBannerUrl(movie)}
             alt={`Banner for ${movie.title}`}
             fill
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', objectPosition: 'center top' }}
             priority={index === 0}
             data-ai-hint="movie scene landscape"
           />
@@ -82,12 +83,12 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h1 className="text-2xl md:text-3xl font-headline font-bold mb-3">
+          <h1 className="text-xl md:text-2xl font-headline font-bold mb-2">
             {currentMovie.title}
           </h1>
           <div className="flex items-center space-x-4 mb-4">
             {currentMovie.genres?.slice(0, 3).map(genre => (
-              <Badge key={genre.id} variant="outline" className="border-primary-foreground/50 text-primary-foreground bg-black/30 backdrop-blur-sm text-sm">
+              <Badge key={genre.id} variant="outline" className="border-primary-foreground/50 text-primary-foreground bg-black/30 backdrop-blur-sm text-xs">
                 {genre.name}
               </Badge>
             ))}

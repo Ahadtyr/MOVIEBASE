@@ -30,18 +30,18 @@ export default async function AnimePage() {
       
       <div className="flex justify-center gap-4 mb-10">
         <Link href="/anime/trending" passHref>
-          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent">
-            <Flame className="mr-2 h-5 w-5" /> Trending
+          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-accent/30 transform hover:scale-105 border-accent/30 hover:border-accent">
+            <Flame className="mr-2 h-5 w-5 text-accent neon-glow" /> Trending
           </Button>
         </Link>
         <Link href="/anime/upcoming" passHref>
-          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent">
-            <Calendar className="mr-2 h-5 w-5" /> Upcoming
+          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-accent/30 transform hover:scale-105 border-accent/30 hover:border-accent">
+            <Calendar className="mr-2 h-5 w-5 text-accent neon-glow" /> Upcoming
           </Button>
         </Link>
         <Link href="/anime/top-rated" passHref>
-          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent">
-            <Star className="mr-2 h-5 w-5" /> Top Rated
+          <Button variant="outline" className="text-lg bg-card hover:bg-primary/20 hover:text-accent transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-accent/30 transform hover:scale-105 border-accent/30 hover:border-accent">
+            <Star className="mr-2 h-5 w-5 text-accent neon-glow" /> Top Rated
           </Button>
         </Link>
       </div>

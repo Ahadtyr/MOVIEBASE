@@ -82,21 +82,17 @@ const recommendMovieFlow = ai.defineFlow(
     
     const { keywords, reason } = output;
 
-    // Step 2: Get keyword IDs from TMDb
-    const keywordIds = await getKeywordIds(keywords);
-
+    // Step 2: Directly use the keywords to discover movies
+    const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywords });
+    
     let topResult: Movie | null = null;
-    // Step 3: Use keyword IDs to discover movies on TMDb, only if we have IDs
-    if (keywordIds && keywordIds.length > 0) {
-        const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywordIds });
-        if (searchResults.length > 0) {
-            // To make it more interesting, pick a random movie from the top 5 results
-            const top5 = searchResults.slice(0, 5);
-            topResult = top5[Math.floor(Math.random() * top5.length)];
-        }
+    if (searchResults.length > 0) {
+        // To make it more interesting, pick a random movie from the top 5 results
+        const top5 = searchResults.slice(0, 5);
+        topResult = top5[Math.floor(Math.random() * top5.length)];
     }
 
-    // Step 4: Return the structured data in the correct format
+    // Step 3: Return the structured data in the correct format
     return {
       recommendation: topResult,
       reason,

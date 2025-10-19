@@ -97,16 +97,14 @@ export default function Header() {
             <NavLinkItem key={link.href} {...link} />
           ))}
           <NavLinkItem href="/anime" label="Anime" icon={Tv} />
-          <BrowseDropdown />
-          <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
           <NavLinkItem href="/search-page" label="Search" icon={Search} />
-          <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
-
         </nav>
 
         {/* Mobile Menu Button */}
-        <div className="flex items-center md:hidden">
-          <BrowseDropdown />
+        <div className="flex items-center">
+          <div className="md:hidden">
+            <BrowseDropdown />
+          </div>
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -115,15 +113,24 @@ export default function Header() {
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-background shadow-lg p-4 animate-fade-in">
+        <div className="absolute top-16 left-0 right-0 bg-background shadow-lg p-4 animate-fade-in">
           <nav className="flex flex-col space-y-2">
-            {navLinks.map((link) => (
-              <NavLinkItem key={link.href} {...link} />
-            ))}
-            <NavLinkItem href="/anime" label="Anime" icon={Tv} />
-             <div className="border-t border-border/50 my-2"></div>
+            <div className="md:hidden">
+              {navLinks.map((link) => (
+                <NavLinkItem key={link.href} {...link} />
+              ))}
+              <NavLinkItem href="/anime" label="Anime" icon={Tv} />
+              <div className="border-t border-border/50 my-2"></div>
+              <NavLinkItem href="/search-page" label="Search" icon={Search} />
+            </div>
+
+            <div className="border-t border-border/50 my-2"></div>
+            
+            <div className="hidden md:block">
+              <BrowseDropdown />
+            </div>
+
             <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
-            <NavLinkItem href="/search-page" label="Search" icon={Search} />
             <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
           </nav>
         </div>

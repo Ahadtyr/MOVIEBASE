@@ -34,10 +34,11 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 }
 
 
-async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
+async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T | null> {
   const API_KEY = process.env.TMDB_API_KEY;
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
-    throw new Error('TMDb API Key is missing. Please add TMDB_API_KEY to your .env.local file.');
+    console.warn('TMDb API Key is missing. Please add TMDB_API_KEY to your .env.local file. Returning empty data.');
+    return null;
   }
   
   const urlParams = new URLSearchParams({
@@ -61,12 +62,12 @@ async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string>
       console.error(`Error fetching from TMDb: ${response.status} ${response.statusText} for URL: ${url}`);
       const errorBody = await response.text();
       console.error('Error body:', errorBody);
-      throw new Error(`Failed to fetch data from TMDb: ${response.statusText}`);
+      return null;
     }
     return response.json();
   } catch (error) {
     console.error(`Network error or JSON parsing error fetching from TMDb: ${url}`, error);
-    throw error;
+    return null;
   }
 }
 
@@ -87,51 +88,43 @@ function mapTMDbMovie(tmdbMovie: any): Movie {
 
 export async function getPopularMovies(): Promise<Movie[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/popular');
+  if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }
 
 export async function getUpcomingMovies(): Promise<Movie[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/upcoming');
+  if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }
 
 export async function getTopRatedMovies(): Promise<Movie[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/top_rated');
+  if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }
 
 export async function getMovieDetails(movieId: number): Promise<Movie | null> {
-  try {
-    const data = await fetchFromTMDB<TMDbMovieDetail>(`movie/${movieId}`);
-    return mapTMDbMovie(data);
-  } catch (error) {
-    console.error(`Error fetching details for movie ID ${movieId}:`, error);
-    return null;
-  }
+  const data = await fetchFromTMDB<TMDbMovieDetail>(`movie/${movieId}`);
+  if (!data) return null;
+  return mapTMDbMovie(data);
 }
 
 export async function getMovieCredits(movieId: number): Promise<{ cast: TMDBCastMember[] }> {
-   try {
-    const data = await fetchFromTMDB<{ cast: TMDBCastMember[], crew: any[] }>(`movie/${movieId}/credits`);
-    return { cast: data.cast };
-  } catch (error) {
-    console.error(`Error fetching credits for movie ID ${movieId}:`, error);
-    return { cast: [] };
-  }
+   const data = await fetchFromTMDB<{ cast: TMDBCastMember[], crew: any[] }>(`movie/${movieId}/credits`);
+   if (!data) return { cast: [] };
+   return { cast: data.cast };
 }
 
 export async function getSimilarMovies(movieId: number): Promise<Movie[]> {
-  try {
-    const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>(`movie/${movieId}/similar`);
-    return data.results.map(mapTMDbMovie);
-  } catch (error) {
-    console.error(`Error fetching similar movies for movie ID ${movieId}:`, error);
-    return [];
-  }
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>(`movie/${movieId}/similar`);
+  if (!data) return [];
+  return data.results.map(mapTMDbMovie);
 }
 
 export async function getMovieGenres(): Promise<Genre[]> {
   const data = await fetchFromTMDB<TMDbGenreList>('genre/movie/list');
+  if (!data) return [];
   return data.genres;
 }
 
@@ -141,7 +134,7 @@ export async function getDiscoverMovies(genreId: string, page: number = 1): Prom
     sort_by: 'popularity.desc',
     page: page.toString(),
   });
-  // The TMDb API caps total_pages at 500
+  if (!data) return { movies: [], totalPages: 0 };
   const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
   return {
     movies: data.results.map(mapTMDbMovie),
@@ -155,6 +148,7 @@ export async function getDiscoverMoviesByParams(params: Record<string, string>, 
     sort_by: 'popularity.desc',
     page: page.toString(),
   });
+  if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }
 
@@ -182,6 +176,7 @@ export async function getMoviesByCategory(category: BrowseCategory, page: number
     }
 
     const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', params);
+    if (!data) return { movies: [], totalPages: 0 };
     const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
     
     return {
@@ -211,52 +206,43 @@ function mapTMDbTVShow(tmdbTVShow: any): TVShow {
 
 export async function getPopularTVShows(): Promise<TVShow[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/popular');
+  if (!data) return [];
   return data.results.map(mapTMDbTVShow);
 }
 
 export async function getTopRatedTVShows(): Promise<TVShow[]> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/top_rated');
+  if (!data) return [];
   return data.results.map(mapTMDbTVShow);
 }
 
 export async function getTVShowDetails(tvId: number): Promise<TVShow | null> {
-  try {
-    const data = await fetchFromTMDB<TMDbTVShowDetail>(`tv/${tvId}`);
-    return mapTMDbTVShow(data);
-  } catch (error) {
-    console.error(`Error fetching details for TV show ID ${tvId}:`, error);
-    return null;
-  }
+  const data = await fetchFromTMDB<TMDbTVShowDetail>(`tv/${tvId}`);
+  if (!data) return null;
+  return mapTMDbTVShow(data);
 }
 
-export async function getTVSeasonDetails(tvId: number, seasonNumber: number): Promise<TVSeasonDetails> {
+export async function getTVSeasonDetails(tvId: number, seasonNumber: number): Promise<TVSeasonDetails | null> {
     const data = await fetchFromTMDB<TVSeasonDetails>(`tv/${tvId}/season/${seasonNumber}`);
+    if (!data) return null;
     return data;
 }
 
 export async function getTVShowCredits(tvId: number): Promise<{ cast: TMDBCastMember[] }> {
-  try {
-    const data = await fetchFromTMDB<{ cast: TMDBCastMember[], crew: any[] }>(`tv/${tvId}/credits`);
-    return { cast: data.cast };
-  } catch (error) {
-    console.error(`Error fetching credits for TV show ID ${tvId}:`, error);
-    return { cast: [] };
-  }
+  const data = await fetchFromTMDB<{ cast: TMDBCastMember[], crew: any[] }>(`tv/${tvId}/credits`);
+  if (!data) return { cast: [] };
+  return { cast: data.cast };
 }
 
 export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
-  try {
-    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>(`tv/${tvId}/similar`);
-    return data.results.map(mapTMDbTVShow);
-  } catch (error)
- {
-    console.error(`Error fetching similar TV shows for TV ID ${tvId}:`, error);
-    return [];
-  }
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>(`tv/${tvId}/similar`);
+  if (!data) return [];
+  return data.results.map(mapTMDbTVShow);
 }
 
 export async function getTVShowGenres(): Promise<Genre[]> {
   const data = await fetchFromTMDB<TMDbGenreList>('genre/tv/list');
+  if (!data) return [];
   return data.genres;
 }
 
@@ -266,6 +252,7 @@ export async function getDiscoverTVShowsByParams(params: Record<string, string>,
     sort_by: 'popularity.desc',
     page: page.toString(),
   });
+  if (!data) return [];
   return data.results.map(mapTMDbTVShow);
 }
 
@@ -330,20 +317,17 @@ function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | 
 
 export async function searchMulti(query: string, page: number = 1): Promise<(Movie | TVShow)[]> {
   if (!query) return [];
-  try {
-    const map = await getGenreMap();
-    const data = await fetchFromTMDB<TMDbListResponse<any>>('search/multi', {
-      query,
-      page: page.toString(),
-      include_adult: 'false',
-    });
-    return data.results
-      .map(item => mapTMDbSearchResult(item, map))
-      .filter((item): item is Movie | TVShow => item !== null && (item.poster_path || item.backdrop_path) != null);
-  } catch (error) {
-    console.error(`Error searching for query "${query}":`, error);
-    return [];
-  }
+  
+  const map = await getGenreMap();
+  const data = await fetchFromTMDB<TMDbListResponse<any>>('search/multi', {
+    query,
+    page: page.toString(),
+    include_adult: 'false',
+  });
+  if (!data) return [];
+  return data.results
+    .map(item => mapTMDbSearchResult(item, map))
+    .filter((item): item is Movie | TVShow => item !== null && (item.poster_path || item.backdrop_path) != null);
 }
 
 export async function getKeywordIds(keywordNames: string): Promise<string> {
@@ -351,6 +335,7 @@ export async function getKeywordIds(keywordNames: string): Promise<string> {
     const keywordIdPromises = individualKeywords.map(async (keyword) => {
         try {
             const data = await fetchFromTMDB<TMDbListResponse<TMDbKeyword>>('search/keyword', { query: keyword });
+            if (!data) return null;
             return data.results.length > 0 ? data.results[0].id.toString() : null;
         } catch (error) {
             console.warn(`Could not find keyword ID for "${keyword}":`, error);

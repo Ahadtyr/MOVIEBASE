@@ -1,3 +1,4 @@
+
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
@@ -5,30 +6,24 @@ import { getPopularTVShows, getDiscoverTVShowsByParams } from '@/lib/tmdb';
 import type { TVShow } from '@/lib/types';
 
 async function getTVShowsPageData() {
-  try {
-    const [
-      popularShows,
-      hindiShows,
-      koreanShows,
-      westernShows
-    ] = await Promise.all([
-      getPopularTVShows(),
-      getDiscoverTVShowsByParams({ with_original_language: 'hi' }),
-      getDiscoverTVShowsByParams({ with_origin_country: 'KR' }),
-      getDiscoverTVShowsByParams({ with_origin_country: 'US' })
-    ]);
-    
-    return { 
-      popularShows: popularShows.slice(0, 12),
-      hindiShows: hindiShows.slice(0, 12),
-      koreanShows: koreanShows.slice(0, 12),
-      westernShows: westernShows.slice(0, 12),
-    };
-  } catch (error) {
-    console.error("Failed to fetch TV shows page data:", error);
-    // Gracefully return empty arrays if there's an error (e.g., missing API key)
-    return { popularShows: [], hindiShows: [], koreanShows: [], westernShows: [] };
-  }
+  const [
+    popularShows,
+    hindiShows,
+    koreanShows,
+    westernShows
+  ] = await Promise.all([
+    getPopularTVShows(),
+    getDiscoverTVShowsByParams({ with_original_language: 'hi' }),
+    getDiscoverTVShowsByParams({ with_origin_country: 'KR' }),
+    getDiscoverTVShowsByParams({ with_origin_country: 'US' })
+  ]);
+  
+  return { 
+    popularShows: popularShows.slice(0, 12),
+    hindiShows: hindiShows.slice(0, 12),
+    koreanShows: koreanShows.slice(0, 12),
+    westernShows: westernShows.slice(0, 12),
+  };
 }
 
 export default async function TVShowsPage() {

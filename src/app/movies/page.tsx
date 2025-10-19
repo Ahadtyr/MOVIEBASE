@@ -1,3 +1,4 @@
+
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
@@ -8,30 +9,24 @@ import type { Movie } from '@/lib/types';
 const COMEDY_GENRE_ID = '35';
 
 async function getMoviesPageData() {
-  try {
-    const [
-      popularMoviesData,
-      comedyMoviesData,
-      hindiMoviesData,
-      koreanMoviesData
-    ] = await Promise.all([
-      getPopularMovies(),
-      getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
-      getDiscoverMoviesByParams({ with_original_language: 'hi' }),
-      getDiscoverMoviesByParams({ with_origin_country: 'KR' })
-    ]);
-    
-    return { 
-      popularMovies: popularMoviesData.slice(0, 12),
-      comedyMovies: comedyMoviesData.slice(0, 12),
-      hindiMovies: hindiMoviesData.slice(0, 12),
-      koreanMovies: koreanMoviesData.slice(0, 12),
-    };
-  } catch (error) {
-    console.error("Failed to fetch movies page data:", error);
-    // Gracefully return empty arrays if there's an error (e.g., missing API key)
-    return { popularMovies: [], comedyMovies: [], hindiMovies: [], koreanMovies: [] };
-  }
+  const [
+    popularMoviesData,
+    comedyMoviesData,
+    hindiMoviesData,
+    koreanMoviesData
+  ] = await Promise.all([
+    getPopularMovies(),
+    getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
+    getDiscoverMoviesByParams({ with_original_language: 'hi' }),
+    getDiscoverMoviesByParams({ with_origin_country: 'KR' })
+  ]);
+  
+  return { 
+    popularMovies: popularMoviesData.slice(0, 12),
+    comedyMovies: comedyMoviesData.slice(0, 12),
+    hindiMovies: hindiMoviesData.slice(0, 12),
+    koreanMovies: koreanMoviesData.slice(0, 12),
+  };
 }
 
 export default async function MoviesPage() {

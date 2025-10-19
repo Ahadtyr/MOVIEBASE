@@ -1,3 +1,4 @@
+
 import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import { getMovieDetails, getTVShowDetails, getTVSeasonDetails } from '@/lib/tmdb';
@@ -47,11 +48,12 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
 
     // Fetch all seasons data
     if (show.seasons) {
-        seasonsData = await Promise.all(
-            show.seasons
-                .filter(s => s.season_number > 0) // Exclude season 0 which is usually "Specials"
-                .map(s => getTVSeasonDetails(tmdbId, s.season_number))
-        );
+        const seasonDetailPromises = show.seasons
+            .filter(s => s.season_number > 0) // Exclude season 0 which is usually "Specials"
+            .map(s => getTVSeasonDetails(tmdbId, s.season_number));
+        
+        const results = await Promise.all(seasonDetailPromises);
+        seasonsData = results.filter(s => s !== null);
     }
   }
 
@@ -82,7 +84,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         <p>This content is provided by an external service. MOVIEBASE does not host any media files.</p>
       </div>
 
-      {type === 'tv' && seasonsData && (
+      {type === 'tv' && seasonsData && seasonsData.length > 0 && (
         <div className="mt-12">
             <EpisodeList 
                 tvShowId={tmdbId}

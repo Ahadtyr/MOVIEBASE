@@ -260,12 +260,13 @@ export async function getDiscoverTVShowsByParams(params: Record<string, string>,
 // Anime Fetching Functions
 export async function getTrendingAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
     const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('trending/tv/week', {
-        with_genres: '16',
+        with_genres: '16', // Ensures we get animation
+        with_keywords: '210024', // Anime
         page: page.toString()
     });
     if (!data) return { movies: [], totalPages: 0 };
     return {
-        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        movies: data.results.map(mapTMDbTVShow),
         totalPages: data.total_pages > 500 ? 500 : data.total_pages
     };
 }
@@ -275,28 +276,53 @@ export async function getUpcomingAnime(page: number = 1): Promise<{ movies: TVSh
         with_genres: '16',
         with_origin_country: 'JP',
         'first_air_date.gte': new Date().toISOString().split('T')[0],
-        sort_by: 'first_air_date.asc',
+        sort_by: 'popularity.desc',
         page: page.toString()
     });
     if (!data) return { movies: [], totalPages: 0 };
     return {
-        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        movies: data.results.map(mapTMDbTVShow),
         totalPages: data.total_pages > 500 ? 500 : data.total_pages
     };
 }
 
 export async function getTopRatedAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
-    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/top_rated', {
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('discover/tv', {
         with_genres: '16',
         with_origin_country: 'JP',
+        sort_by: 'vote_average.desc',
+        'vote_count.gte': '200',
         page: page.toString()
     });
     if (!data) return { movies: [], totalPages: 0 };
     return {
-        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        movies: data.results.map(mapTMDbTVShow),
         totalPages: data.total_pages > 500 ? 500 : data.total_pages
     };
 }
+
+export type AnimeCategory = 'trending' | 'upcoming' | 'top-rated';
+
+export async function getAnimeByCategory(category: AnimeCategory, page: number = 1): Promise<{ shows: TVShow[], totalPages: number }> {
+    let result: { movies: TVShow[], totalPages: number };
+
+    switch (category) {
+        case 'trending':
+            result = await getTrendingAnime(page);
+            break;
+        case 'upcoming':
+            result = await getUpcomingAnime(page);
+            break;
+        case 'top-rated':
+            result = await getTopRatedAnime(page);
+            break;
+        default:
+            return { shows: [], totalPages: 0 };
+    }
+    
+    return { shows: result.movies, totalPages: result.totalPages };
+}
+
 
 // Search Functions
 let genreMap: Map<number, string> | null = null;

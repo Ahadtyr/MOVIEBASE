@@ -151,11 +151,12 @@ export async function getDiscoverMoviesByParams(params: Record<string, string>, 
 
 export type BrowseCategory = 'bollywood' | 'hollywood' | 'anime';
 
-export async function getMoviesByCategory(category: BrowseCategory, page: number = 1): Promise<{ movies: Movie[], totalPages: number }> {
+export async function getMoviesByCategory(category: BrowseCategory, page: number = 1): Promise<{ movies: (Movie | TVShow)[], totalPages: number }> {
     let params: Record<string, string> = {
         sort_by: 'popularity.desc',
         page: page.toString(),
     };
+    let endpoint = 'discover/movie';
 
     switch (category) {
         case 'bollywood':
@@ -166,18 +167,21 @@ export async function getMoviesByCategory(category: BrowseCategory, page: number
             params.with_origin_country = 'US';
             break;
         case 'anime':
+            endpoint = 'discover/tv';
             params.with_genres = '16'; // Animation
             params.with_keywords = '210024'; // Anime keyword ID
             params.with_origin_country = 'JP';
             break;
     }
 
-    const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', params);
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail | TMDbTVShowDetail>>(endpoint, params);
     if (!data) return { movies: [], totalPages: 0 };
+    
+    const map = await getGenreMap();
     const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
     
     return {
-        movies: data.results.map(mapTMDbMovie),
+        movies: data.results.map(item => mapTMDbSearchResult(item, map)).filter((item): item is Movie | TVShow => item !== null),
         totalPages,
     };
 }
@@ -253,6 +257,47 @@ export async function getDiscoverTVShowsByParams(params: Record<string, string>,
   return data.results.map(mapTMDbTVShow);
 }
 
+// Anime Fetching Functions
+export async function getTrendingAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('trending/tv/week', {
+        with_genres: '16',
+        page: page.toString()
+    });
+    if (!data) return { movies: [], totalPages: 0 };
+    return {
+        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        totalPages: data.total_pages > 500 ? 500 : data.total_pages
+    };
+}
+
+export async function getUpcomingAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('discover/tv', {
+        with_genres: '16',
+        with_origin_country: 'JP',
+        'first_air_date.gte': new Date().toISOString().split('T')[0],
+        sort_by: 'popularity.desc',
+        page: page.toString()
+    });
+    if (!data) return { movies: [], totalPages: 0 };
+    return {
+        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        totalPages: data.total_pages > 500 ? 500 : data.total_pages
+    };
+}
+
+export async function getTopRatedAnime(page: number = 1): Promise<{ movies: TVShow[], totalPages: number }> {
+    const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('tv/top_rated', {
+        with_genres: '16',
+        with_origin_country: 'JP',
+        page: page.toString()
+    });
+    if (!data) return { movies: [], totalPages: 0 };
+    return {
+        movies: data.results.map(mapTMDbTVShow).slice(0, 10),
+        totalPages: data.total_pages > 500 ? 500 : data.total_pages
+    };
+}
+
 // Search Functions
 let genreMap: Map<number, string> | null = null;
 
@@ -281,7 +326,7 @@ async function getGenreMap(): Promise<Map<number, string>> {
   return genreMap;
 }
 
-function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | TVShow | null {
+export function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | TVShow | null {
   const genre_ids = item.genre_ids || [];
   const baseItem = {
     id: item.id,
@@ -292,7 +337,7 @@ function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | 
     genres: genre_ids.map((id: number) => ({ id, name: genreMap.get(id) || '' })).filter((g: Genre) => g.name),
   };
 
-  if (item.media_type === 'movie') {
+  if (item.media_type === 'movie' || 'title' in item) {
     return {
       ...baseItem,
       title: item.title,
@@ -300,7 +345,7 @@ function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | 
     } as Movie;
   }
 
-  if (item.media_type === 'tv') {
+  if (item.media_type === 'tv' || 'name' in item) {
     return {
       ...baseItem,
       name: item.name,

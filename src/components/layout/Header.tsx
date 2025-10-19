@@ -96,6 +96,7 @@ export default function Header() {
           {navLinks.map((link) => (
             <NavLinkItem key={link.href} {...link} />
           ))}
+          <NavLinkItem href="/anime" label="Anime" icon={Tv} />
           <BrowseDropdown />
           <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
           <NavLinkItem href="/search-page" label="Search" icon={Search} />
@@ -119,6 +120,7 @@ export default function Header() {
             {navLinks.map((link) => (
               <NavLinkItem key={link.href} {...link} />
             ))}
+            <NavLinkItem href="/anime" label="Anime" icon={Tv} />
              <div className="border-t border-border/50 my-2"></div>
             <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
             <NavLinkItem href="/search-page" label="Search" icon={Search} />

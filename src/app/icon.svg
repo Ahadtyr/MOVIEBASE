@@ -1,24 +1,25 @@
-<svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <defs>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
     <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+        <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+        <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
     </filter>
-  </defs>
-  <g fill="none" stroke="#BF00FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow)">
-    <!-- Clapperboard Top -->
-    <path d="M15 25 L85 10" transform="rotate(-8 15 25)"/>
-    <path d="M22 23 L32 21" stroke-width="4"/>
-    <path d="M42 19.5 L52 17.5" stroke-width="4"/>
-    <path d="M62 16 L72 14" stroke-width="4"/>
-    
-    <!-- Clapperboard Body -->
-    <path d="M15 30 H 85 V 85 H 15 Z"/>
-    <path d="M25 45 H 75"/>
-    <path d="M25 60 H 75"/>
-    <path d="M25 75 H 75"/>
-  </g>
+</defs>
+<g filter="url(#neon-glow)">
+    <path d="M216 168V200C216 204.418 212.418 208 208 208H48C43.5817 208 40 204.418 40 200V168" stroke="#BF00FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <path d="M40 88V56C40 51.5817 43.5817 48 48 48H208C212.418 48 216 51.5817 216 56V88" stroke="#BF00FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <circle cx="128" cy="128" r="64" stroke="#BF00FF" stroke-width="16"/>
+
+    <circle cx="128" cy="128" r="16" stroke="#BF00FF" stroke-width="16"/>
+
+    <circle cx="96" cy="96" r="8" stroke="#BF00FF" stroke-width="12"/>
+    <circle cx="160" cy="96" r="8" stroke="#BF00FF" stroke-width="12"/>
+    <circle cx="96" cy="160" r="8" stroke="#BF00FF" stroke-width="12"/>
+    <circle cx="160" cy="160" r="8" stroke="#BF00FF" stroke-width="12"/>
+</g>
 </svg>

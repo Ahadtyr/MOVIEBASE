@@ -12,7 +12,7 @@ config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getDiscoverMoviesByParams } from '@/lib/tmdb';
+import { getDiscoverMoviesByParams, getKeywordIds } from '@/lib/tmdb';
 import type { Movie, TVShow } from '@/lib/types';
 
 const RecommendMovieInputSchema = z.object({
@@ -82,11 +82,17 @@ const recommendMovieFlow = ai.defineFlow(
     
     const { keywords, reason } = output;
 
-    // Step 2: Use keywords to discover movies on TMDb
-    const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywords });
-    const topResult = searchResults.length > 0 ? searchResults[0] : null;
+    // Step 2: Get keyword IDs from TMDb
+    const keywordIds = await getKeywordIds(keywords);
 
-    // Step 3: Return the structured data
+    let topResult: Movie | null = null;
+    if (keywordIds) {
+        // Step 3: Use keyword IDs to discover movies on TMDb
+        const searchResults = await getDiscoverMoviesByParams({ with_keywords: keywordIds });
+        topResult = searchResults.length > 0 ? searchResults[0] : null;
+    }
+
+    // Step 4: Return the structured data
     return {
       recommendation: topResult,
       reason,

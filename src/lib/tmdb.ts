@@ -17,6 +17,11 @@ interface TMDbGenre {
   name: string;
 }
 
+interface TMDbKeyword {
+    id: number;
+    name: string;
+}
+
 interface TMDbGenreList {
   genres: Genre[];
 }
@@ -296,4 +301,20 @@ export async function searchMulti(query: string, page: number = 1): Promise<(Mov
     console.error(`Error searching for query "${query}":`, error);
     return [];
   }
+}
+
+export async function getKeywordIds(keywordNames: string): Promise<string> {
+    const individualKeywords = keywordNames.split(',').map(k => k.trim());
+    const keywordIdPromises = individualKeywords.map(async (keyword) => {
+        try {
+            const data = await fetchFromTMDB<TMDbListResponse<TMDbKeyword>>('search/keyword', { query: keyword });
+            return data.results.length > 0 ? data.results[0].id.toString() : null;
+        } catch (error) {
+            console.warn(`Could not find keyword ID for "${keyword}":`, error);
+            return null;
+        }
+    });
+
+    const keywordIds = await Promise.all(keywordIdPromises);
+    return keywordIds.filter(id => id !== null).join(',');
 }

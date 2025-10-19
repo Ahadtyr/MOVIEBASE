@@ -12,11 +12,6 @@ interface TMDbListResponse<T> {
   total_results: number;
 }
 
-interface TMDbGenre {
-  id: number;
-  name: string;
-}
-
 interface TMDbKeyword {
     id: number;
     name: string;
@@ -27,12 +22,12 @@ interface TMDbGenreList {
 }
 
 interface TMDbMovieDetail extends Omit<Movie, 'genres' | 'credits' | 'similar' | 'runtime'> {
-  genres: TMDbGenre[];
+  genres: Genre[];
   runtime: number | null;
 }
 
 interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar' | 'number_of_seasons' | 'number_of_episodes'> {
-  genres: TMDbGenre[];
+  genres: Genre[];
   number_of_seasons: number;
   number_of_episodes: number;
   seasons: TVSeason[];
@@ -40,17 +35,19 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
-  const API_KEY = process.env.TMDB_API_KEY;
-  if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
-    throw new Error('TMDb API Key is missing or is a placeholder. Please add TMDB_API_KEY to your .env.local file.');
+  const ACCESS_TOKEN = process.env.TMDB_ACCESS_TOKEN;
+  if (!ACCESS_TOKEN) {
+    throw new Error('TMDb Access Token is missing. Please add TMDB_ACCESS_TOKEN to your .env.local file.');
   }
-  const urlParams = new URLSearchParams({ ...params, api_key: API_KEY });
+  
+  const urlParams = new URLSearchParams(params);
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;
 
   const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      Authorization: `Bearer ${ACCESS_TOKEN}`
     },
     next: { revalidate: 3600 } // Cache for 1 hour
   };
@@ -248,7 +245,8 @@ export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
   try {
     const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>(`tv/${tvId}/similar`);
     return data.results.map(mapTMDbTVShow);
-  } catch (error) {
+  } catch (error)
+ {
     console.error(`Error fetching similar TV shows for TV ID ${tvId}:`, error);
     return [];
   }
@@ -303,7 +301,7 @@ function mapTMDbSearchResult(item: any, genreMap: Map<number, string>): Movie | 
     poster_path: item.poster_path,
     backdrop_path: item.backdrop_path,
     overview: item.overview,
-    vote_average: item.vote_,
+    vote_average: item.vote_average,
     genres: genre_ids.map((id: number) => ({ id, name: genreMap.get(id) || '' })).filter((g: Genre) => g.name),
   };
 

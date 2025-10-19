@@ -6,6 +6,7 @@ import { getTrendingAnime, getUpcomingAnime, getTopRatedAnime } from '@/lib/tmdb
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Flame, Calendar, Star } from 'lucide-react';
+import type { TVShow } from '@/lib/types';
 
 export default async function AnimePage() {
   const trendingPromise = getTrendingAnime(1);
@@ -24,7 +25,7 @@ export default async function AnimePage() {
 
   return (
     <PageContainer>
-      <SectionTitle className="text-center !text-5xl !font-bold text-primary neon-glow-primary mb-6">
+      <SectionTitle className="text-center !text-5xl !font-bold text-accent neon-glow-primary mb-6">
         Anime World
       </SectionTitle>
       
@@ -54,15 +55,15 @@ export default async function AnimePage() {
       ) : (
         <>
           {trendingAnime.length > 0 && (
-            <MovieSection title="🔥 Trending Anime" items={trendingAnime} href="/anime/trending" />
+            <MovieSection title="🔥 Trending Anime" items={trendingAnime as TVShow[]} href="/anime/trending" />
           )}
 
           {upcomingAnime.length > 0 && (
-            <MovieSection title="🌸 Upcoming Anime" items={upcomingAnime} href="/anime/upcoming" />
+            <MovieSection title="🌸 Upcoming Anime" items={upcomingAnime as TVShow[]} href="/anime/upcoming" />
           )}
 
           {topRatedAnime.length > 0 && (
-            <MovieSection title="⭐ Top Rated Anime" items={topRatedAnime} href="/anime/top-rated" />
+            <MovieSection title="⭐ Top Rated Anime" items={topRatedAnime as TVShow[]} href="/anime/top-rated" />
           )}
         </>
       )}

@@ -1,7 +1,7 @@
 
 import type { Movie, TVShow, TMDBCastMember, Genre, TVSeason, TVSeasonDetails } from './types';
 
-const API_KEY = process.env.TMDB_API_KEY;
+const ACCESS_TOKEN = process.env.TMDB_ACCESS_TOKEN;
 const BASE_URL = 'https://api.themoviedb.org/3';
 export const IMAGE_BASE_URL_W500 = 'https://image.tmdb.org/t/p/w500';
 export const IMAGE_BASE_URL_ORIGINAL = 'https://image.tmdb.org/t/p/original';
@@ -41,14 +41,23 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
-  if (!API_KEY || API_KEY === 'your_key_here') {
-    throw new Error('TMDb API key is missing or invalid. Please get a free key from themoviedb.org and add it to your .env.local file. See README.md for more details.');
+  if (!ACCESS_TOKEN) {
+    throw new Error('TMDb Access Token is missing. Please add TMDB_ACCESS_TOKEN to your .env.local file.');
   }
-  const urlParams = new URLSearchParams({ ...params, api_key: API_KEY });
+  const urlParams = new URLSearchParams(params);
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;
 
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${ACCESS_TOKEN}`
+    },
+    next: { revalidate: 3600 } // Cache for 1 hour
+  };
+
   try {
-    const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
+    const response = await fetch(url, options);
     if (!response.ok) {
       console.error(`Error fetching from TMDb: ${response.status} ${response.statusText} for URL: ${url}`);
       const errorBody = await response.text();

@@ -35,23 +35,20 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
 
 
 async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T | null> {
-  const API_KEY = process.env.TMDB_API_KEY;
-  if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY_HERE') {
-    console.warn('TMDb API Key is missing. Please add TMDB_API_KEY to your .env.local file. Returning empty data.');
+  const ACCESS_TOKEN = process.env.TMDB_ACCESS_TOKEN;
+  if (!ACCESS_TOKEN || ACCESS_TOKEN === 'YOUR_TMDB_ACCESS_TOKEN_HERE') {
+    console.warn('TMDb Access Token is missing. Please add TMDB_ACCESS_TOKEN to your environment variables. Returning empty data.');
     return null;
   }
   
-  const urlParams = new URLSearchParams({
-    ...params,
-    api_key: API_KEY,
-  });
-  
+  const urlParams = new URLSearchParams(params);
   const url = `${BASE_URL}/${endpoint}?${urlParams.toString()}`;
 
   const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      Authorization: `Bearer ${ACCESS_TOKEN}`
     },
     next: { revalidate: 3600 } // Cache for 1 hour
   };
@@ -272,10 +269,10 @@ async function getGenreMap(): Promise<Map<number, string>> {
     tvGenresPromise,
   ]);
 
-  const allGenres = [...movieGenres, ...tvGenres];
+  const allGenres = [...(movieGenres || []), ...(tvGenres || [])];
   const newGenreMap = new Map<number, string>();
   allGenres.forEach(genre => {
-    if (!newGenreMap.has(genre.id)) {
+    if (genre && !newGenreMap.has(genre.id)) {
       newGenreMap.set(genre.id, genre.name);
     }
   });

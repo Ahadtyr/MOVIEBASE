@@ -29,6 +29,7 @@ async function getMoviesPageData() {
     };
   } catch (error) {
     console.error("Failed to fetch movies page data:", error);
+    // Gracefully return empty arrays if there's an error (e.g., missing API key)
     return { popularMovies: [], comedyMovies: [], hindiMovies: [], koreanMovies: [] };
   }
 }

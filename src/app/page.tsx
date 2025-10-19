@@ -27,7 +27,7 @@ async function getHomePageData() {
     return { heroMovies, trending, newReleases, topRated, recommended };
   } catch (error) {
     console.error("Failed to fetch homepage data from TMDb:", error);
-    // Fallback to empty arrays if needed
+    // Fallback to empty arrays if an error occurs (e.g., missing API key)
     return { 
       heroMovies: [], 
       trending: [], 
@@ -49,6 +49,13 @@ export default async function HomePage() {
         {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
         {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
         {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}
+        
+        {heroMovies.length === 0 && (
+           <div className="text-center py-10">
+            <p className="text-xl text-muted-foreground">Could not load movies.</p>
+            <p className="text-sm text-muted-foreground">Please check your TMDb API key and try again.</p>
+          </div>
+        )}
       </PageContainer>
     </>
   );

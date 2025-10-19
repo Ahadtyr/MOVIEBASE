@@ -26,6 +26,7 @@ async function getTVShowsPageData() {
     };
   } catch (error) {
     console.error("Failed to fetch TV shows page data:", error);
+    // Gracefully return empty arrays if there's an error (e.g., missing API key)
     return { popularShows: [], hindiShows: [], koreanShows: [], westernShows: [] };
   }
 }

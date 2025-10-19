@@ -58,7 +58,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] md:h-[calc(85vh-4rem)] max-h-[700px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[calc(70vh-4rem)] md:h-[calc(65vh-4rem)] max-h-[600px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}

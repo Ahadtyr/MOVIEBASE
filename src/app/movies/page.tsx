@@ -17,7 +17,7 @@ async function getMoviesPageData() {
   ] = await Promise.all([
     getPopularMovies(),
     getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
-    getDiscoverMoviesByParams({ with_original_language: 'hi' }),
+    getDiscoverMoviesByParams({ with_original_language: 'hi', sort_by: 'primary_release_date.desc' }),
     getDiscoverMoviesByParams({ with_origin_country: 'KR' })
   ]);
   
@@ -46,7 +46,7 @@ export default async function MoviesPage() {
       )}
 
       {hindiMovies.length > 0 && (
-        <MovieSection title="Hindi Cinema" items={hindiMovies} />
+        <MovieSection title="Latest Hindi Cinema" items={hindiMovies} />
       )}
 
       {koreanMovies.length > 0 && (

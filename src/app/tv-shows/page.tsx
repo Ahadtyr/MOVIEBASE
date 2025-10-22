@@ -13,9 +13,9 @@ async function getTVShowsPageData() {
     westernShows
   ] = await Promise.all([
     getPopularTVShows(),
-    getDiscoverTVShowsByParams({ with_original_language: 'hi' }),
+    getDiscoverTVShowsByParams({ with_original_language: 'hi', sort_by: 'first_air_date.desc' }),
     getDiscoverTVShowsByParams({ with_origin_country: 'KR' }),
-    getDiscoverTVShowsByParams({ with_origin_country: 'US' })
+    getDiscoverTVShowsByParams({ with_origin_country: 'US', sort_by: 'first_air_date.desc' })
   ]);
   
   return { 
@@ -39,7 +39,7 @@ export default async function TVShowsPage() {
       )}
       
       {hindiShows.length > 0 && (
-        <MovieSection title="Hindi Series" items={hindiShows} />
+        <MovieSection title="Latest Hindi Series" items={hindiShows} />
       )}
 
       {koreanShows.length > 0 && (
@@ -47,7 +47,7 @@ export default async function TVShowsPage() {
       )}
 
       {westernShows.length > 0 && (
-        <MovieSection title="Western Shows" items={westernShows} />
+        <MovieSection title="Latest Western Shows" items={westernShows} />
       )}
 
       {(popularShows.length === 0 && hindiShows.length === 0 && koreanShows.length === 0 && westernShows.length === 0) && (

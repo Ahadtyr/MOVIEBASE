@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Movie } from '@/lib/types';
+import type { Movie, TVShow } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, PlayCircle, Info, Star, CalendarDays } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +39,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[55vh] flex items-center justify-center bg-muted">
+      <div className="h-[75vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[60vh] max-h-[700px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[75vh] max-h-[800px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}
@@ -82,16 +82,16 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-           <h1 className="text-4xl md:text-5xl font-headline font-bold mb-3 drop-shadow-xl">{currentMovie.title}</h1>
+           <h1 className="text-3xl md:text-4xl font-headline font-bold mb-3 drop-shadow-xl">{currentMovie.title}</h1>
            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-400 mr-1.5 neon-glow" />
-                  <span className="text-lg font-medium">{currentMovie.vote_average.toFixed(1)}</span>
+                  <span className="text-base font-medium">{currentMovie.vote_average.toFixed(1)}</span>
                 </div>
                 {currentMovie.release_date && (
                   <div className="flex items-center">
                     <CalendarDays className="w-5 h-5 text-muted-foreground mr-1.5" />
-                    <span className="text-lg">{new Date(currentMovie.release_date).getFullYear()}</span>
+                    <span className="text-base">{new Date(currentMovie.release_date).getFullYear()}</span>
                   </div>
                 )}
             </div>
@@ -102,7 +102,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
               </Badge>
             ))}
           </div>
-          <p className="text-base md:text-lg text-foreground/80 leading-relaxed line-clamp-3 mb-6">
+          <p className="text-sm md:text-base text-foreground/80 leading-relaxed line-clamp-3 mb-6">
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">

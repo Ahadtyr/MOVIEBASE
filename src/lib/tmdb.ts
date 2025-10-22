@@ -90,7 +90,11 @@ export async function getPopularMovies(): Promise<Movie[]> {
 }
 
 export async function getUpcomingMovies(): Promise<Movie[]> {
-  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/upcoming');
+  const today = new Date().toISOString().split('T')[0];
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', {
+    'primary_release_date.gte': today,
+    sort_by: 'popularity.desc',
+  });
   if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }

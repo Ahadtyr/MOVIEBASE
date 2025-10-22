@@ -62,6 +62,40 @@
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+.film-reel-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.film-reel-loader div {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  animation: pulse 1.4s infinite ease-in-out both;
+}
+
+.film-reel-loader div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.film-reel-loader div:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
 /* Neon Glow Effect */
 .neon-glow {
   filter: drop-shadow(0 0 3px hsl(var(--accent))) drop-shadow(0 0 6px hsl(var(--accent)));

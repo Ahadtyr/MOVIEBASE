@@ -162,9 +162,11 @@ export async function getMoviesByCategory(category: BrowseCategory, page: number
         case 'bollywood':
             params.with_original_language = 'hi';
             params.region = 'IN';
+            params.sort_by = 'primary_release_date.desc';
             break;
         case 'hollywood':
             params.with_origin_country = 'US';
+            params.sort_by = 'primary_release_date.desc';
             break;
         case 'anime':
             endpoint = 'discover/tv';

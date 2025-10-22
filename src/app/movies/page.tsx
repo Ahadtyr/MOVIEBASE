@@ -12,25 +12,25 @@ async function getMoviesPageData() {
   const [
     popularMoviesData,
     comedyMoviesData,
-    hindiMoviesData,
-    koreanMoviesData
+    bollywoodMoviesData,
+    hollywoodMoviesData
   ] = await Promise.all([
     getPopularMovies(),
     getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
     getDiscoverMoviesByParams({ with_original_language: 'hi', sort_by: 'primary_release_date.desc' }),
-    getDiscoverMoviesByParams({ with_origin_country: 'KR' })
+    getDiscoverMoviesByParams({ with_origin_country: 'US', sort_by: 'primary_release_date.desc' })
   ]);
   
   return { 
     popularMovies: popularMoviesData.slice(0, 12),
     comedyMovies: comedyMoviesData.slice(0, 12),
-    hindiMovies: hindiMoviesData.slice(0, 12),
-    koreanMovies: koreanMoviesData.slice(0, 12),
+    bollywoodMovies: bollywoodMoviesData.slice(0, 12),
+    hollywoodMovies: hollywoodMoviesData.slice(0, 12),
   };
 }
 
 export default async function MoviesPage() {
-  const { popularMovies, comedyMovies, hindiMovies, koreanMovies } = await getMoviesPageData();
+  const { popularMovies, comedyMovies, bollywoodMovies, hollywoodMovies } = await getMoviesPageData();
 
   return (
     <PageContainer>
@@ -45,15 +45,15 @@ export default async function MoviesPage() {
         <MovieSection title="Comedy Movies" items={comedyMovies} />
       )}
 
-      {hindiMovies.length > 0 && (
-        <MovieSection title="Latest Hindi Cinema" items={hindiMovies} />
+      {bollywoodMovies.length > 0 && (
+        <MovieSection title="Bollywood" items={bollywoodMovies} />
       )}
 
-      {koreanMovies.length > 0 && (
-        <MovieSection title="Korean Cinema" items={koreanMovies} />
+      {hollywoodMovies.length > 0 && (
+        <MovieSection title="Hollywood" items={hollywoodMovies} />
       )}
 
-      {(popularMovies.length === 0 && comedyMovies.length === 0 && hindiMovies.length === 0 && koreanMovies.length === 0) && (
+      {(popularMovies.length === 0 && comedyMovies.length === 0 && bollywoodMovies.length === 0 && hollywoodMovies.length === 0) && (
         <p className="text-muted-foreground text-center py-10">
           Could not load movies at the moment. Please ensure your TMDb API key is correct or try again later.
         </p>

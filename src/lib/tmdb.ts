@@ -152,6 +152,7 @@ export async function getDiscoverMoviesByParams(params: Record<string, string>, 
 export type BrowseCategory = 'bollywood' | 'hollywood' | 'anime';
 
 export async function getMoviesByCategory(category: BrowseCategory, page: number = 1): Promise<{ movies: (Movie | TVShow)[], totalPages: number }> {
+    const today = new Date().toISOString().split('T')[0];
     let params: Record<string, string> = {
         sort_by: 'popularity.desc',
         page: page.toString(),
@@ -163,10 +164,12 @@ export async function getMoviesByCategory(category: BrowseCategory, page: number
             params.with_original_language = 'hi';
             params.region = 'IN';
             params.sort_by = 'primary_release_date.desc';
+            params['primary_release_date.lte'] = today;
             break;
         case 'hollywood':
             params.with_origin_country = 'US';
             params.sort_by = 'primary_release_date.desc';
+            params['primary_release_date.lte'] = today;
             break;
         case 'anime':
             endpoint = 'discover/tv';

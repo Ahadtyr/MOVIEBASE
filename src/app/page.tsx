@@ -35,7 +35,7 @@ export default async function HomePage() {
     <>
       <HeroCarousel movies={heroMovies} />
       <PageContainer>
-        {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} href="/movies" />}
+        {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} href="/trending" />}
         {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
         {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
         {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}

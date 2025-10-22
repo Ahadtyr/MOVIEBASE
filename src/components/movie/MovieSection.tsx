@@ -1,3 +1,4 @@
+
 import type { Movie, TVShow } from '@/lib/types';
 import MovieCard from './MovieCard';
 import SectionTitle from '@/components/shared/SectionTitle';
@@ -15,6 +16,12 @@ export default function MovieSection({ title, items, href }: MovieSectionProps) 
     return null;
   }
 
+  const itemsWithPosters = items.filter(item => item.poster_path);
+
+  if (itemsWithPosters.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-8 md:py-12">
       <div className="flex items-baseline justify-between mb-6">
@@ -29,7 +36,7 @@ export default function MovieSection({ title, items, href }: MovieSectionProps) 
 
       <div className="relative">
         <div className="flex space-x-4 md:space-x-6 overflow-x-auto pb-4 -mb-4">
-          {items.map((item) => (
+          {itemsWithPosters.map((item) => (
             <div key={item.id} className="flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[18vw] xl:w-[15vw]">
               <MovieCard item={item} />
             </div>

@@ -9,6 +9,8 @@ import type { Movie } from '@/lib/types';
 const COMEDY_GENRE_ID = '35';
 
 async function getMoviesPageData() {
+  const today = new Date().toISOString().split('T')[0];
+
   const [
     popularMoviesData,
     comedyMoviesData,
@@ -17,8 +19,8 @@ async function getMoviesPageData() {
   ] = await Promise.all([
     getPopularMovies(),
     getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
-    getDiscoverMoviesByParams({ with_original_language: 'hi', sort_by: 'primary_release_date.desc' }),
-    getDiscoverMoviesByParams({ with_origin_country: 'US', sort_by: 'primary_release_date.desc' })
+    getDiscoverMoviesByParams({ with_original_language: 'hi', sort_by: 'primary_release_date.desc', 'primary_release_date.lte': today }),
+    getDiscoverMoviesByParams({ with_origin_country: 'US', sort_by: 'primary_release_date.desc', 'primary_release_date.lte': today })
   ]);
   
   return { 

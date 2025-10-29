@@ -60,7 +60,7 @@
   }
   body {
     @apply text-foreground font-body antialiased;
-    background: linear-gradient(315deg, hsl(var(--background)) 30%, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.05), hsl(var(--background)) 70%);
+    background: linear-gradient(315deg, hsl(var(--background)) 30%, hsl(var(--primary) / 0.04), hsl(var(--accent) / 0.02), hsl(var(--background)) 70%);
     background-size: 200% 200%;
     animation: gradient-animation 40s ease-in-out infinite;
   }

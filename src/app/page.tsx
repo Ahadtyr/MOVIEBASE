@@ -14,7 +14,9 @@ async function getHomePageData() {
     getTopRatedTVShows(),
   ]);
 
-  const heroMovies = popularMovies.slice(0, 5) as Movie[];
+  const heroItems = [...popularMovies.slice(0, 3), ...topRatedTVShows.slice(0, 2)]
+    .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
+
   const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending
   const newReleases = upcomingMovies.slice(0, 12) as Movie[];
   const topRated = topRatedMovies.slice(0, 12) as Movie[];
@@ -24,23 +26,23 @@ async function getHomePageData() {
     .sort(() => 0.5 - Math.random())
     .slice(0, 12) as (Movie | TVShow)[];
 
-  return { heroMovies, trending, newReleases, topRated, recommended };
+  return { heroItems, trending, newReleases, topRated, recommended };
 
 }
 
 export default async function HomePage() {
-  const { heroMovies, trending, newReleases, topRated, recommended } = await getHomePageData();
+  const { heroItems, trending, newReleases, topRated, recommended } = await getHomePageData();
 
   return (
     <>
-      <HeroCarousel movies={heroMovies} />
+      <HeroCarousel items={heroItems} />
       <PageContainer>
         {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} href="/trending" />}
         {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
         {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
         {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}
         
-        {heroMovies.length === 0 && (
+        {heroItems.length === 0 && (
            <div className="text-center py-10">
             <p className="text-xl text-muted-foreground">Could not load movies.</p>
             <p className="text-sm text-muted-foreground">Please check your TMDb API key and try again.</p>

@@ -1,3 +1,4 @@
+
 export interface Genre {
   id: number;
   name: string;
@@ -25,6 +26,7 @@ export interface Movie {
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: Movie[] };
   name?: string; // for compatibility
+  first_air_date?: string; // for compatibility
 }
 
 export interface TVShow {
@@ -43,6 +45,7 @@ export interface TVShow {
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: TVShow[] };
   title?: string; // for compatibility
+  release_date?: string; // for compatibility
 }
 
 export interface TVSeason {

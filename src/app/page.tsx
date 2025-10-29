@@ -14,7 +14,7 @@ async function getHomePageData() {
     getPopularTVShows(),
   ]);
 
-  const heroItems = [...popularMovies.slice(0, 3), ...popularTVShows.slice(0, 2)]
+  const heroItems = [...popularMovies.slice(0, 5), ...popularTVShows.slice(0, 5)]
     .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
 
   const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending

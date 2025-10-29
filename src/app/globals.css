@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 13%; /* Dark Gray #222222 */
+    --background: 240 21% 6%; /* Very Dark Blue, close to #0A0A0F */
     --foreground: 0 0% 98%; /* Light gray for text */
 
     --card: 0 0% 16%; /* Slightly lighter than background for cards */
@@ -60,9 +60,9 @@
   }
   body {
     @apply text-foreground font-body antialiased;
-    background: linear-gradient(315deg, hsl(var(--background)) 25%, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.1), hsl(var(--background)) 80%);
+    background: linear-gradient(315deg, hsl(var(--background)) 30%, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.05), hsl(var(--background)) 70%);
     background-size: 200% 200%;
-    animation: gradient-animation 25s ease-in-out infinite;
+    animation: gradient-animation 40s ease-in-out infinite;
   }
 }
 

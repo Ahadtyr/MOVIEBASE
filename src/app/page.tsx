@@ -14,8 +14,11 @@ async function getHomePageData() {
     getDiscoverTVShowsByParams({ 'first_air_date.gte': '2025-01-01', 'first_air_date.lte': '2025-12-31' }),
   ]);
 
-  const heroItems = [...popularMovies.slice(0, 5), ...showsFrom2025.slice(0, 5)]
+  const mostTrendingMovie = popularMovies[0];
+  const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
     .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
+  
+  const heroItems = [mostTrendingMovie, ...otherHeroItems];
 
   const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending
   const newReleases = upcomingMovies.slice(0, 12) as Movie[];

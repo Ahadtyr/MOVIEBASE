@@ -1,9 +1,10 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Movie, TVShow } from '@/lib/types';
+import type { Movie } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, PlayCircle, Info, Star, CalendarDays } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +40,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="h-[75vh] flex items-center justify-center bg-muted">
+      <div className="h-[85vh] flex items-center justify-center bg-muted">
         <p className="text-muted-foreground">No featured movies available at the moment.</p>
       </div>
     );
@@ -47,18 +48,16 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   const getBannerUrl = (movie: Movie) => {
     if (movie.backdrop_path) {
-      if (movie.backdrop_path.startsWith('http')) {
-        return movie.backdrop_path;
-      }
       return `${IMAGE_BASE_URL_ORIGINAL}${movie.backdrop_path}`;
     }
-    return `https://placehold.co/1200x675.png`;
+    // Fallback in case there is no backdrop
+    return `https://placehold.co/1920x1080.png`;
   };
   
   const currentMovie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[75vh] max-h-[800px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
+    <div className="relative w-full h-[85vh] max-h-[1080px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
       {movies.map((movie, index) => (
         <div
           key={movie.id}
@@ -78,11 +77,12 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
        </div>
       ))}
       
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent"></div>
+      {/* Dark overlay for contrast */}
+      <div className="absolute inset-0 bg-black/40"></div>
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-           <h1 className="text-3xl md:text-4xl font-headline font-bold mb-3 drop-shadow-xl">{currentMovie.title}</h1>
+           <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-bold mb-3 drop-shadow-xl">{currentMovie.title}</h1>
            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-400 mr-1.5 neon-glow" />
@@ -97,12 +97,12 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             </div>
           <div className="flex flex-wrap gap-2 mb-6">
             {currentMovie.genres?.slice(0, 3).map(genre => (
-              <Badge key={genre.id} variant="secondary" className="bg-primary/80 text-primary-foreground backdrop-blur-sm text-sm px-3 py-1">
+              <Badge key={genre.id} variant="secondary" className="bg-white/20 text-white backdrop-blur-sm text-sm px-3 py-1 border border-white/30">
                 {genre.name}
               </Badge>
             ))}
           </div>
-          <p className="text-sm md:text-base text-foreground/80 leading-relaxed line-clamp-3 mb-6">
+          <p className="text-sm md:text-base text-white/90 leading-relaxed line-clamp-3 mb-6 drop-shadow-md">
             {currentMovie.overview}
           </p>
           <div className="flex space-x-3">
@@ -112,7 +112,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
               </Button>
             </Link>
             <Link href={`/movie/${currentMovie.id}`} passHref>
-              <Button size="lg" variant="secondary" className="bg-secondary/70 hover:bg-secondary/90 text-secondary-foreground font-semibold backdrop-blur-sm text-lg py-6 px-8">
+              <Button size="lg" variant="secondary" className="bg-white/20 hover:bg-white/30 text-white font-semibold backdrop-blur-sm text-lg py-6 px-8">
                  <Info className="mr-2 h-6 w-6" /> More Info
               </Button>
             </Link>

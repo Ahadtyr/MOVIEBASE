@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,9 +60,9 @@
   }
   body {
     @apply text-foreground font-body antialiased;
-    background: linear-gradient(300deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.15), hsl(var(--background)), hsl(var(--background)));
-    background-size: 400% 400%;
-    animation: gradient-animation 40s ease infinite;
+    background: linear-gradient(315deg, hsl(var(--background)) 25%, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.1), hsl(var(--background)) 80%);
+    background-size: 200% 200%;
+    animation: gradient-animation 25s ease-in-out infinite;
   }
 }
 

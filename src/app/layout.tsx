@@ -24,12 +24,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased bg-background text-foreground flex flex-col min-h-screen">
+      <body className="font-body antialiased text-foreground flex flex-col min-h-screen">
         <Suspense>
           <NProgress />
         </Suspense>
         <Header />
-        <main className="flex-grow">
+        <main className="flex-grow bg-background/80 backdrop-blur-3xl">
           {children}
         </main>
         <Footer />

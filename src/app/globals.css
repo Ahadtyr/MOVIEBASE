@@ -58,9 +58,25 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply text-foreground font-body antialiased;
+    background: linear-gradient(300deg, hsl(var(--background)) 0%, hsl(var(--primary) / 0.2) 50%, hsl(var(--background)) 100%);
+    background-size: 200% 200%;
+    animation: gradient-animation 25s ease infinite;
   }
 }
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 @keyframes pulse {
   0%, 100% {

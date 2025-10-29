@@ -2,19 +2,19 @@
 import HeroCarousel from '@/components/movie/HeroCarousel';
 import MovieSection from '@/components/movie/MovieSection';
 import PageContainer from '@/components/shared/PageContainer';
-import { getPopularMovies, getUpcomingMovies, getTopRatedMovies, getPopularTVShows } from '@/lib/tmdb';
+import { getPopularMovies, getUpcomingMovies, getTopRatedMovies, getDiscoverTVShowsByParams } from '@/lib/tmdb';
 import type { Movie, TVShow } from '@/lib/types';
 
 // Simulate fetching data
 async function getHomePageData() {
-  const [popularMovies, upcomingMovies, topRatedMovies, popularTVShows] = await Promise.all([
+  const [popularMovies, upcomingMovies, topRatedMovies, showsFrom2025] = await Promise.all([
     getPopularMovies(),
     getUpcomingMovies(),
     getTopRatedMovies(),
-    getPopularTVShows(),
+    getDiscoverTVShowsByParams({ 'first_air_date.gte': '2025-01-01', 'first_air_date.lte': '2025-12-31' }),
   ]);
 
-  const heroItems = [...popularMovies.slice(0, 5), ...popularTVShows.slice(0, 5)]
+  const heroItems = [...popularMovies.slice(0, 5), ...showsFrom2025.slice(0, 5)]
     .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
 
   const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending
@@ -22,7 +22,7 @@ async function getHomePageData() {
   const topRated = topRatedMovies.slice(0, 12) as Movie[];
   
   // Mix top-rated movies and TV shows for recommendations
-  const recommended = [...topRatedMovies.slice(12, 18), ...popularTVShows.slice(0, 6)]
+  const recommended = [...topRatedMovies.slice(12, 18), ...showsFrom2025.slice(0, 6)]
     .sort(() => 0.5 - Math.random())
     .slice(0, 12) as (Movie | TVShow)[];
 

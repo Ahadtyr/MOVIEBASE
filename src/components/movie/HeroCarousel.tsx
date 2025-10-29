@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Movie, TVShow } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, PlayCircle, Info, Star, CalendarDays } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlayCircle, Info, Star, CalendarDays, Film, Tv } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
@@ -97,6 +97,10 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
                     <span className="text-base">{new Date(releaseDate).getFullYear()}</span>
                   </div>
                 )}
+                <div className="flex items-center">
+                    {isTV ? <Tv className="w-5 h-5 text-muted-foreground mr-1.5" /> : <Film className="w-5 h-5 text-muted-foreground mr-1.5" />}
+                    <span className="text-base">{isTV ? 'TV Show' : 'Movie'}</span>
+                </div>
             </div>
           <div className="flex flex-wrap gap-2 mb-6">
             {currentItem.genres?.slice(0, 3).map(genre => (

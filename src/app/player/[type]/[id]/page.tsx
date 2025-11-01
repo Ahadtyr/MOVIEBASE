@@ -53,7 +53,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc2 = `https://www.vidking.net/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`; // Assumed structure for vidking
+    embedSrc2 = `https://www.vidking.net/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

@@ -46,14 +46,14 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
-    embedSrc2 = `https://www.vidking.net/embed/movie/${tmdbId}?color=5865f2`;
+    embedSrc2 = `https://blackvid.net/embed?tmdb=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc2 = `https://www.vidking.net/embed/tv/${tmdbId}?season=${seasonNumber}&episode=${episodeNumber}&color=5865f2`;
+    embedSrc2 = `https://blackvid.net/embed?tmdb=${tmdbId}&s=${seasonNumber}&e=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

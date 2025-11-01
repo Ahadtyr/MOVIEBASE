@@ -38,13 +38,13 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     if (!movie) notFound();
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
-    embedSrc = `https://www.vidking.net/embed/movie/${tmdbId}`;
+    embedSrc = `https://vidsrc.to/embed/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
-    embedSrc = `https://www.vidking.net/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

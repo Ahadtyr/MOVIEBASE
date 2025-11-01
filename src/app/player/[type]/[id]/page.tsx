@@ -46,14 +46,14 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
-    embedSrc2 = `http://2embed.cc/embed/${tmdbId}`;
+    embedSrc2 = `https://vidsrc.xyz/embed/movie?tmdb=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc2 = `http://2embed.cc/embedtv/${tmdbId}/`;
+    embedSrc2 = `https://vidsrc.xyz/embed/tv?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

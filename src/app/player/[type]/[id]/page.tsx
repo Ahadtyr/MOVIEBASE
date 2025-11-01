@@ -46,14 +46,14 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
-    embedSrc2 = `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
+    embedSrc2 = `https://remotestre.am/player.php?tmdb=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc2 = `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
+    embedSrc2 = `https://remotestre.am/player.php?tmdb=${tmdbId}&s=${seasonNumber}&e=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

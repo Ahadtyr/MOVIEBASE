@@ -49,7 +49,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
-    embedSrc3 = `https://vidsrc.xyz/embed/movie?tmdb=${tmdbId}`;
+    embedSrc3 = `https://2embed.org/embed/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -57,7 +57,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
-    embedSrc3 = `https://vidsrc.xyz/embed/tv?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
+    embedSrc3 = `https://2embed.org/embed/series?tmdb=${tmdbId}&s=${seasonNumber}&e=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {

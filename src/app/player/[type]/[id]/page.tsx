@@ -16,7 +16,7 @@ interface PlayerPageProps {
   searchParams: {
     s?: string;
     e?: string;
-    player?: '1' | '2';
+    player?: '1' | '2' | '3';
   };
 }
 
@@ -35,10 +35,12 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   let itemUrl = '';
   let embedSrc1 = '';
   let embedSrc2 = '';
+  let embedSrc3 = '';
   let seasonsData = null;
 
   const player1Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=1`;
   const player2Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=2`;
+  const player3Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=3`;
 
   if (type === 'movie') {
     const movie = await getMovieDetails(tmdbId);
@@ -47,6 +49,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
+    embedSrc3 = `https://vidsrc.xyz/embed/movie?tmdb=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -54,6 +57,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
+    embedSrc3 = `https://vidsrc.xyz/embed/tv?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {
@@ -93,15 +97,19 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-sm mx-auto mb-4">
+        <TabsList className="grid w-full grid-cols-3 max-w-sm mx-auto mb-4">
           <Link href={player1Path} scroll={false}><TabsTrigger value="1" className="w-full">Player 1</TabsTrigger></Link>
           <Link href={player2Path} scroll={false}><TabsTrigger value="2" className="w-full">Player 2</TabsTrigger></Link>
+          <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
           <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} />
         </TabsContent>
         <TabsContent value="2">
           <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} />
+        </TabsContent>
+         <TabsContent value="3">
+          <PlayerFrame src={embedSrc3} title={`Playback for ${title} on Player 3`} />
         </TabsContent>
       </Tabs>
 

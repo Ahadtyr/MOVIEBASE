@@ -45,14 +45,14 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     if (!movie) notFound();
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
-    embedSrc1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
+    embedSrc1 = `https://superembed.stream/movie?tmdb_id=${tmdbId}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
-    embedSrc1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc1 = `https://superembed.stream/tv?tmdb_id=${tmdbId}&s=${seasonNumber}&e=${episodeNumber}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
 
     // Fetch all seasons data

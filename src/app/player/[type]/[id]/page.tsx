@@ -73,6 +73,8 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         width="100%"
         height="100%"
         frameBorder="0"
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+        sandbox="allow-scripts allow-same-origin allow-presentation"
         allowFullScreen
         title={title}
         key={src} // Force re-render on src change

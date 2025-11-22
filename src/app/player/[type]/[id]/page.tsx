@@ -20,6 +20,32 @@ interface PlayerPageProps {
   };
 }
 
+interface PlayerFrameProps {
+  src: string;
+  title: string;
+  sandbox?: string;
+  allow?: string;
+}
+
+function PlayerFrame({ src, title, sandbox, allow = "autoplay; fullscreen; encrypted-media; picture-in-picture" }: PlayerFrameProps) {
+  return (
+    <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+      <iframe
+        src={src}
+        width="100%"
+        height="100%"
+        frameBorder="0"
+        allowFullScreen
+        title={title}
+        key={src}
+        sandbox={sandbox}
+        allow={allow}
+      ></iframe>
+    </div>
+  );
+}
+
+
 export default async function PlayerPage({ params, searchParams }: PlayerPageProps) {
   const { type, id } = params;
   const tmdbId = parseInt(id, 10);
@@ -88,48 +114,26 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
-            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-                <iframe
-                    src={embedSrc1}
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    allowFullScreen
-                    title={`Playback for ${title} on Player 1`}
-                    key={embedSrc1}
-                    sandbox="allow-scripts allow-same-origin allow-presentation"
-                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                ></iframe>
-            </div>
+            <PlayerFrame 
+              src={embedSrc1}
+              title={`Playback for ${title} on Player 1`}
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+            />
         </TabsContent>
         <TabsContent value="2">
-            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-                <iframe
-                    src={embedSrc2}
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    allowFullScreen
-                    title={`Playback for ${title} on Player 2`}
-                    key={embedSrc2}
-                    sandbox="allow-scripts allow-same-origin allow-presentation"
-                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                ></iframe>
-            </div>
+            <PlayerFrame
+              src={embedSrc2}
+              title={`Playback for ${title} on Player 2`}
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+            />
         </TabsContent>
         <TabsContent value="3">
-           <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-              <iframe
-                  src={embedSrc3}
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  allowFullScreen
-                  title={`Playback for ${title} on Player 3`}
-                  key={embedSrc3}
-                  allow="encrypted-media"
-              ></iframe>
-            </div>
+           <PlayerFrame
+              src={embedSrc3}
+              title={`Playback for ${title} on Player 3`}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              allow="fullscreen"
+            />
         </TabsContent>
       </Tabs>
 

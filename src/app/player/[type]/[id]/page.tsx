@@ -41,7 +41,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   const player1Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=1`;
   const player2Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=2`;
   const player3Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=3`;
-  const vidplusQuery = 'autoplay=true';
+  const vidplusQuery = 'autoplay=true&chromecast=true&servericon=true';
 
   if (type === 'movie') {
     const movie = await getMovieDetails(tmdbId);

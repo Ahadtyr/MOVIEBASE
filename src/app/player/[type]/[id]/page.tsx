@@ -70,21 +70,38 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     }
   }
 
-  const PlayerFrame = ({ src, title, useSandbox = true }: { src: string, title: string, useSandbox?: boolean }) => (
-    <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-      <iframe
-        src={src}
-        width="100%"
-        height="100%"
-        frameBorder="0"
-        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-        sandbox={useSandbox ? "allow-scripts allow-same-origin allow-presentation" : undefined}
-        allowFullScreen
-        title={title}
-        key={src} // Force re-render on src change
-      ></iframe>
-    </div>
-  );
+  const PlayerFrame = ({ src, title, useSandbox = true }: { src: string, title: string, useSandbox?: boolean }) => {
+    const commonProps = {
+      src: src,
+      width: "100%",
+      height: "100%",
+      frameBorder: "0",
+      allowFullScreen: true,
+      title: title,
+      key: src,
+    };
+    
+    if (useSandbox) {
+        return (
+            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+                <iframe
+                    {...commonProps}
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    sandbox="allow-scripts allow-same-origin allow-presentation"
+                ></iframe>
+            </div>
+        );
+    }
+
+    return (
+        <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+            <iframe
+                {...commonProps}
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            ></iframe>
+        </div>
+    );
+  };
 
   return (
     <PageContainer>

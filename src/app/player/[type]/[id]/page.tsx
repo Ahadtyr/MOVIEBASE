@@ -58,7 +58,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p1 = `https://watchsb.com/e/${tmdbId}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
     embedSrc.p3 = `https://player.vidplus.to/embed/movie/${tmdbId}`;
-    embedSrc.p4 = `https://ansi.to/e/${tmdbId}`;
+    embedSrc.p4 = `https://zembed.to/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -67,7 +67,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
     embedSrc.p3 = `https://player.vidplus.to/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
-    embedSrc.p4 = `https://ansi.to/e/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
+    embedSrc.p4 = `https://zembed.to/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
 
     if (show.seasons) {
         const seasonDetailPromises = show.seasons

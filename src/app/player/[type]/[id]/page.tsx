@@ -41,6 +41,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   const player1Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=1`;
   const player2Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=2`;
   const player3Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=3`;
+  const vidplusQuery = 'autoplay=true&poster=true&title=true&watchparty=false&chromecast=true&servericon=true&setting=true&pip=true&hideprimarycolor=true&hidesecondarycolor=true&hideiconcolor=true&hideprogresscontrol=true&hideiconset=true&hideposter=true&hidetitle=true&primarycolor=6C63FF&secondarycolor=9F9BFF&iconcolor=FFFFFF&logourl=https%3A%2F%2Fi.ibb.co%2F67wTJd9R%2Fpngimg-com-netflix-PNG11.png&font=Roboto&fontcolor=FFFFFF&fontsize=20&opacity=0.5';
 
   if (type === 'movie') {
     const movie = await getMovieDetails(tmdbId);
@@ -49,7 +50,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://watchsb.com/e/${tmdbId}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
-    embedSrc3 = `https://player.vidplus.to/embed/movie/${tmdbId}`;
+    embedSrc3 = `https://player.vidplus.to/embed/movie/${tmdbId}?${vidplusQuery}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -57,7 +58,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
-    embedSrc3 = `https://player.vidplus.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc3 = `https://player.vidplus.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?${vidplusQuery}`;
 
     // Fetch all seasons data
     if (show.seasons) {

@@ -70,34 +70,19 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     }
   }
 
-  const PlayerFrame = ({ src, title, useSandbox = true }: { src: string, title: string, useSandbox?: boolean }) => {
-    const commonProps = {
-      src: src,
-      width: "100%",
-      height: "100%",
-      frameBorder: "0",
-      allowFullScreen: true,
-      title: title,
-      key: src,
-    };
-    
-    if (useSandbox) {
-        return (
-            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-                <iframe
-                    {...commonProps}
-                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                    sandbox="allow-scripts allow-same-origin allow-presentation"
-                ></iframe>
-            </div>
-        );
-    }
-
+  const PlayerFrame = ({ src, title }: { src: string, title: string }) => {
     return (
         <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
             <iframe
-                {...commonProps}
+                src={src}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allowFullScreen
+                title={title}
+                key={src}
                 allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                sandbox="allow-scripts allow-same-origin allow-presentation"
             ></iframe>
         </div>
     );
@@ -122,13 +107,24 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
-          <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} useSandbox={true} />
+          <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} />
         </TabsContent>
         <TabsContent value="2">
-          <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} useSandbox={true} />
+          <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} />
         </TabsContent>
         <TabsContent value="3">
-          <PlayerFrame src={embedSrc3} title={`Playback for ${title} on Player 3`} useSandbox={false} />
+          <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+            <iframe
+                src={embedSrc3}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allowFullScreen
+                title={`Playback for ${title} on Player 3`}
+                key={embedSrc3}
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            ></iframe>
+          </div>
         </TabsContent>
       </Tabs>
 

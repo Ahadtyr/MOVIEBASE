@@ -70,7 +70,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     }
   }
 
-  const PlayerFrame = ({ src, title }: { src: string, title: string }) => (
+  const PlayerFrame = ({ src, title, useSandbox = true }: { src: string, title: string, useSandbox?: boolean }) => (
     <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
       <iframe
         src={src}
@@ -78,7 +78,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         height="100%"
         frameBorder="0"
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-        sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups"
+        sandbox={useSandbox ? "allow-scripts allow-same-origin allow-presentation allow-forms allow-popups" : undefined}
         allowFullScreen
         title={title}
         key={src} // Force re-render on src change
@@ -111,7 +111,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} />
         </TabsContent>
         <TabsContent value="3">
-          <PlayerFrame src={embedSrc3} title={`Playback for ${title} on Player 3`} />
+          <PlayerFrame src={embedSrc3} title={`Playback for ${title} on Player 3`} useSandbox={false} />
         </TabsContent>
       </Tabs>
 

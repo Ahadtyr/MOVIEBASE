@@ -7,6 +7,7 @@ import { ExternalLink, Tv, Film } from 'lucide-react';
 import Link from 'next/link';
 import EpisodeList from '@/components/tv/EpisodeList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ResponsivePlayer from '@/components/player/ResponsivePlayer';
 
 interface PlayerPageProps {
   params: {
@@ -16,35 +17,9 @@ interface PlayerPageProps {
   searchParams: {
     s?: string;
     e?: string;
-    player?: '1' | '2' | '3';
+    player?: '1' | '2' | '3' | '4';
   };
 }
-
-interface PlayerFrameProps {
-  src: string;
-  title: string;
-  sandbox?: string;
-  allow?: string;
-}
-
-function PlayerFrame({ src, title, sandbox, allow = "autoplay; fullscreen; encrypted-media; picture-in-picture" }: PlayerFrameProps) {
-  return (
-    <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-      <iframe
-        src={src}
-        width="100%"
-        height="100%"
-        frameBorder="0"
-        allowFullScreen
-        title={title}
-        key={src}
-        sandbox={sandbox}
-        allow={allow}
-      ></iframe>
-    </div>
-  );
-}
-
 
 export default async function PlayerPage({ params, searchParams }: PlayerPageProps) {
   const { type, id } = params;
@@ -59,31 +34,40 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
 
   let title = 'Player';
   let itemUrl = '';
-  let embedSrc1 = '';
-  let embedSrc2 = '';
-  let embedSrc3 = '';
   let seasonsData = null;
 
-  const player1Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=1`;
-  const player2Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=2`;
-  const player3Path = `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=3`;
+  const playerPaths = {
+      p1: `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=1`,
+      p2: `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=2`,
+      p3: `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=3`,
+      p4: `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=4`,
+  };
+
+  const embedSrc = {
+      p1: '',
+      p2: '',
+      p3: '',
+      p4: '',
+  }
 
   if (type === 'movie') {
     const movie = await getMovieDetails(tmdbId);
     if (!movie) notFound();
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
-    embedSrc1 = `https://watchsb.com/e/${tmdbId}`;
-    embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
-    embedSrc3 = `https://player.vidplus.to/embed/movie/${tmdbId}`;
+    embedSrc.p1 = `https://watchsb.com/e/${tmdbId}`;
+    embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
+    embedSrc.p3 = `https://vidfast.pro/movie/${tmdbId}`;
+    embedSrc.p4 = `https://player.vidplus.to/embed/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
-    embedSrc1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
-    embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
-    embedSrc3 = `https://player.vidplus.to/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
+    embedSrc.p1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
+    embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
+    embedSrc.p3 = `https://vidfast.pro/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
+    embedSrc.p4 = `https://player.vidplus.to/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
 
     if (show.seasons) {
         const seasonDetailPromises = show.seasons
@@ -108,31 +92,34 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-sm mx-auto mb-4">
-          <Link href={player1Path} scroll={false}><TabsTrigger value="1" className="w-full">Player 1</TabsTrigger></Link>
-          <Link href={player2Path} scroll={false}><TabsTrigger value="2" className="w-full">Player 2</TabsTrigger></Link>
-          <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
+        <TabsList className="grid w-full grid-cols-4 max-w-md mx-auto mb-4">
+          <Link href={playerPaths.p1} scroll={false}><TabsTrigger value="1" className="w-full">Player 1</TabsTrigger></Link>
+          <Link href={playerPaths.p2} scroll={false}><TabsTrigger value="2" className="w-full">Player 2</TabsTrigger></Link>
+          <Link href={playerPaths.p3} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
+          <Link href={playerPaths.p4} scroll={false}><TabsTrigger value="4" className="w-full">Player 4</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
-            <PlayerFrame 
-              src={embedSrc1}
-              title={`Playback for ${title} on Player 1`}
+            <ResponsivePlayer 
+              src={embedSrc.p1}
               sandbox="allow-scripts allow-same-origin allow-presentation"
             />
         </TabsContent>
         <TabsContent value="2">
-            <PlayerFrame
-              src={embedSrc2}
-              title={`Playback for ${title} on Player 2`}
+            <ResponsivePlayer
+              src={embedSrc.p2}
               sandbox="allow-scripts allow-same-origin allow-presentation"
             />
         </TabsContent>
         <TabsContent value="3">
-           <PlayerFrame
-              src={embedSrc3}
-              title={`Playback for ${title} on Player 3`}
+           <ResponsivePlayer
+              src={embedSrc.p3}
               sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-              allow="fullscreen"
+            />
+        </TabsContent>
+        <TabsContent value="4">
+           <ResponsivePlayer
+              src={embedSrc.p4}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
             />
         </TabsContent>
       </Tabs>

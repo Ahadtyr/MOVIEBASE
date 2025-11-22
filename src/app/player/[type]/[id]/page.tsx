@@ -78,7 +78,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         height="100%"
         frameBorder="0"
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-        sandbox={useSandbox ? "allow-scripts allow-same-origin allow-presentation allow-forms allow-popups" : undefined}
+        sandbox={useSandbox ? "allow-scripts allow-same-origin allow-presentation" : undefined}
         allowFullScreen
         title={title}
         key={src} // Force re-render on src change
@@ -105,10 +105,10 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
-          <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} />
+          <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} useSandbox={true} />
         </TabsContent>
         <TabsContent value="2">
-          <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} />
+          <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} useSandbox={true} />
         </TabsContent>
         <TabsContent value="3">
           <PlayerFrame src={embedSrc3} title={`Playback for ${title} on Player 3`} useSandbox={false} />

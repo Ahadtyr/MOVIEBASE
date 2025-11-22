@@ -49,7 +49,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/movie/${tmdbId}`;
     embedSrc1 = `https://watchsb.com/e/${tmdbId}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
-    embedSrc3 = `https://vidfast.pro/movie/${tmdbId}`;
+    embedSrc3 = `https://vidsrc.me/embed/movie?tmdb_id=${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -57,7 +57,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
     embedSrc2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
-    embedSrc3 = `https://vidfast.pro/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
+    embedSrc3 = `https://vidsrc.me/embed/tv?tmdb_id=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
 
     // Fetch all seasons data
     if (show.seasons) {
@@ -69,24 +69,6 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         seasonsData = results.filter(s => s !== null);
     }
   }
-
-  const PlayerFrame = ({ src, title }: { src: string, title: string }) => {
-    return (
-        <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
-            <iframe
-                src={src}
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                allowFullScreen
-                title={title}
-                key={src}
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                sandbox="allow-scripts allow-same-origin allow-presentation"
-            ></iframe>
-        </div>
-    );
-  };
 
   return (
     <PageContainer>
@@ -107,10 +89,34 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <Link href={player3Path} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
-          <PlayerFrame src={embedSrc1} title={`Playback for ${title} on Player 1`} />
+            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+                <iframe
+                    src={embedSrc1}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    allowFullScreen
+                    title={`Playback for ${title} on Player 1`}
+                    key={embedSrc1}
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    sandbox="allow-scripts allow-same-origin allow-presentation"
+                ></iframe>
+            </div>
         </TabsContent>
         <TabsContent value="2">
-          <PlayerFrame src={embedSrc2} title={`Playback for ${title} on Player 2`} />
+            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">
+                <iframe
+                    src={embedSrc2}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    allowFullScreen
+                    title={`Playback for ${title} on Player 2`}
+                    key={embedSrc2}
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    sandbox="allow-scripts allow-same-origin allow-presentation"
+                ></iframe>
+            </div>
         </TabsContent>
         <TabsContent value="3">
           <div className="aspect-video w-full rounded-lg overflow-hidden shadow-2xl shadow-primary/20 bg-black">

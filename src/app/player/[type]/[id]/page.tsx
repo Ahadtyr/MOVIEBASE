@@ -101,7 +101,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         <TabsContent value="1">
             <ResponsivePlayer 
               src={embedSrc.p1}
-              sandbox="allow-scripts allow-same-origin allow-presentation"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
             />
         </TabsContent>
         <TabsContent value="2">

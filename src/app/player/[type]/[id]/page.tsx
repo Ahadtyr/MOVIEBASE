@@ -55,7 +55,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     if (!movie) notFound();
     title = movie.title;
     itemUrl = `/movie/${tmdbId}`;
-    embedSrc.p1 = `https://watchsb.com/e/${tmdbId}`;
+    embedSrc.p1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
     embedSrc.p3 = `https://player.vidplus.to/embed/movie/${tmdbId}`;
     embedSrc.p4 = `https://zembed.to/movie/${tmdbId}`;
@@ -64,7 +64,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     if (!show) notFound();
     title = `${show.name} - S${seasonNumber} E${episodeNumber}`;
     itemUrl = `/tv-show/${tmdbId}`;
-    embedSrc.p1 = `https://watchsb.com/e/${tmdbId}-${seasonNumber}-${episodeNumber}`;
+    embedSrc.p1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
     embedSrc.p3 = `https://player.vidplus.to/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
     embedSrc.p4 = `https://zembed.to/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;

@@ -57,7 +57,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/movie/${tmdbId}`;
     embedSrc.p1 = `https://vidsrc.to/embed/movie/${tmdbId}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
-    embedSrc.p3 = `https://vidsrc.cc/embed/movie/${tmdbId}`;
+    embedSrc.p3 = `https://vidsrc.to/embed/movie/${tmdbId}`;
     embedSrc.p4 = `https://vidfast.pro/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
@@ -66,7 +66,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     itemUrl = `/tv-show/${tmdbId}`;
     embedSrc.p1 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
-    embedSrc.p3 = `https://vidsrc.cc/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc.p3 = `https://vidsrc.to/embed/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p4 = `https://vidfast.pro/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
 
     if (show.seasons) {

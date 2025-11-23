@@ -2,9 +2,10 @@
 interface ResponsivePlayerProps {
   src: string;
   sandbox?: string;
+  allow?: string;
 }
 
-export default function ResponsivePlayer({ src, sandbox }: ResponsivePlayerProps) {
+export default function ResponsivePlayer({ src, sandbox, allow }: ResponsivePlayerProps) {
   return (
     <>
       <style>
@@ -33,6 +34,7 @@ export default function ResponsivePlayer({ src, sandbox }: ResponsivePlayerProps
           src={src}
           allowFullScreen
           sandbox={sandbox}
+          allow={allow}
         ></iframe>
       </div>
     </>

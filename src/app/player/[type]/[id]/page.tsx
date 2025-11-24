@@ -92,11 +92,11 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 max-w-md mx-auto mb-4">
-          <Link href={playerPaths.p1} scroll={false}><TabsTrigger value="1" className="w-full">Player 1</TabsTrigger></Link>
-          <Link href={playerPaths.p2} scroll={false}><TabsTrigger value="2" className="w-full">Player 2</TabsTrigger></Link>
-          <Link href={playerPaths.p3} scroll={false}><TabsTrigger value="3" className="w-full">Player 3</TabsTrigger></Link>
-          <Link href={playerPaths.p4} scroll={false}><TabsTrigger value="4" className="w-full">Player 4</TabsTrigger></Link>
+        <TabsList className="grid w-full grid-cols-4 max-w-md mx-auto mb-6 bg-card border-border p-1 rounded-lg">
+          <Link href={playerPaths.p1} scroll={false}><TabsTrigger value="1" className="w-full py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all duration-300">Server 1</TabsTrigger></Link>
+          <Link href={playerPaths.p2} scroll={false}><TabsTrigger value="2" className="w-full py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all duration-300">Server 2</TabsTrigger></Link>
+          <Link href={playerPaths.p3} scroll={false}><TabsTrigger value="3" className="w-full py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all duration-300">Server 3</TabsTrigger></Link>
+          <Link href={playerPaths.p4} scroll={false}><TabsTrigger value="4" className="w-full py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all duration-300">Server 4</TabsTrigger></Link>
         </TabsList>
         <TabsContent value="1">
             <ResponsivePlayer 

@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { ExternalLink, Tv, Film } from 'lucide-react';
 import Link from 'next/link';
 import EpisodeList from '@/components/tv/EpisodeList';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ResponsivePlayer from '@/components/player/ResponsivePlayer';
 import { cn } from '@/lib/utils';
 
@@ -38,13 +38,6 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   let seasonsData = null;
 
   const getPlayerPath = (player: string) => `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=${player}`;
-
-  const playerPaths = {
-    p1: getPlayerPath('1'),
-    p2: getPlayerPath('2'),
-    p3: getPlayerPath('3'),
-    p4: getPlayerPath('4'),
-  };
 
   const embedSrc = {
     p1: '',
@@ -82,21 +75,6 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     }
   }
 
-  const PlayerButton = ({ player, serverNumber }: { player: '1' | '2' | '3' | '4', serverNumber: string }) => (
-    <Link href={getPlayerPath(player)} scroll={false}>
-      <div
-        className={cn(
-          "w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105",
-          selectedPlayer === player
-            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/40"
-            : "bg-card hover:bg-primary/20 text-muted-foreground hover:text-foreground border border-border"
-        )}
-      >
-        Server {serverNumber}
-      </div>
-    </Link>
-  );
-
   return (
     <PageContainer>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
@@ -110,12 +88,28 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 max-w-xl mx-auto mb-6">
-            <PlayerButton player="1" serverNumber="1" />
-            <PlayerButton player="2" serverNumber="2" />
-            <PlayerButton player="3" serverNumber="3" />
-            <PlayerButton player="4" serverNumber="4" />
-        </div>
+        <TabsList className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 max-w-xl mx-auto mb-6 bg-transparent p-0">
+          <Link href={getPlayerPath('1')} scroll={false} passHref>
+            <TabsTrigger value="1" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+              Server 1
+            </TabsTrigger>
+          </Link>
+          <Link href={getPlayerPath('2')} scroll={false} passHref>
+            <TabsTrigger value="2" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+              Server 2
+            </TabsTrigger>
+          </Link>
+          <Link href={getPlayerPath('3')} scroll={false} passHref>
+            <TabsTrigger value="3" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+              Server 3
+            </TabsTrigger>
+          </Link>
+          <Link href={getPlayerPath('4')} scroll={false} passHref>
+            <TabsTrigger value="4" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+              Server 4
+            </TabsTrigger>
+          </Link>
+        </TabsList>
         <TabsContent value="1">
             <ResponsivePlayer 
               src={embedSrc.p1}

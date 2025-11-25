@@ -139,7 +139,8 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         <TabsContent value="4">
            <ResponsivePlayer
               src={embedSrc.p4}
-              allow="encrypted-media"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              sandbox="allow-same-origin allow-scripts"
             />
         </TabsContent>
         <TabsContent value="5">

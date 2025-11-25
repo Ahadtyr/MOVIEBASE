@@ -16,7 +16,7 @@ interface PlayerPageProps {
   searchParams: {
     s?: string;
     e?: string;
-    player?: '1' | '2' | '3' | '4' | '5';
+    player?: '1' | '2' | '3' | '4' | '5' | '6';
   };
 }
 
@@ -41,6 +41,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     p3: '',
     p4: '',
     p5: '',
+    p6: '',
   };
 
   if (type === 'movie') {
@@ -53,6 +54,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p3 = `https://vidnest.fun/movie/${tmdbId}`;
     embedSrc.p4 = `https://vidfast.pro/movie/${tmdbId}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/movie/${tmdbId}`;
+    embedSrc.p6 = `https://cinemaos.tech/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -63,6 +65,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p3 = `https://vidnest.fun/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p4 = `https://vidfast.pro/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc.p6 = `https://cinemaos.tech/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
 
     if (show.seasons) {
       const seasonDetailPromises = show.seasons
@@ -94,7 +97,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-2xl mx-auto mb-6 bg-transparent p-0">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 max-w-3xl mx-auto mb-6 bg-transparent p-0">
           <TabsTrigger value="1" asChild>
              <Link href={`?player=1&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
                 Server 1
@@ -120,6 +123,11 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
                 Server 5
               </Link>
           </TabsTrigger>
+          <TabsTrigger value="6" asChild>
+              <Link href={`?player=6&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 6
+              </Link>
+          </TabsTrigger>
         </TabsList>
         
         <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ paddingBottom: '56.25%' }}>
@@ -137,6 +145,9 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
             </TabsContent>
             <TabsContent value="5" className="absolute inset-0 w-full h-full m-0">
                 <iframe src={embedSrc.p5} {...commonIframeProps} />
+            </TabsContent>
+            <TabsContent value="6" className="absolute inset-0 w-full h-full m-0">
+                <iframe src={embedSrc.p6} {...commonIframeProps} />
             </TabsContent>
         </div>
       </Tabs>

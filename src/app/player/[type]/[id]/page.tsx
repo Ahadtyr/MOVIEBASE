@@ -54,7 +54,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p3 = `https://vidnest.fun/movie/${tmdbId}`;
     embedSrc.p4 = `https://vidfast.pro/movie/${tmdbId}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/movie/${tmdbId}`;
-    embedSrc.p6 = `https://cinemaos.tech/movie/${tmdbId}`;
+    embedSrc.p6 = `https://cinemaos.live/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -65,7 +65,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p3 = `https://vidnest.fun/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p4 = `https://vidfast.pro/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc.p6 = `https://cinemaos.tech/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc.p6 = `https://cinemaos.live/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
 
     if (show.seasons) {
       const seasonDetailPromises = show.seasons

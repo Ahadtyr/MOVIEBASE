@@ -37,8 +37,6 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
   let itemUrl = '';
   let seasonsData = null;
 
-  const getPlayerPath = (player: string) => `/player/${type}/${id}?s=${seasonNumber}&e=${episodeNumber}&player=${player}`;
-
   const embedSrc = {
     p1: '',
     p2: '',
@@ -92,50 +90,47 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
         <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-2xl mx-auto mb-6 bg-transparent p-0">
-          <Link href={getPlayerPath('1')} scroll={false} passHref>
-            <TabsTrigger value="1" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
-              Server 1
-            </TabsTrigger>
-          </Link>
-          <Link href={getPlayerPath('2')} scroll={false} passHref>
-            <TabsTrigger value="2" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
-              Server 2
-            </TabsTrigger>
-          </Link>
-          <Link href={getPlayerPath('3')} scroll={false} passHref>
-            <TabsTrigger value="3" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
-              Server 3
-            </TabsTrigger>
-          </Link>
-          <Link href={getPlayerPath('4')} scroll={false} passHref>
-            <TabsTrigger value="4" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
-              Server 4
-            </TabsTrigger>
-          </Link>
-          <Link href={getPlayerPath('5')} scroll={false} passHref>
-            <TabsTrigger value="5" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
-              Server 5
-            </TabsTrigger>
-          </Link>
+          <TabsTrigger value="1" asChild>
+             <Link href={`?player=1&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 1
+              </Link>
+          </TabsTrigger>
+          <TabsTrigger value="2" asChild>
+              <Link href={`?player=2&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 2
+              </Link>
+          </TabsTrigger>
+          <TabsTrigger value="3" asChild>
+              <Link href={`?player=3&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 3
+              </Link>
+          </TabsTrigger>
+          <TabsTrigger value="4" asChild>
+              <Link href={`?player=4&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 4
+              </Link>
+          </TabsTrigger>
+          <TabsTrigger value="5" asChild>
+              <Link href={`?player=5&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+                Server 5
+              </Link>
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="1">
             <ResponsivePlayer 
               src={embedSrc.p1}
-              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
               allowFullScreen
             />
         </TabsContent>
         <TabsContent value="2">
             <ResponsivePlayer
               src={embedSrc.p2}
-              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
               allowFullScreen
             />
         </TabsContent>
         <TabsContent value="3">
            <ResponsivePlayer
               src={embedSrc.p3}
-              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
               allowFullScreen
             />
         </TabsContent>
@@ -143,7 +138,6 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
            <ResponsivePlayer
               src={embedSrc.p4}
               allow="autoplay; encrypted-media; picture-in-picture"
-              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
               allowFullScreen
             />
         </TabsContent>
@@ -151,6 +145,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
            <ResponsivePlayer
               src={embedSrc.p5}
               allow="fullscreen; encrypted-media"
+              allowFullScreen
             />
         </TabsContent>
       </Tabs>

@@ -146,7 +146,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         <TabsContent value="5">
            <ResponsivePlayer
               src={embedSrc.p5}
-              allow="fullscreen"
+              allow="fullscreen; encrypted-media"
             />
         </TabsContent>
       </Tabs>

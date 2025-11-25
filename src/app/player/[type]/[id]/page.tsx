@@ -7,7 +7,6 @@ import { ExternalLink, Tv, Film } from 'lucide-react';
 import Link from 'next/link';
 import EpisodeList from '@/components/tv/EpisodeList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ResponsivePlayer from '@/components/player/ResponsivePlayer';
 import { cn } from '@/lib/utils';
 
 interface PlayerPageProps {
@@ -21,6 +20,21 @@ interface PlayerPageProps {
     player?: '1' | '2' | '3' | '4' | '5';
   };
 }
+
+const IframeWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ paddingBottom: '56.25%' }}>
+    {children}
+  </div>
+);
+
+const IframeEmbed = ({ src, allow, allowFullScreen }: { src: string; allow?: string; allowFullScreen?: boolean }) => (
+  <iframe
+    src={src}
+    allow={allow}
+    allowFullScreen={allowFullScreen}
+    className="absolute top-0 left-0 h-full w-full border-0"
+  />
+);
 
 export default async function PlayerPage({ params, searchParams }: PlayerPageProps) {
   const { type, id } = params;
@@ -117,36 +131,37 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           </TabsTrigger>
         </TabsList>
         <TabsContent value="1">
-            <ResponsivePlayer 
-              src={embedSrc.p1}
-              allowFullScreen
-            />
+            <IframeWrapper>
+              <IframeEmbed src={embedSrc.p1} allowFullScreen />
+            </IframeWrapper>
         </TabsContent>
         <TabsContent value="2">
-            <ResponsivePlayer
-              src={embedSrc.p2}
-              allowFullScreen
-            />
+            <IframeWrapper>
+              <IframeEmbed src={embedSrc.p2} allowFullScreen />
+            </IframeWrapper>
         </TabsContent>
         <TabsContent value="3">
-           <ResponsivePlayer
-              src={embedSrc.p3}
-              allowFullScreen
-            />
+           <IframeWrapper>
+             <IframeEmbed src={embedSrc.p3} allowFullScreen />
+           </IframeWrapper>
         </TabsContent>
         <TabsContent value="4">
-           <ResponsivePlayer
-              src={embedSrc.p4}
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
+           <IframeWrapper>
+             <IframeEmbed
+                src={embedSrc.p4}
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+              />
+           </IframeWrapper>
         </TabsContent>
         <TabsContent value="5">
-           <ResponsivePlayer
-              src={embedSrc.p5}
-              allow="fullscreen; encrypted-media"
-              allowFullScreen
-            />
+           <IframeWrapper>
+             <IframeEmbed
+                src={embedSrc.p5}
+                allow="fullscreen; encrypted-media"
+                allowFullScreen
+              />
+           </IframeWrapper>
         </TabsContent>
       </Tabs>
 

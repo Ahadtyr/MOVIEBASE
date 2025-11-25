@@ -121,26 +121,30 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
         <TabsContent value="1">
             <ResponsivePlayer 
               src={embedSrc.p1}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+              allowFullScreen
             />
         </TabsContent>
         <TabsContent value="2">
             <ResponsivePlayer
               src={embedSrc.p2}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+              allowFullScreen
             />
         </TabsContent>
         <TabsContent value="3">
            <ResponsivePlayer
               src={embedSrc.p3}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+              allowFullScreen
             />
         </TabsContent>
         <TabsContent value="4">
            <ResponsivePlayer
               src={embedSrc.p4}
               allow="autoplay; encrypted-media; picture-in-picture"
-              sandbox="allow-same-origin allow-scripts"
+              sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+              allowFullScreen
             />
         </TabsContent>
         <TabsContent value="5">

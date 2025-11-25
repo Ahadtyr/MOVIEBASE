@@ -18,7 +18,7 @@ interface PlayerPageProps {
   searchParams: {
     s?: string;
     e?: string;
-    player?: '1' | '2' | '3' | '4';
+    player?: '1' | '2' | '3' | '4' | '5';
   };
 }
 
@@ -44,6 +44,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     p2: '',
     p3: '',
     p4: '',
+    p5: '',
   };
 
   if (type === 'movie') {
@@ -55,6 +56,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}`;
     embedSrc.p3 = `https://vidnest.fun/movie/${tmdbId}`;
     embedSrc.p4 = `https://vidfast.pro/movie/${tmdbId}`;
+    embedSrc.p5 = `https://player.videasy.net/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -64,6 +66,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p2 = `https://embed.smashystream.com/playere.php?tmdb=${tmdbId}&season=${seasonNumber}&episode=${episodeNumber}`;
     embedSrc.p3 = `https://vidnest.fun/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p4 = `https://vidfast.pro/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
+    embedSrc.p5 = `https://player.videasy.net/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
 
     if (show.seasons) {
       const seasonDetailPromises = show.seasons
@@ -88,7 +91,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 max-w-xl mx-auto mb-6 bg-transparent p-0">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-2xl mx-auto mb-6 bg-transparent p-0">
           <Link href={getPlayerPath('1')} scroll={false} passHref>
             <TabsTrigger value="1" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
               Server 1
@@ -107,6 +110,11 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
           <Link href={getPlayerPath('4')} scroll={false} passHref>
             <TabsTrigger value="4" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
               Server 4
+            </TabsTrigger>
+          </Link>
+          <Link href={getPlayerPath('5')} scroll={false} passHref>
+            <TabsTrigger value="5" className="w-full text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/40 data-[state=inactive]:bg-card data-[state=inactive]:hover:bg-primary/20 data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground data-[state=inactive]:border data-[state=inactive]:border-border">
+              Server 5
             </TabsTrigger>
           </Link>
         </TabsList>
@@ -132,6 +140,13 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
            <ResponsivePlayer
               src={embedSrc.p4}
               allow="encrypted-media"
+            />
+        </TabsContent>
+        <TabsContent value="5">
+           <ResponsivePlayer
+              src={embedSrc.p5}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              allow="fullscreen"
             />
         </TabsContent>
       </Tabs>

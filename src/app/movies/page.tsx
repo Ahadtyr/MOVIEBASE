@@ -76,12 +76,20 @@ export default async function MoviesPage() {
       
       {popularMovies.length > 0 && (
         <MovieSection 
-          title={<><span className="text-trending">Trending Now</span> ⚡</>}
+          title={<><span className="text-now-playing">Now Playing</span> 🍿🌟</>}
           items={popularMovies} 
           href="/trending"
         />
       )}
 
+      {trendingIndian.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-india">Trending Indian</span> 🇮🇳🔥</>} 
+          items={trendingIndian}
+          href="/country/IN/movies"
+        />
+      )}
+      
       {topRatedMovies.length > 0 && (
         <MovieSection 
           title={<><span className="text-top-rated">Top Rated</span> ⭐</>}
@@ -135,14 +143,6 @@ export default async function MoviesPage() {
           title={<><span className="text-peacock">Peacock</span> 🪄🌈</>} 
           items={peacockMovies} 
           href="/service/peacock/movies"
-        />
-      )}
-
-      {trendingIndian.length > 0 && (
-        <MovieSection 
-          title={<><span className="text-india">Trending Indian</span> 🇮🇳🔥</>} 
-          items={trendingIndian}
-          href="/country/IN/movies"
         />
       )}
 

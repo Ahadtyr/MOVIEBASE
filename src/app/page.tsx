@@ -8,15 +8,16 @@ import ContinueWatching from '@/components/movie/ContinueWatching';
 
 // Simulate fetching data
 async function getHomePageData() {
-  const [popularMovies, upcomingMovies, topRatedMovies, showsFrom2025] = await Promise.all([
+  const [popularMovies, upcomingMovies, topRatedMovies, showsFrom2025Data] = await Promise.all([
     getPopularMovies(),
     getUpcomingMovies(),
     getTopRatedMovies(),
     getDiscoverTVShowsByParams({ 'first_air_date.gte': '2025-01-01', 'first_air_date.lte': '2025-12-31' }),
   ]);
 
+  const showsFrom2025 = showsFrom2025Data.shows;
   const mostTrendingMovie = popularMovies[0];
-  const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.results.slice(0, 5)]
+  const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
     .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
   
   const heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean);
@@ -26,7 +27,7 @@ async function getHomePageData() {
   const topRated = topRatedMovies.slice(0, 12) as Movie[];
   
   // Mix top-rated movies and TV shows for recommendations
-  const recommended = [...topRatedMovies.slice(12, 18), ...showsFrom2025.results.slice(0, 6)]
+  const recommended = [...topRatedMovies.slice(12, 18), ...showsFrom2025.slice(0, 6)]
     .sort(() => 0.5 - Math.random())
     .slice(0, 12) as (Movie | TVShow)[];
 

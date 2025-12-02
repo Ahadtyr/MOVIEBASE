@@ -35,12 +35,12 @@ async function getMoviesPageData() {
   
   return { 
     popularMovies: popularMoviesData.slice(0, 12),
-    netflixMovies: netflixMoviesData.slice(0, 12),
-    primeMovies: primeMoviesData.slice(0, 12),
-    appleMovies: appleMoviesData.slice(0, 12),
-    disneyMovies: disneyMoviesData.slice(0, 12),
-    hboMovies: hboMoviesData.slice(0, 12),
-    peacockMovies: peacockMoviesData.slice(0, 12),
+    netflixMovies: netflixMoviesData.movies.slice(0, 12),
+    primeMovies: primeMoviesData.movies.slice(0, 12),
+    appleMovies: appleMoviesData.movies.slice(0, 12),
+    disneyMovies: disneyMoviesData.movies.slice(0, 12),
+    hboMovies: hboMoviesData.movies.slice(0, 12),
+    peacockMovies: peacockMoviesData.movies.slice(0, 12),
   };
 }
 
@@ -122,4 +122,3 @@ export default async function MoviesPage() {
     </PageContainer>
   );
 }
-

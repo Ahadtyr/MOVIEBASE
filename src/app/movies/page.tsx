@@ -63,7 +63,11 @@ export default async function MoviesPage() {
       <p className="mb-8 text-muted-foreground">Explore our vast collection of movies from different categories.</p>
       
       {popularMovies.length > 0 && (
-        <MovieSection title="Popular Movies" items={popularMovies} />
+        <MovieSection 
+          title={<><span className="text-now-playing">Now Playing</span> 🍿🌟</>}
+          items={popularMovies} 
+          href="/trending"
+        />
       )}
       
       {netflixMovies.length > 0 && (

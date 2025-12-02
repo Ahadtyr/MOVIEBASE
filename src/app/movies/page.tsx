@@ -150,7 +150,6 @@ export default async function MoviesPage() {
         <MovieSection 
           title={<><span className="text-bollywood">Bollywood Picks</span> 🍿🎥</>} 
           items={bollywoodPicks}
-          href="/service/bollywood/movies"
         />
       )}
 

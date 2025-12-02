@@ -14,13 +14,13 @@ const PEACOCK_ID = '3353';
 
 async function getTVShowsPageData() {
   const [
-    popularShows,
-    netflixShows,
-    primeShows,
-    appleShows,
-    disneyShows,
-    hboShows,
-    peacockShows,
+    popularShowsData,
+    netflixShowsData,
+    primeShowsData,
+    appleShowsData,
+    disneyShowsData,
+    hboShowsData,
+    peacockShowsData,
   ] = await Promise.all([
     getPopularTVShows(),
     getDiscoverTVShowsByParams({ with_networks: NETFLIX_ID }),
@@ -32,13 +32,13 @@ async function getTVShowsPageData() {
   ]);
   
   return { 
-    popularShows: popularShows.slice(0, 12),
-    netflixShows: netflixShows.slice(0, 12),
-    primeShows: primeShows.slice(0, 12),
-    appleShows: appleShows.slice(0, 12),
-    disneyShows: disneyShows.slice(0, 12),
-    hboShows: hboShows.slice(0, 12),
-    peacockShows: peacockShows.slice(0, 12),
+    popularShows: popularShowsData.slice(0, 12),
+    netflixShows: netflixShowsData.shows.slice(0, 12),
+    primeShows: primeShowsData.shows.slice(0, 12),
+    appleShows: appleShowsData.shows.slice(0, 12),
+    disneyShows: disneyShowsData.shows.slice(0, 12),
+    hboShows: hboShowsData.shows.slice(0, 12),
+    peacockShows: peacockShowsData.shows.slice(0, 12),
   };
 }
 

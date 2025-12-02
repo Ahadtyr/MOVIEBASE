@@ -43,10 +43,10 @@ export default async function HomePage() {
       <HeroCarousel items={heroItems} />
       <PageContainer>
         <ContinueWatching />
-        {trending.length > 0 && <MovieSection title="Trending Movies" items={trending} href="/trending" />}
-        {newReleases.length > 0 && <MovieSection title="Upcoming Movies" items={newReleases} />}
-        {topRated.length > 0 && <MovieSection title="Top Rated Movies" items={topRated} />}
-        {recommended.length > 0 && <MovieSection title="Recommended For You" items={recommended} />}
+        {trending.length > 0 && <MovieSection title={<><span className="text-trending">Trending Movies</span> 🔥</>} items={trending} href="/trending" />}
+        {newReleases.length > 0 && <MovieSection title={<><span className="text-now-playing">Upcoming Movies</span> 🚀</>} items={newReleases} />}
+        {topRated.length > 0 && <MovieSection title={<><span className="text-top-rated">Top Rated Movies</span> ⭐</>} items={topRated} />}
+        {recommended.length > 0 && <MovieSection title={<><span className="text-hbo">Recommended For You</span> 💡</>} items={recommended} />}
         
         {heroItems.length === 0 && (
            <div className="text-center py-10">

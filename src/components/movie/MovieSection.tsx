@@ -4,9 +4,10 @@ import MovieCard from './MovieCard';
 import SectionTitle from '@/components/shared/SectionTitle';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 interface MovieSectionProps {
-  title: string;
+  title: ReactNode;
   items: (Movie | TVShow)[];
   href?: string;
 }

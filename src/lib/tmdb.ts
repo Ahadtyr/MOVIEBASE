@@ -143,14 +143,18 @@ export async function getDiscoverMovies(genreId: string, page: number = 1): Prom
   };
 }
 
-export async function getDiscoverMoviesByParams(params: Record<string, string>, page: number = 1): Promise<Movie[]> {
+export async function getDiscoverMoviesByParams(params: Record<string, string>, page: number = 1): Promise<{ movies: Movie[], totalPages: number }> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('discover/movie', {
     ...params,
     sort_by: 'popularity.desc',
     page: page.toString(),
   });
-  if (!data) return [];
-  return data.results.map(mapTMDbMovie);
+  if (!data) return { movies: [], totalPages: 0 };
+  const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
+  return {
+    movies: data.results.map(mapTMDbMovie),
+    totalPages,
+  };
 }
 
 export type BrowseCategory = 'bollywood' | 'hollywood' | 'anime';
@@ -256,14 +260,18 @@ export async function getTVShowGenres(): Promise<Genre[]> {
   return data.genres;
 }
 
-export async function getDiscoverTVShowsByParams(params: Record<string, string>, page: number = 1): Promise<TVShow[]> {
+export async function getDiscoverTVShowsByParams(params: Record<string, string>, page: number = 1): Promise<{ shows: TVShow[], totalPages: number }> {
   const data = await fetchFromTMDB<TMDbListResponse<TMDbTVShowDetail>>('discover/tv', {
     ...params,
     sort_by: 'popularity.desc',
     page: page.toString(),
   });
-  if (!data) return [];
-  return data.results.map(mapTMDbTVShow);
+  if (!data) return { shows: [], totalPages: 0 };
+  const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
+  return {
+    shows: data.results.map(mapTMDbTVShow),
+    totalPages,
+  };
 }
 
 // Anime Fetching Functions
@@ -423,4 +431,21 @@ export async function getKeywordIds(keywordNames: string): Promise<string> {
 
     const keywordIds = await Promise.all(keywordIdPromises);
     return keywordIds.filter(id => id !== null).join(',');
+}
+
+export async function getItemsByIds(itemIds: {id: number, type: 'movie' | 'tv'}[]): Promise<(Movie | TVShow)[]> {
+    if (!itemIds || itemIds.length === 0) {
+        return [];
+    }
+
+    const itemPromises = itemIds.map(async ({ id, type }) => {
+        if (type === 'movie') {
+            return getMovieDetails(id);
+        } else {
+            return getTVShowDetails(id);
+        }
+    });
+
+    const results = await Promise.all(itemPromises);
+    return results.filter((item): item is Movie | TVShow => item !== null);
 }

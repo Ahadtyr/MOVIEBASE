@@ -3,36 +3,59 @@ import PageContainer from '@/components/shared/PageContainer';
 import SectionTitle from '@/components/shared/SectionTitle';
 import MovieSection from '@/components/movie/MovieSection';
 import { getPopularMovies, getDiscoverMoviesByParams } from '@/lib/tmdb';
-import type { Movie } from '@/lib/types';
 
-// Comedy Genre ID is 35
-const COMEDY_GENRE_ID = '35';
+// Provider IDs for movies
+const NETFLIX_ID = '8';
+const PRIME_VIDEO_ID = '9';
+const APPLE_TV_ID = '350';
+const DISNEY_PLUS_ID = '337';
+const HBO_MAX_ID = '384';
+const PEACOCK_ID = '386';
 
 async function getMoviesPageData() {
-  const today = new Date().toISOString().split('T')[0];
+  const commonParams = { watch_region: 'US' };
 
   const [
     popularMoviesData,
-    comedyMoviesData,
-    bollywoodMoviesData,
-    hollywoodMoviesData
+    netflixMoviesData,
+    primeMoviesData,
+    appleMoviesData,
+    disneyMoviesData,
+    hboMoviesData,
+    peacockMoviesData,
   ] = await Promise.all([
     getPopularMovies(),
-    getDiscoverMoviesByParams({ with_genres: COMEDY_GENRE_ID }),
-    getDiscoverMoviesByParams({ with_original_language: 'hi', sort_by: 'primary_release_date.desc', 'primary_release_date.lte': today }),
-    getDiscoverMoviesByParams({ with_origin_country: 'US', sort_by: 'primary_release_date.desc', 'primary_release_date.lte': today })
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: NETFLIX_ID }),
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: PRIME_VIDEO_ID }),
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: APPLE_TV_ID }),
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: DISNEY_PLUS_ID }),
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: HBO_MAX_ID }),
+    getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: PEACOCK_ID }),
   ]);
   
   return { 
     popularMovies: popularMoviesData.slice(0, 12),
-    comedyMovies: comedyMoviesData.slice(0, 12),
-    bollywoodMovies: bollywoodMoviesData.slice(0, 12),
-    hollywoodMovies: hollywoodMoviesData.slice(0, 12),
+    netflixMovies: netflixMoviesData.slice(0, 12),
+    primeMovies: primeMoviesData.slice(0, 12),
+    appleMovies: appleMoviesData.slice(0, 12),
+    disneyMovies: disneyMoviesData.slice(0, 12),
+    hboMovies: hboMoviesData.slice(0, 12),
+    peacockMovies: peacockMoviesData.slice(0, 12),
   };
 }
 
 export default async function MoviesPage() {
-  const { popularMovies, comedyMovies, bollywoodMovies, hollywoodMovies } = await getMoviesPageData();
+  const { 
+    popularMovies,
+    netflixMovies,
+    primeMovies,
+    appleMovies,
+    disneyMovies,
+    hboMovies,
+    peacockMovies,
+  } = await getMoviesPageData();
+
+  const allMovies = [...popularMovies, ...netflixMovies, ...primeMovies, ...appleMovies, ...disneyMovies, ...hboMovies, ...peacockMovies];
 
   return (
     <PageContainer>
@@ -43,19 +66,55 @@ export default async function MoviesPage() {
         <MovieSection title="Popular Movies" items={popularMovies} />
       )}
       
-      {comedyMovies.length > 0 && (
-        <MovieSection title="Comedy Movies" items={comedyMovies} />
+      {netflixMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-netflix">Netflix Originals</span> 🎬🔥</>} 
+          items={netflixMovies}
+          href="/service/netflix/movies" 
+        />
       )}
 
-      {bollywoodMovies.length > 0 && (
-        <MovieSection title="Bollywood" items={bollywoodMovies} />
+      {primeMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-prime">Prime Video</span> 🔷</>} 
+          items={primeMovies} 
+          href="/service/prime/movies"
+        />
       )}
 
-      {hollywoodMovies.length > 0 && (
-        <MovieSection title="Hollywood" items={hollywoodMovies} />
+      {appleMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-apple">Apple TV+</span> 🍏</>} 
+          items={appleMovies} 
+          href="/service/apple/movies"
+        />
       )}
 
-      {(popularMovies.length === 0 && comedyMovies.length === 0 && bollywoodMovies.length === 0 && hollywoodMovies.length === 0) && (
+      {disneyMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-disney">Disney+</span> 🐭✨</>} 
+          items={disneyMovies} 
+          href="/service/disney/movies"
+        />
+      )}
+
+      {hboMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-hbo">HBO Max</span> 💜🛡️</>} 
+          items={hboMovies} 
+          href="/service/hbo/movies"
+        />
+      )}
+
+      {peacockMovies.length > 0 && (
+        <MovieSection 
+          title={<><span className="text-peacock">Peacock</span> 🪄🌈</>} 
+          items={peacockMovies} 
+          href="/service/peacock/movies"
+        />
+      )}
+
+      {allMovies.length === 0 && (
         <p className="text-muted-foreground text-center py-10">
           Could not load movies at the moment. Please ensure your TMDb API key is correct or try again later.
         </p>
@@ -63,3 +122,4 @@ export default async function MoviesPage() {
     </PageContainer>
   );
 }
+

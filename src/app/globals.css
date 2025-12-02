@@ -147,3 +147,12 @@ input[type="search"]::-webkit-search-results-decoration {
   -webkit-appearance: none;
   appearance: none;
 }
+
+/* Service-specific text colors and glows */
+.text-netflix { color: #E50914; filter: drop-shadow(0 0 5px #E50914); }
+.text-prime { color: #00A8E1; filter: drop-shadow(0 0 5px #00A8E1); }
+.text-apple { color: #F5F5F7; filter: drop-shadow(0 0 3px #F5F5F7); }
+.text-disney { color: #A8D1FF; background: linear-gradient(to right, #A8D1FF, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 6px #A8D1FF); }
+.text-hbo { color: #8A2BE2; filter: drop-shadow(0 0 5px #8A2BE2); }
+.text-peacock { color: #FFC42D; background: linear-gradient(90deg, #f72585, #b5179e, #7209b7, #560bad, #480ca8, #3a0ca3, #3f37c9, #4361ee, #4895ef, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 4px #fff); }
+

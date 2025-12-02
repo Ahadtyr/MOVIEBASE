@@ -7,14 +7,15 @@ import { Star, Info, Tv } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { IMAGE_BASE_URL_W500 } from '@/lib/tmdb';
+import { Progress } from '@/components/ui/progress';
 
 interface MovieCardProps {
   item: Movie | TVShow;
   className?: string;
+  progress?: number; // Watch progress in percentage (0-100)
 }
 
-export default function MovieCard({ item, className }: MovieCardProps) {
-  // Use 'name' property to identify TV shows, as TMDb API uses 'name' for TV and 'title' for movies.
+export default function MovieCard({ item, className, progress }: MovieCardProps) {
   const isTV = 'name' in item;
   const href = isTV ? `/tv-show/${item.id}` : `/movie/${item.id}`;
 
@@ -24,50 +25,61 @@ export default function MovieCard({ item, className }: MovieCardProps) {
   const posterUrl = item.poster_path
     ? `${IMAGE_BASE_URL_W500}${item.poster_path}`
     : 'https://placehold.co/400x600.png';
+  
+  const playerHref = isTV ? `/player/tv/${item.id}` : `/player/movie/${item.id}`;
 
   return (
-    <Link href={href} className={cn("group relative block overflow-hidden rounded-lg shadow-lg aspect-[2/3] transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-accent/30 hover:scale-105", className)} data-ai-hint="movie poster">
-      <Image
-        src={posterUrl}
-        alt={title}
-        width={400}
-        height={600}
-        className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end">
-        <h3 className="text-lg font-headline font-semibold text-primary-foreground mb-1 line-clamp-2">{title}</h3>
-        <div className="flex items-center text-xs text-muted-foreground mb-2 flex-wrap">
-          <Star className="w-4 h-4 text-yellow-400 mr-1" />
-          <span>{item.vote_average.toFixed(1)}</span>
-          {releaseDate && <span className="mx-2">|</span>}
-          {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
-          {isTV && (
-            <>
-              <span className="mx-2">|</span>
-              <Tv className="w-3 h-3 mr-1" />
-              <span>TV Show</span>
-            </>
-          )}
-        </div>
-        <div className="flex space-x-2 mb-2">
-          {item.genres?.slice(0, 2).map((genre) => (
-            <Badge key={genre.id} variant="secondary" className="text-xs bg-primary/70 text-primary-foreground backdrop-blur-sm">
-              {genre.name}
-            </Badge>
-          ))}
-        </div>
-        
-        <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{item.overview}</p>
+    <div className={cn("relative group", className)}>
+      <Link href={href} className={cn("block overflow-hidden rounded-lg shadow-lg aspect-[2/3] transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-accent/30 hover:scale-105", className)} data-ai-hint="movie poster">
+        <Image
+          src={posterUrl}
+          alt={title}
+          width={400}
+          height={600}
+          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end">
+          <h3 className="text-lg font-headline font-semibold text-primary-foreground mb-1 line-clamp-2">{title}</h3>
+          <div className="flex items-center text-xs text-muted-foreground mb-2 flex-wrap">
+            <Star className="w-4 h-4 text-yellow-400 mr-1" />
+            <span>{item.vote_average.toFixed(1)}</span>
+            {releaseDate && <span className="mx-2">|</span>}
+            {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
+            {isTV && (
+              <>
+                <span className="mx-2">|</span>
+                <Tv className="w-3 h-3 mr-1" />
+                <span>TV Show</span>
+              </>
+            )}
+          </div>
+          <div className="flex space-x-2 mb-2">
+            {item.genres?.slice(0, 2).map((genre) => (
+              <Badge key={genre.id} variant="secondary" className="text-xs bg-primary/70 text-primary-foreground backdrop-blur-sm">
+                {genre.name}
+              </Badge>
+            ))}
+          </div>
+          
+          <p className="text-xs text-foreground/80 line-clamp-2 mb-3">{item.overview}</p>
 
-        <div className="flex items-center space-x-2">
-            <div className="p-2 rounded-full bg-secondary/80 text-secondary-foreground">
-                <Info className="w-5 h-5" />
-            </div>
+          <div className="flex items-center space-x-2">
+              <div className="p-2 rounded-full bg-secondary/80 text-secondary-foreground">
+                  <Info className="w-5 h-5" />
+              </div>
+          </div>
         </div>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-0 transition-opacity duration-300">
-        <h3 className="text-md font-semibold text-primary-foreground truncate">{title}</h3>
-      </div>
-    </Link>
+        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-0 transition-opacity duration-300">
+          <h3 className="text-md font-semibold text-primary-foreground truncate">{title}</h3>
+        </div>
+      </Link>
+      
+      {progress !== undefined && progress > 0 && progress < 100 && (
+         <div className="absolute bottom-0 left-0 right-0 p-2 z-10">
+          <Progress value={progress} className="h-1.5" />
+          <Link href={playerHref} className="absolute inset-0" aria-label={`Continue watching ${title}`}></Link>
+        </div>
+      )}
+    </div>
   );
 }

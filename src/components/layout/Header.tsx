@@ -10,7 +10,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -25,6 +29,20 @@ const browseLinks = [
     { href: '/browse/hollywood', label: 'Hollywood' },
     { href: '/browse/anime', label: 'Anime' },
 ];
+
+const countryLinks = [
+  { href: '/country/US/movies', label: 'United States' },
+  { href: '/country/GB/movies', label: 'United Kingdom' },
+  { href: '/country/CA/movies', label: 'Canada' },
+  { href: '/country/IN/movies', label: 'India' },
+  { href: '/country/FR/movies', label: 'France' },
+  { href: '/country/DE/movies', label: 'Germany' },
+  { href: '/country/JP/movies', label: 'Japan' },
+  { href: '/country/KR/movies', label: 'South Korea' },
+  { href: '/country/ES/movies', label: 'Spain' },
+  { href: '/country/CN/movies', label: 'China' },
+];
+
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -66,11 +84,18 @@ export default function Header() {
                 </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/browse/by-country" className={cn("flex items-center gap-2", pathname === '/browse/by-country' ? "bg-primary/10" : "")}>
-                By Country
-              </Link>
-            </DropdownMenuItem>
+             <DropdownMenuSub>
+              <DropdownMenuSubTrigger>By Country</DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent className="border-border/40 bg-popover/80 backdrop-blur-xl max-h-96 overflow-y-auto">
+                  {countryLinks.map((link) => (
+                    <DropdownMenuItem key={link.href} asChild>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
         </DropdownMenuContent>
     </DropdownMenu>
   );

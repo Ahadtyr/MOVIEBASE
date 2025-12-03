@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Film, Tv, LayoutGrid, Search, Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { Film, Tv, LayoutGrid, Search, Menu, X, ChevronDown, Globe, Wand2, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Film },
   { href: '/movies', label: 'Movies', icon: Film },
   { href: '/tv-shows', label: 'TV Shows', icon: Tv },
+  { href: '/anime', label: 'Anime', icon: Tv },
 ];
 
 const browseLinks = [
@@ -52,12 +53,13 @@ export default function Header() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const NavLinkItem = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType; }) => (
+  const NavLinkItem = ({ href, label, icon: Icon, className }: { href: string; label: string; icon: React.ElementType; className?: string; }) => (
     <Link
       href={href}
       className={cn(
         "px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2",
-        pathname === href ? "bg-primary text-primary-foreground" : "text-foreground/80"
+        pathname === href ? "bg-primary text-primary-foreground" : "text-foreground/80",
+        className
       )}
       aria-current={pathname === href ? "page" : undefined}
     >
@@ -66,16 +68,22 @@ export default function Header() {
     </Link>
   );
   
-  const BrowseDropdown = () => (
+  const BrowseDropdown = ({ isMobile = false }) => (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80">
+            <Button variant="ghost" className={cn("px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80", isMobile && 'w-full justify-start')}>
                 <Globe className="w-4 h-4 neon-glow" />
                 Browse
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 ml-auto" />
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-border/40 bg-popover/80 backdrop-blur-xl">
+            <DropdownMenuItem asChild>
+                <Link href="/genres" className={cn("flex items-center gap-2", pathname === "/genres" ? "bg-primary/10" : "")}>
+                   <LayoutGrid className="w-4 h-4" /> Genres
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             {browseLinks.map((link) => (
                  <DropdownMenuItem key={link.href} asChild>
                     <Link href={link.href} className={cn("flex items-center gap-2", pathname === link.href ? "bg-primary/10" : "")}>
@@ -100,6 +108,30 @@ export default function Header() {
     </DropdownMenu>
   );
 
+  const MoreDropdown = ({ isMobile = false }) => (
+     <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+             <Button variant="ghost" className={cn("px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground flex items-center gap-2 text-foreground/80", isMobile && 'w-full justify-start')}>
+                <MoreHorizontal className="w-4 h-4 neon-glow" />
+                More
+                <ChevronDown className="w-4 h-4 ml-auto" />
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="border-border/40 bg-popover/80 backdrop-blur-xl">
+            <DropdownMenuItem asChild>
+                <Link href="/recommendations" className={cn("flex items-center gap-2", pathname === "/recommendations" ? "bg-primary/10" : "")}>
+                   <Wand2 className="w-4 h-4" /> AI Recommends
+                </Link>
+            </DropdownMenuItem>
+             <DropdownMenuItem asChild>
+                <Link href="/about" className={cn("flex items-center gap-2", pathname === "/about" ? "bg-primary/10" : "")}>
+                    About
+                </Link>
+            </DropdownMenuItem>
+        </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-3xl">
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -113,13 +145,18 @@ export default function Header() {
           {navLinks.map((link) => (
             <NavLinkItem key={link.href} {...link} />
           ))}
-          <NavLinkItem href="/anime" label="Anime" icon={Tv} />
           <BrowseDropdown />
-          <NavLinkItem href="/search-page" label="Search" icon={Search} />
+          <MoreDropdown />
+          <NavLinkItem href="/search-page" label="Search" icon={Search} className="hidden lg:flex"/>
         </nav>
 
         {/* Mobile Menu Button */}
         <div className="flex items-center md:hidden">
+         <Link href="/search-page" passHref>
+           <Button variant="ghost" size="icon" aria-label="Search Page">
+              <Search className="h-6 w-6" />
+           </Button>
+          </Link>
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -133,16 +170,9 @@ export default function Header() {
               {navLinks.map((link) => (
                 <NavLinkItem key={link.href} {...link} />
               ))}
-              <NavLinkItem href="/anime" label="Anime" icon={Tv} />
               <div className="border-t border-border/50 my-2"></div>
-              
-              <BrowseDropdown />
-              
-              <div className="border-t border-border/50 my-2"></div>
-
-              <NavLinkItem href="/search-page" label="Search" icon={Search} />
-              <NavLinkItem href="/genres" label="Genres" icon={LayoutGrid} />
-              <NavLinkItem href="/recommendations" label="AI Recommends" icon={LayoutGrid} />
+              <BrowseDropdown isMobile={true} />
+              <MoreDropdown isMobile={true} />
           </nav>
         </div>
       )}

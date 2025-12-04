@@ -58,7 +58,7 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
   const title = isTV ? currentItem.name : currentItem.title;
   const releaseDate = isTV ? currentItem.first_air_date : currentItem.release_date;
   const playerHref = isTV ? `/player/tv/${currentItem.id}?s=1&e=1` : `/player/movie/${currentItem.id}`;
-  const detailsHref = isTV ? `/tv-show/${currentItem.id}` : `/movie/${item.id}`;
+  const detailsHref = isTV ? `/tv-show/${currentItem.id}` : `/movie/${currentItem.id}`;
 
   return (
     <div className="relative w-full h-[85vh] max-h-[1080px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">

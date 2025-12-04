@@ -2,7 +2,7 @@
 import HeroCarousel from '@/components/movie/HeroCarousel';
 import MovieSection from '@/components/movie/MovieSection';
 import PageContainer from '@/components/shared/PageContainer';
-import { getPopularMovies, getUpcomingMovies, getTopRatedMovies, getDiscoverTVShowsByParams } from '@/lib/tmdb';
+import { getPopularMovies, getUpcomingMovies, getTopRatedMovies, getDiscoverTVShowsByParams, getItemImages, IMAGE_BASE_URL_ORIGINAL } from '@/lib/tmdb';
 import type { Movie, TVShow } from '@/lib/types';
 import ContinueWatching from '@/components/movie/ContinueWatching';
 
@@ -16,11 +16,34 @@ async function getHomePageData() {
   ]);
 
   const showsFrom2025 = showsFrom2025Data.shows;
-  const mostTrendingMovie = popularMovies[0];
-  const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
-    .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
   
-  const heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean);
+  let heroItems: (Movie | TVShow)[] = [];
+  if (popularMovies.length > 0) {
+    const mostTrendingMovie = popularMovies[0];
+    const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
+      .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
+    
+    heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean);
+  }
+
+  // Fetch logos for hero items
+  const heroItemsWithLogos = await Promise.all(
+    heroItems.map(async (item) => {
+      const type = 'name' in item ? 'tv' : 'movie';
+      const images = await getItemImages(type, item.id);
+      
+      // Find the best logo (prefer English, then fallback to any)
+      let bestLogo = images?.logos.find(logo => logo.iso_639_1 === 'en');
+      if (!bestLogo) {
+        bestLogo = images?.logos[0];
+      }
+
+      return {
+        ...item,
+        logo_path: bestLogo ? `${IMAGE_BASE_URL_ORIGINAL}${bestLogo.file_path}` : null,
+      };
+    })
+  );
 
   const trending = popularMovies.slice(0, 12) as Movie[]; // Using popular as trending
   const newReleases = upcomingMovies.slice(0, 12) as Movie[];
@@ -31,7 +54,7 @@ async function getHomePageData() {
     .sort(() => 0.5 - Math.random())
     .slice(0, 12) as (Movie | TVShow)[];
 
-  return { heroItems, trending, newReleases, topRated, recommended };
+  return { heroItems: heroItemsWithLogos, trending, newReleases, topRated, recommended };
 
 }
 

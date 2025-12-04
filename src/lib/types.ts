@@ -12,6 +12,16 @@ export interface TMDBCastMember {
   known_for_department?: string;
 }
 
+export interface TMDbImage {
+    aspect_ratio: number;
+    height: number;
+    iso_639_1: string | null;
+    file_path: string;
+    vote_average: number;
+    vote_count: number;
+    width: number;
+}
+
 export interface Movie {
   id: number; // TMDb uses numbers for IDs
   title: string;
@@ -22,6 +32,7 @@ export interface Movie {
   vote_average: number; // Rating
   genres: { id: number; name: string }[]; // TMDb provides genre objects
   runtime?: number; // Duration in minutes
+  logo_path?: string | null; // For title logos
   // Fields that might come from specific endpoints like /movie/{id}
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: Movie[] };
@@ -41,6 +52,7 @@ export interface TVShow {
   number_of_seasons?: number;
   number_of_episodes?: number;
   seasons?: TVSeason[];
+  logo_path?: string | null; // For title logos
   // credits and similar from specific calls
   credits?: { cast: TMDBCastMember[] };
   similar?: { results: TVShow[] };

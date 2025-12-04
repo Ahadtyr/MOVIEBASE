@@ -85,7 +85,18 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-           <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-bold mb-3 drop-shadow-xl">{title}</h1>
+           {currentItem.logo_path ? (
+              <Image
+                src={currentItem.logo_path}
+                alt={`${title} logo`}
+                width={400}
+                height={200}
+                className="max-h-[60px] md:max-h-[100px] w-auto object-contain object-left drop-shadow-xl mb-4"
+                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}
+              />
+            ) : (
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-bold mb-3 drop-shadow-xl">{title}</h1>
+            )}
            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-400 mr-1.5 neon-glow" />

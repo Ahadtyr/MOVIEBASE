@@ -1,5 +1,5 @@
 
-import type { Movie, TVShow, TMDBCastMember, Genre, TVSeason, TVSeasonDetails } from './types';
+import type { Movie, TVShow, TMDBCastMember, Genre, TVSeason, TVSeasonDetails, TMDbImage } from './types';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 export const IMAGE_BASE_URL_W500 = 'https://image.tmdb.org/t/p/w500';
@@ -31,6 +31,12 @@ interface TMDbTVShowDetail extends Omit<TVShow, 'genres' | 'credits' | 'similar'
   number_of_seasons: number;
   number_of_episodes: number;
   seasons: TVSeason[];
+}
+
+interface TMDbImageResponse {
+    logos: TMDbImage[];
+    backdrops: TMDbImage[];
+    posters: TMDbImage[];
 }
 
 
@@ -80,6 +86,7 @@ function mapTMDbMovie(tmdbMovie: any): Movie {
     vote_average: tmdbMovie.vote_average,
     genres: tmdbMovie.genres || [],
     runtime: tmdbMovie.runtime,
+    logo_path: tmdbMovie.logo_path,
   };
 }
 
@@ -215,6 +222,7 @@ function mapTMDbTVShow(tmdbTVShow: any): TVShow {
     number_of_episodes: tmdbTVShow.number_of_episodes,
     seasons: tmdbTVShow.seasons || [],
     title: tmdbTVShow.name, // for MovieCard compatibility
+    logo_path: tmdbTVShow.logo_path,
   };
 }
 
@@ -448,4 +456,10 @@ export async function getItemsByIds(itemIds: {id: number, type: 'movie' | 'tv'}[
 
     const results = await Promise.all(itemPromises);
     return results.filter((item): item is Movie | TVShow => item !== null);
+}
+
+export async function getItemImages(type: 'movie' | 'tv', id: number): Promise<TMDbImageResponse | null> {
+    const data = await fetchFromTMDB<TMDbImageResponse>(`${type}/${id}/images`);
+    if (!data) return null;
+    return data;
 }

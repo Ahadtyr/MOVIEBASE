@@ -58,7 +58,7 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
   const title = isTV ? currentItem.name : currentItem.title;
   const releaseDate = isTV ? currentItem.first_air_date : currentItem.release_date;
   const playerHref = isTV ? `/player/tv/${currentItem.id}?s=1&e=1` : `/player/movie/${currentItem.id}`;
-  const detailsHref = isTV ? `/tv-show/${currentItem.id}` : `/movie/${currentItem.id}`;
+  const detailsHref = isTV ? `/tv-show/${currentItem.id}` : `/movie/${item.id}`;
 
   return (
     <div className="relative w-full h-[85vh] max-h-[1080px] overflow-hidden group" role="region" aria-roledescription="carousel" aria-label="Featured Movies">
@@ -81,7 +81,7 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
        </div>
       ))}
       
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
         <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>

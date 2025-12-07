@@ -8,13 +8,14 @@ import ContinueWatching from '@/components/movie/ContinueWatching';
 
 // Simulate fetching data
 async function getHomePageData() {
-  const [popularMovies, upcomingMovies, topRatedMovies, showsFrom2025Data] = await Promise.all([
+  const [popularMovies, upcomingMovies, topRatedMoviesData, showsFrom2025Data] = await Promise.all([
     getPopularMovies(),
     getUpcomingMovies(),
     getTopRatedMovies(),
     getDiscoverTVShowsByParams({ 'first_air_date.gte': '2025-01-01', 'first_air_date.lte': '2025-12-31' }),
   ]);
 
+  const topRatedMovies = topRatedMoviesData.movies;
   const showsFrom2025 = showsFrom2025Data.shows;
   
   let heroItems: (Movie | TVShow)[] = [];

@@ -90,8 +90,8 @@ function mapTMDbMovie(tmdbMovie: any): Movie {
   };
 }
 
-export async function getPopularMovies(): Promise<Movie[]> {
-  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/popular');
+export async function getPopularMovies(page: number = 1): Promise<Movie[]> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/popular', { page: page.toString() });
   if (!data) return [];
   return data.results.map(mapTMDbMovie);
 }
@@ -106,10 +106,11 @@ export async function getUpcomingMovies(): Promise<Movie[]> {
   return data.results.map(mapTMDbMovie);
 }
 
-export async function getTopRatedMovies(): Promise<Movie[]> {
-  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/top_rated');
-  if (!data) return [];
-  return data.results.map(mapTMDbMovie);
+export async function getTopRatedMovies(page: number = 1): Promise<{ movies: Movie[], totalPages: number }> {
+  const data = await fetchFromTMDB<TMDbListResponse<TMDbMovieDetail>>('movie/top_rated', { page: page.toString() });
+  if (!data) return { movies: [], totalPages: 0 };
+  const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
+  return { movies: data.results.map(mapTMDbMovie), totalPages };
 }
 
 export async function getMovieDetails(movieId: number): Promise<Movie | null> {

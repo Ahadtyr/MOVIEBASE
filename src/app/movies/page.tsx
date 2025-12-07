@@ -28,7 +28,7 @@ async function getMoviesPageData() {
     bollywoodPicksData,
   ] = await Promise.all([
     getPopularMovies(),
-    getTopRatedMovies(),
+    getTopRatedMovies(1),
     getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: NETFLIX_ID }),
     getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: PRIME_VIDEO_ID }),
     getDiscoverMoviesByParams({ ...commonParams, with_watch_providers: APPLE_TV_ID }),
@@ -41,7 +41,7 @@ async function getMoviesPageData() {
   
   return { 
     popularMovies: popularMoviesData.slice(0, 12),
-    topRatedMovies: topRatedMoviesData.slice(0, 12),
+    topRatedMovies: topRatedMoviesData.movies.slice(0, 12),
     netflixMovies: netflixMoviesData.movies.slice(0, 12),
     primeMovies: primeMoviesData.movies.slice(0, 12),
     appleMovies: appleMoviesData.movies.slice(0, 12),

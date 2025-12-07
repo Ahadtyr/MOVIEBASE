@@ -69,7 +69,7 @@ export default async function HomePage() {
         <ContinueWatching />
         {trending.length > 0 && <MovieSection title={<><span className="text-trending">Trending Movies</span> 🔥</>} items={trending} href="/trending" />}
         {newReleases.length > 0 && <MovieSection title={<><span className="text-now-playing">Upcoming Movies</span> 🚀</>} items={newReleases} />}
-        {topRated.length > 0 && <MovieSection title={<><span className="text-top-rated">Top Rated Movies</span> ⭐</>} items={topRated} />}
+        {topRated.length > 0 && <MovieSection title={<><span className="text-top-rated">Top Rated Movies</span> ⭐</>} items={topRated} href="/movies/top-rated" />}
         {recommended.length > 0 && <MovieSection title={<><span className="text-hbo">Recommended For You</span> 💡</>} items={recommended} />}
         
         {heroItems.length === 0 && (

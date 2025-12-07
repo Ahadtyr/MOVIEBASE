@@ -56,7 +56,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p4 = `https://vidfast.pro/movie/${tmdbId}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/movie/${tmdbId}`;
     embedSrc.p6 = `https://cinemaos.tech/player/${tmdbId}`;
-    embedSrc.p7 = `https://2embed.stream/movie/${tmdbId}`;
+    embedSrc.p7 = `https://www.2embed.stream/embed/movie/${tmdbId}`;
   } else {
     const show = await getTVShowDetails(tmdbId);
     if (!show) notFound();
@@ -68,7 +68,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
     embedSrc.p4 = `https://vidfast.pro/tv/${tmdbId}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
     embedSrc.p5 = `https://player.videasy.net/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
     embedSrc.p6 = `https://cinemaos.tech/player/${tmdbId}/${seasonNumber}/${episodeNumber}`;
-    embedSrc.p7 = `https://2embed.stream/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
+    embedSrc.p7 = `https://www.2embed.stream/embed/tv/${tmdbId}?s=${seasonNumber}&e=${episodeNumber}`;
 
     if (show.seasons) {
       const seasonDetailPromises = show.seasons

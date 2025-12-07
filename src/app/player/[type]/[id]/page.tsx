@@ -102,7 +102,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
       </div>
 
       <Tabs defaultValue={selectedPlayer} className="w-full">
-        <TabsList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 sm:gap-4 max-w-4xl mx-auto mb-6 bg-transparent p-0 h-auto">
+        <TabsList className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-7 gap-2 sm:gap-4 max-w-4xl mx-auto mb-6 bg-transparent p-0 h-auto">
           <TabsTrigger value="1" asChild>
              <Link href={`?player=1&s=${seasonNumber}&e=${episodeNumber}`} scroll={false} className={serverButtonClasses}>
                 Server 1

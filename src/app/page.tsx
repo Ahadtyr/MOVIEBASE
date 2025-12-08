@@ -24,7 +24,7 @@ async function getHomePageData() {
     const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
       .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
     
-    heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean);
+    heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean).slice(0, 6);
   }
 
   // Fetch logos for hero items

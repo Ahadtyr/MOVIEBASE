@@ -172,7 +172,7 @@ export default async function PlayerPage({ params, searchParams }: PlayerPagePro
                 <iframe src={embedSrc.p7} {...commonIframeProps} />
             </TabsContent>
             <TabsContent value="8" className="absolute inset-0 w-full h-full m-0">
-                <iframe src={embedSrc.p8} {...commonIframeProps} />
+                <iframe src={embedSrc.p8} {...commonIframeProps} title="vidsrc.wtf" />
             </TabsContent>
         </div>
       </Tabs>

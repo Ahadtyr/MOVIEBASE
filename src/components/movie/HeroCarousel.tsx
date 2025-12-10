@@ -84,7 +84,7 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
 
       <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-12 lg:p-16 text-primary-foreground">
-        <div className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div key={currentIndex} className="max-w-3xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
            {currentItem.logo_path ? (
               <Image
                 src={currentItem.logo_path}

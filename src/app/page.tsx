@@ -18,14 +18,10 @@ async function getHomePageData() {
   const topRatedMovies = topRatedMoviesData.movies;
   const showsFrom2025 = showsFrom2025Data.shows;
   
-  let heroItems: (Movie | TVShow)[] = [];
-  if (popularMovies.length > 0) {
-    const mostTrendingMovie = popularMovies[0];
-    const otherHeroItems = [...popularMovies.slice(1, 5), ...showsFrom2025.slice(0, 5)]
-      .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
-    
-    heroItems = [mostTrendingMovie, ...otherHeroItems].filter(Boolean).slice(0, 6);
-  }
+  const potentialHeroItems = [...popularMovies.slice(0, 6), ...showsFrom2025.slice(0, 4)]
+    .sort(() => 0.5 - Math.random()) as (Movie | TVShow)[];
+
+  const heroItems = potentialHeroItems.slice(0, 10);
 
   // Fetch logos for hero items
   const heroItemsWithLogos = await Promise.all(

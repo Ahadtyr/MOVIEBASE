@@ -91,11 +91,11 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
                 alt={`${title} logo`}
                 width={400}
                 height={200}
-                className="max-h-[60px] md:max-h-[100px] w-auto object-contain object-left drop-shadow-xl mb-4"
-                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}
+                className="max-h-[60px] md:max-h-[100px] w-auto object-contain object-left drop-shadow-xl mb-4 animate-fade-in"
+                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))', animationDelay: '0.5s' }}
               />
             ) : (
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-bold mb-3 drop-shadow-xl">{title}</h1>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-bold mb-3 drop-shadow-xl animate-fade-in" style={{ animationDelay: '0.5s' }}>{title}</h1>
             )}
            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <div className="flex items-center">
